@@ -1,11 +1,14 @@
 {
-  "name": "rs-bind",
+  "name": "rs-git",
   "scripts": {
-    "test": "vitest",
-    "example": "nodemon --watch main.js --watch example.js example.js"
+    "start": "nodemon --watch main.js --watch start.js start.js",
+    "test": "vitest"
   },
   "devDependencies": {
     "express": "^5.2.1",
     "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "mime": "^4.1.0"
   }
 }
