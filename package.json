@@ -9,6 +9,7 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
-    "mime": "^4.1.0"
+    "mime": "^4.1.0",
+    "simple-git": "^3.30.0"
   }
 }
