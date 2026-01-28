@@ -11,3 +11,4 @@ package-lock.json
 # LOCAL
 .env*
 !.env-sample
+data
