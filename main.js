@@ -58,7 +58,7 @@ const mod = {
 				type,
 				hash,
 				size: size === '-' ? null : parseInt(size),
-			}]
+			}];
 		}));
 
 		return res.set({
