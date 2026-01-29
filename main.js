@@ -17,13 +17,12 @@ const prefix = '/storage';
 
 const mod = {
 
-	_relativePath: url => url.split(prefix).slice(1).join(prefix),
+	_relativePath: (url, prefix) => url.split(prefix).slice(1).join(prefix),
 
 	async handle (req, res, next) {
 		// await git.pull('origin');
-		
 		const isFolder = req.url.endsWith('/');
-		const relativePath = mod._relativePath(req.url);
+		const relativePath = mod._relativePath(req.url, prefix);
 		const target = path.join(dataPath, relativePath);
 
 		if (req.url.toLowerCase().match('/.well-known/webfinger'))
@@ -38,7 +37,7 @@ const mod = {
 		if (!req.headers.authorization)
 			return res.status(401).send('Unauthorized');
 
-		if (req.method === 'GET' && !fs.existsSync(target))
+		if (['GET', 'HEAD'].includes(req.method) && !fs.existsSync(target))
 			return res.status(404).send('Not found');
 
 		if (req.method === 'PUT') {
@@ -51,35 +50,51 @@ const mod = {
 				// .push('origin');
 		}
 
-		const tree = Object.fromEntries((await git.raw('ls-tree', '-t', '-r', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD')).split('\n').map(e => {
-			const [type, hash, size, path] = e.split(/\s+/);
+		const gitPath = `.${ relativePath }`;
+		const etag = (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift();
 
-			return [`/${ path }${ type === 'tree' ? '/' : '' }`, {
-				type,
-				hash,
-				size: size === '-' ? null : parseInt(size),
-			}];
-		}));
+		if (req.method === 'DELETE') {
+			fs.unlinkSync(target);
 
-		return res.set({
+			await git.add('./*')
+				.commit('sync')
+				// .push('origin');
+
+			return res.set({
+				ETag: etag,
+			}).status(200).send('OK');
+		}
+
+		res.set({
 			'Content-Type': isFolder ? 'application/ld+json' : 'application/json',
-			ETag: tree[relativePath].hash,
-		}).status(200).json(isFolder ? {
+			ETag: etag,
+		}).status(200);
+
+		if (!isFolder)
+			return res.json(JSON.parse(fs.readFileSync(target, 'utf8')));
+
+		return res.json({
 			'@context': 'http://remotestorage.io/spec/folder-description',
-			items: fs.readdirSync(target).reduce((coll, item) => {
-				const _path = path.join(relativePath, item);
-				const object = tree[Object.keys(tree).filter(e => e.match(_path)).shift()];
-				
-				coll[object.type === 'tree' ? `${ item }/` : item] = Object.assign(tree.type === 'tree' ? {} : {
-					'Content-Length': object.size,
+			items: (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', gitPath)).trim().split('\n').map(e => {
+				const [type, hash, size, path] = e.split(/\s+/);
+				return {
+					name: type === 'tree' ? `${ path }/` : path,
+					type,
+					hash,
+					size: size === '-' ? null : parseInt(size),
+				};
+			}).reduce((coll, item) => {
+				const _path = path.join(relativePath, item.name);
+				coll[mod._relativePath(item.name, relativePath.slice(1))] = Object.assign(item.type === 'tree' ? {} : {
+					'Content-Length': item.size,
 					'Content-Type': mime.getType(_path) || 'application/json',
 				}, {
-					ETag: object.hash,
+					ETag: item.hash,
 				});
 
 				return coll;
 			}, {}),
-		} : JSON.parse(fs.readFileSync(target, 'utf8')));
+		});
 	},
 
 };
