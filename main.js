@@ -7,13 +7,13 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const dataPath = path.join(__dirname, 'data');
-const git = simpleGit(dataPath, {
+const prefix = '/storage';
+const _storage = path.join(__dirname, 'data');
+
+const git = simpleGit(_storage, {
 	maxConcurrentProcesses: 10,
 	trimmed: true,
 }).clean(CleanOptions.FORCE);
-
-const prefix = '/storage';
 
 const mod = {
 
@@ -24,9 +24,9 @@ const mod = {
 	async handle (req, res, next) {
 		// await git.pull('origin');
 		const isFolder = req.url.endsWith('/');
-		const relativePath = mod._relativePath(req.url, prefix);
-		const target = path.join(dataPath, relativePath);
-
+		const _url = req.url.split(new RegExp(`^\\${ prefix }`)).pop();
+		const target = path.join(_storage, _url);
+		
 		if (req.url.toLowerCase().match('/.well-known/webfinger'))
 			return res.json({
 				links: [{
@@ -50,10 +50,19 @@ const mod = {
 				'Access-Control-Allow-Headers': 'Authorization, Content-Length, Content-Type, If-Match, If-None-Match, Origin, X-Requested-With',				
 			}).status(204).end();
 
-		const gitPath = `.${ relativePath }`;
+		const gitPath = `.${ _url }`;
 
-		if (req.method === 'PUT' && fs.existsSync(target) && !isFolder && fs.statSync(target).isDirectory())
+		if (req.method === 'PUT' && fs.existsSync(target) && fs.statSync(target).isDirectory())
 			return res.status(409).send('Conflict');
+
+		if (req.method === 'PUT' && !fs.existsSync(target))
+			if (_url.split('/').reduce((coll, item) => {
+				return coll.concat(`${ coll.at(-1) || '' }/${ item }`);
+			}, []).filter(url => {
+				const _path = path.join(_storage, url);
+				return fs.existsSync(_path) && fs.statSync(_path).isFile();
+			}).length)
+				return res.status(409).send('Conflict');
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
 			!fs.existsSync(target) && req.headers['if-match']
@@ -112,8 +121,8 @@ const mod = {
 					size: size === '-' ? null : parseInt(size),
 				};
 			}).reduce((coll, item) => {
-				const _path = path.join(relativePath, item.name);
-				coll[mod._relativePath(item.name, relativePath.slice(1))] = Object.assign(item.type === 'tree' ? {} : {
+				const _path = path.join(_url, item.name);
+				coll[mod._relativePath(item.name, _url.slice(1))] = Object.assign(item.type === 'tree' ? {} : {
 					'Content-Length': item.size,
 					'Content-Type': mime.getType(_path) || 'application/json',
 				}, {
