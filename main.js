@@ -50,7 +50,6 @@ const mod = {
 				'Access-Control-Allow-Headers': 'Authorization, Content-Length, Content-Type, If-Match, If-None-Match, Origin, X-Requested-With',				
 			}).status(204).end();
 
-		const gitPath = `.${ _url }`;
 
 		if (req.method === 'PUT' && fs.existsSync(target) && fs.statSync(target).isDirectory())
 			return res.status(409).send('Conflict');
@@ -63,6 +62,8 @@ const mod = {
 				return fs.existsSync(_path) && fs.statSync(_path).isFile();
 			}).length)
 				return res.status(409).send('Conflict');
+
+		const gitPath = `.${ _url }`;
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
 			!fs.existsSync(target) && req.headers['if-match']
