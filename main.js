@@ -50,7 +50,7 @@ const mod = {
 				'Access-Control-Allow-Headers': 'Authorization, Content-Length, Content-Type, If-Match, If-None-Match, Origin, X-Requested-With',				
 			}).status(204).end();
 
-		if (['GET', 'HEAD'].includes(req.method) && !fs.existsSync(target))
+		if (['HEAD', 'GET', 'DELETE'].includes(req.method) && !fs.existsSync(target))
 			return res.status(404).send('Not found');
 
 		const gitPath = `.${ relativePath }`;
