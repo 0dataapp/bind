@@ -50,21 +50,21 @@ const mod = {
 				'Access-Control-Allow-Headers': 'Authorization, Content-Length, Content-Type, If-Match, If-None-Match, Origin, X-Requested-With',				
 			}).status(204).end();
 
-		if (['HEAD', 'GET', 'DELETE'].includes(req.method) && !fs.existsSync(target))
-			return res.status(404).send('Not found');
-
 		const gitPath = `.${ relativePath }`;
 
-		if (req.method === 'GET' && fs.existsSync(target) && req.headers['if-none-match'])
-			if (req.headers['if-none-match'].split(',').map(e => e.trim()).includes(await mod.etag(gitPath, isFolder)))
-				return res.status(304).send('Not Modified');
-
-		if (req.method === 'PUT' && (
+		if (['PUT', 'DELETE'].includes(req.method) && (
 			!fs.existsSync(target) && req.headers['if-match']
 			|| fs.existsSync(target) && req.headers['if-match'] && req.headers['if-match'] !== await mod.etag(gitPath, isFolder)
 			|| fs.existsSync(target) && req.headers['if-none-match']
 			))
 			return res.status(412).send('Conflict');
+
+		if (['HEAD', 'GET', 'DELETE'].includes(req.method) && !fs.existsSync(target))
+			return res.status(404).send('Not found');
+
+		if (req.method === 'GET' && fs.existsSync(target) && req.headers['if-none-match'])
+			if (req.headers['if-none-match'].split(',').map(e => e.trim()).includes(await mod.etag(gitPath, isFolder)))
+				return res.status(304).send('Not Modified');
 
 		if (req.method === 'PUT') {
 			const folder = path.dirname(target);
