@@ -44,8 +44,9 @@ const mod = {
 
 		const gitPath = `.${ relativePath }`;
 
-		if (req.method === 'GET' && fs.existsSync(target) && req.headers['if-none-match'] && req.headers['if-none-match'] === await mod.etag(gitPath, isFolder))
-			return res.status(304).send('Not Modified');
+		if (req.method === 'GET' && fs.existsSync(target) && req.headers['if-none-match'])
+			if (req.headers['if-none-match'].split(',').map(e => e.trim()).includes(await mod.etag(gitPath, isFolder)))
+				return res.status(304).send('Not Modified');
 
 		if (req.method === 'PUT' && fs.existsSync(target) && (
 			req.headers['if-match'] && req.headers['if-match'] !== await mod.etag(gitPath, isFolder)
