@@ -19,6 +19,8 @@ const mod = {
 
 	_relativePath: (url, prefix) => url.split(prefix).slice(1).join(prefix),
 
+	etag: async (gitPath, isFolder) => (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
+
 	async handle (req, res, next) {
 		// await git.pull('origin');
 		const isFolder = req.url.endsWith('/');
@@ -40,6 +42,11 @@ const mod = {
 		if (['GET', 'HEAD'].includes(req.method) && !fs.existsSync(target))
 			return res.status(404).send('Not found');
 
+		const gitPath = `.${ relativePath }`;
+		
+		if (req.method === 'PUT' && fs.existsSync(target) && req.headers['if-match'] && req.headers['if-match'] !== await mod.etag(gitPath, isFolder))
+			return res.status(412).send('Conflict');
+
 		if (req.method === 'PUT') {
 			const folder = path.dirname(target);
 			fs.mkdirSync(folder, { recursive: true });
@@ -50,8 +57,7 @@ const mod = {
 				// .push('origin');
 		}
 
-		const gitPath = `.${ relativePath }`;
-		const etag = (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift();
+		const etag = await mod.etag(gitPath, isFolder);
 
 		if (req.method === 'DELETE') {
 			fs.unlinkSync(target);
