@@ -39,6 +39,17 @@ const mod = {
 		if (!req.headers.authorization)
 			return res.status(401).send('Unauthorized');
 
+		res.set({
+			'Access-Control-Allow-Origin': req.headers['origin'] || '*',
+			'Access-Control-Expose-Headers': 'Content-Length, Content-Type, ETag',	
+		});
+
+		if (req.method === 'OPTIONS')
+			return res.set({
+				'Access-Control-Allow-Methods': 'OPTIONS, GET, HEAD, PUT, DELETE',
+				'Access-Control-Allow-Headers': 'Authorization, Content-Length, Content-Type, If-Match, If-None-Match, Origin, X-Requested-With',				
+			}).status(204).end();
+
 		if (['GET', 'HEAD'].includes(req.method) && !fs.existsSync(target))
 			return res.status(404).send('Not found');
 
