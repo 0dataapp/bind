@@ -52,6 +52,9 @@ const mod = {
 
 		const gitPath = `.${ relativePath }`;
 
+		if (req.method === 'PUT' && fs.existsSync(target) && !isFolder && fs.statSync(target).isDirectory())
+			return res.status(409).send('Conflict');
+
 		if (['PUT', 'DELETE'].includes(req.method) && (
 			!fs.existsSync(target) && req.headers['if-match']
 			|| fs.existsSync(target) && req.headers['if-match'] && req.headers['if-match'] !== await mod.etag(gitPath, isFolder)
