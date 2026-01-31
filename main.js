@@ -59,9 +59,10 @@ const mod = {
 			if (req.headers['if-none-match'].split(',').map(e => e.trim()).includes(await mod.etag(gitPath, isFolder)))
 				return res.status(304).send('Not Modified');
 
-		if (req.method === 'PUT' && fs.existsSync(target) && (
-			req.headers['if-match'] && req.headers['if-match'] !== await mod.etag(gitPath, isFolder)
-			|| req.headers['if-none-match']
+		if (req.method === 'PUT' && (
+			!fs.existsSync(target) && req.headers['if-match']
+			|| fs.existsSync(target) && req.headers['if-match'] && req.headers['if-match'] !== await mod.etag(gitPath, isFolder)
+			|| fs.existsSync(target) && req.headers['if-none-match']
 			))
 			return res.status(412).send('Conflict');
 
