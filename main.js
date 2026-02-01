@@ -58,7 +58,7 @@ const mod = {
 			});
 
 		if (!req.headers.authorization)
-			return res.status(401).send('Unauthorized');
+			return res.status(401).end();
 
 		res.set({
 			'Access-Control-Allow-Origin': req.headers['origin'] || '*',
@@ -72,10 +72,10 @@ const mod = {
 			}).status(204).end();
 
 		if (req.method === 'PUT' && req.headers['content-range'])
-				return res.status(400).send('Invalid request, Content-Range in PUT');
+				return res.status(400).end();
 
 		if (req.method === 'PUT' && fs.existsSync(target) && fs.statSync(target).isDirectory())
-			return res.status(409).send('Conflict');
+			return res.status(409).end();
 
 		if (req.method === 'PUT' && !fs.existsSync(target))
 			if (_url.split('/').reduce((coll, item) => {
@@ -84,7 +84,7 @@ const mod = {
 				const _path = path.join(_storage, url);
 				return fs.existsSync(_path) && fs.statSync(_path).isFile();
 			}).length)
-				return res.status(409).send('Conflict');
+				return res.status(409).end();
 
 		const gitPath = `.${ _url }`;
 
@@ -93,14 +93,14 @@ const mod = {
 			|| fs.existsSync(target) && req.headers['if-match'] && req.headers['if-match'] !== await mod.etag(gitPath, isFolder)
 			|| fs.existsSync(target) && req.headers['if-none-match']
 			))
-			return res.status(412).send('Precondition failed');
+			return res.status(412).end();
 
 		if (['HEAD', 'GET', 'DELETE'].includes(req.method) && !fs.existsSync(target))
 			return res.status(404).send('Not found');
 
 		if (req.method === 'GET' && fs.existsSync(target) && req.headers['if-none-match'])
 			if (req.headers['if-none-match'].split(',').map(e => e.trim()).includes(await mod.etag(gitPath, isFolder)))
-				return res.status(304).send('Not Modified');
+				return res.status(304).end();
 
 		if (req.method === 'PUT') {
 			const folder = path.dirname(target);
