@@ -7,6 +7,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+import { fileTypeFromBuffer } from 'file-type';
+
 const prefix = '/storage';
 const _storage = path.join(__dirname, 'data');
 
@@ -20,6 +22,25 @@ const mod = {
 	_relativePath: (url, prefix) => url.split(prefix).slice(1).join(prefix),
 
 	etag: async (gitPath, isFolder) => (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
+
+	fakeJSON (e) {
+		if (!['{', '['].includes(e.trim()[0]))
+			return false;
+
+		try {
+			return JSON.parse(e);
+		} catch (e) {
+			return false
+		}
+	},
+
+	async guessMimeType (data) {
+		const mime = await fileTypeFromBuffer(data);
+		if (mime)
+			return mime.mime;
+		
+		return mod.fakeJSON(data.toString()) ? 'application/json' : 'text/plain';
+	},
 
 	async handle (req, res, next) {
 		// await git.pull('origin');
@@ -84,7 +105,7 @@ const mod = {
 		if (req.method === 'PUT') {
 			const folder = path.dirname(target);
 			fs.mkdirSync(folder, { recursive: true });
-			fs.writeFileSync(target, JSON.stringify(req.body));
+			fs.writeFileSync(target, req.headers['content-type'] === 'application/json' ? JSON.stringify(req.body) : req.body);
 
 			await git.add('./*')
 				.commit('sync')
@@ -92,6 +113,20 @@ const mod = {
 		}
 
 		const etag = await mod.etag(gitPath, isFolder);
+		const data = isFolder ? null : fs.readFileSync(target);
+
+		const meta = {
+			'Content-Type': isFolder ? 'application/ld+json' : await mod.guessMimeType(data),
+			ETag: etag,
+		};
+
+		if (!isFolder)
+			meta['Content-Length'] = fs.statSync(target).size;
+
+		res.set(meta).status(200);
+
+		if (req.method === 'HEAD')
+			return res.end();
 
 		if (req.method === 'DELETE') {
 			fs.unlinkSync(target);
@@ -100,18 +135,11 @@ const mod = {
 				.commit('sync')
 				// .push('origin');
 
-			return res.set({
-				ETag: etag,
-			}).status(200).send('OK');
+			return res.end();
 		}
 
-		res.set({
-			'Content-Type': isFolder ? 'application/ld+json' : 'application/json',
-			ETag: etag,
-		}).status(200);
-
 		if (!isFolder)
-			return res.json(JSON.parse(fs.readFileSync(target, 'utf8')));
+			return res.send(meta['Content-Type'] === 'application/json' ? fs.readFileSync(target, 'utf8') : data);
 
 		return res.json({
 			'@context': 'http://remotestorage.io/spec/folder-description',
