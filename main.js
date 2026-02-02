@@ -60,7 +60,7 @@ const mod = {
 		if (!token)
 			return res.status(401).end();
 
-		const permissions = adapter.permissions(handle, token);
+		const permissions = await adapter.permissions(handle, token);
 
 		if (!permissions)
 			return res.status(401).end();
