@@ -84,13 +84,11 @@ const mod = {
 		if (!fs.existsSync(target))
 			return {};
 
-		const isFolder = fs.statSync(target).isDirectory();
-
 		const meta = {
-			ETag: (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.gitPath(_url)))).trim().split('\n').shift(),
+			ETag: await mod.etag(_url),
 		};
 
-		if (isFolder)
+		if (fs.statSync(target).isDirectory())
 			return meta;
 
 		return Object.assign(meta, {
@@ -98,6 +96,8 @@ const mod = {
 			'Content-Type': await mod.guessMimeType(fs.readFileSync(target)),
 		});
 	},
+
+	async etag: _url => (await git.raw(...['ls-tree', '--object-only'].concat([]).concat('HEAD', mod.gitPath(_url)))).trim().split('\n').shift(),
 
 	put (target, _folders, meta) {
 		return git.add('./*')
