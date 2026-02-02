@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import mime from 'mime';
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -51,11 +52,34 @@ const mod = {
 		ETag: (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
 	} : {},
 
-	putParents: () => {},
-	putChild: () => {},
+	putParents () {},
+	putChild () {},
 
-	deleteChild: () => {},
-	deleteParents: () => {},
+	deleteChild () {},
+	deleteParents () {},
+
+	async folderItems (target, git, gitPath, _url) {
+		const tree = (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', gitPath)).trim();
+
+		return !tree.length ? {} : tree.split('\n').map(e => {
+			const [type, hash, size, path] = e.split(/\s+/);
+			return {
+				name: type === 'tree' ? `${ path }/` : path,
+				type,
+				hash,
+				size: size === '-' ? null : parseInt(size),
+			};
+		}).reduce((coll, item) => {
+			coll[item.name.match(new RegExp(`^${ _url.slice(1) }(.*)`)).pop()] = Object.assign(item.type === 'tree' ? {} : {
+				'Content-Length': item.size,
+				'Content-Type': mime.getType(path.join(_url, item.name)) || 'application/json',
+			}, {
+				ETag: item.hash,
+			});
+
+			return coll;
+		}, {});
+	},
 
 };
 

@@ -155,31 +155,10 @@ const mod = {
 			return res.end();
 		}
 
-		if (!isFolder)
-			return res.send(_meta['Content-Type'] === 'application/json' ? fs.readFileSync(target, 'utf8') : data);
-
-		const tree = (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', gitPath)).trim();
-		return res.json({
+		return isFolder ? res.json({
 			'@context': 'http://remotestorage.io/spec/folder-description',
-			items: !tree.length ? {} : tree.split('\n').map(e => {
-				const [type, hash, size, path] = e.split(/\s+/);
-				return {
-					name: type === 'tree' ? `${ path }/` : path,
-					type,
-					hash,
-					size: size === '-' ? null : parseInt(size),
-				};
-			}).reduce((coll, item) => {
-				coll[item.name.match(new RegExp(`^${ _url.slice(1) }(.*)`)).pop()] = Object.assign(item.type === 'tree' ? {} : {
-					'Content-Length': item.size,
-					'Content-Type': mime.getType(path.join(_url, item.name)) || 'application/json',
-				}, {
-					ETag: item.hash,
-				});
-
-				return coll;
-			}, {}),
-		});
+			items: await adapter.folderItems(target, git, gitPath, _url),
+		}) : res.send(_meta['Content-Type'] === 'application/json' ? fs.readFileSync(target, 'utf8') : data);
 	},
 
 };
