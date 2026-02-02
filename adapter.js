@@ -52,8 +52,11 @@ const mod = {
 		ETag: (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
 	} : {},
 
-	putParents () {},
-	putChild () {},
+	put (target, _folders, meta, git) {
+		return git.add('./*')
+			.commit('sync')
+			// .push('origin');
+	},
 
 	deleteChild () {},
 	deleteParents () {},

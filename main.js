@@ -118,14 +118,10 @@ const mod = {
 
 		if (req.method === 'PUT') {
 			fs.mkdirSync(path.dirname(target), { recursive: true });
-			await adapter.putParents(_folders);
 
 			fs.writeFileSync(target, req.headers['content-type'] === 'application/json' ? JSON.stringify(req.body) : req.body);
-			await adapter.putChild(target, meta);
-
-			await git.add('./*')
-				.commit('sync')
-				// .push('origin');
+			
+			await adapter.put(target, _folders, meta, git);
 		}
 
 		const data = isFolder ? null : fs.readFileSync(target);
