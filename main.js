@@ -18,9 +18,7 @@ const git = simpleGit(_storage, {
 }).clean(CleanOptions.FORCE);
 
 const mod = {
-
-	etag: async (gitPath, isFolder) => (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
-
+	
 	fakeJSON (e) {
 		if (!['{', '['].includes(e.trim()[0]))
 			return false;
