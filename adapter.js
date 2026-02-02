@@ -77,12 +77,24 @@ const mod = {
 		return mod.fakeJSON(data.toString()) ? 'application/json' : 'text/plain';
 	},
 
-	meta: async (gitPath, isFolder, target) => fs.existsSync(target) ? Object.assign({
-		ETag: (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
-	}, !isFolder ? {
-		'Content-Length': fs.statSync(target).size,
-		'Content-Type': await mod.guessMimeType(fs.readFileSync(target)),
-	} : {}) : {},
+	meta: async (target, gitPath) => {
+		if (!fs.existsSync(target))
+			return {};
+
+		const isFolder = fs.statSync(target).isDirectory();
+		
+		const meta = {
+			ETag: (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
+		};
+
+		if (isFolder)
+			return meta;
+
+		return Object.assign(meta, {
+			'Content-Length': fs.statSync(target).size,
+			'Content-Type': await mod.guessMimeType(fs.readFileSync(target)),
+		});
+	},
 
 	put (target, _folders, meta) {
 		return git.add('./*')

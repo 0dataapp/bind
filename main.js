@@ -58,13 +58,13 @@ const mod = {
 		const _folders = _url.split('/').slice(0, -1).reduce((coll, item) => {
 			return coll.concat(`${ coll.at(-1) || '' }/${ item }`);
 		}, []).map(e => adapter.dataPath(handle, e));
+		
 		if (req.method === 'PUT' && !fs.existsSync(target))
 			if (_folders.filter(e => fs.existsSync(e) && fs.statSync(e).isFile()).length)
 				return res.status(409).end();
 
-		const isFolder = req.url.endsWith('/');
 		const gitPath = `.${ _url }`;
-		const meta = await adapter.meta(gitPath, isFolder, target);
+		const meta = await adapter.meta(target, gitPath);
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
 			!fs.existsSync(target) && req.headers['if-match']
@@ -88,7 +88,8 @@ const mod = {
 			await adapter.put(target, _folders, meta);
 		}
 
-		const _meta = Object.assign(req.method === 'PUT' ? await adapter.meta(gitPath, isFolder, target) : meta, isFolder ?{
+		const isFolder = req.url.endsWith('/');
+		const _meta = Object.assign(req.method === 'PUT' ? await adapter.meta(target, gitPath) : meta, isFolder ? {
 			'Content-Type': 'application/ld+json',
 		} : {});
 
