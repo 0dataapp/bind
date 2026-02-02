@@ -1,35 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import mime from 'mime';
-
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-import { fileTypeFromBuffer } from 'file-type';
 
 const prefix = 'storage';
 
 const mod = {
-
-	fakeJSON (e) {
-		if (!['{', '['].includes(e.trim()[0]))
-			return false;
-
-		try {
-			return JSON.parse(e);
-		} catch (e) {
-			return false
-		}
-	},
-
-	async guessMimeType (data) {
-		const mime = await fileTypeFromBuffer(data);
-		if (mime)
-			return mime.mime;
-		
-		return mod.fakeJSON(data.toString()) ? 'application/json' : 'text/plain';
-	},
 
 	_parseToken: e => (!e || !e.trim()) ? null : e.split('Bearer ').pop(),
 
@@ -114,11 +88,9 @@ const mod = {
 			await adapter.put(target, _folders, meta);
 		}
 
-		const data = isFolder ? null : fs.readFileSync(target);
-
-		const _meta = Object.assign(req.method === 'PUT' ? await adapter.meta(gitPath, isFolder, target) : meta, {
-			'Content-Type': isFolder ? 'application/ld+json' : await mod.guessMimeType(data),
-		});
+		const _meta = Object.assign(req.method === 'PUT' ? await adapter.meta(gitPath, isFolder, target) : meta, isFolder ?{
+			'Content-Type': 'application/ld+json',
+		} : {});
 
 		res.set(_meta).status(200);
 
@@ -136,7 +108,7 @@ const mod = {
 		return isFolder ? res.json({
 			'@context': 'http://remotestorage.io/spec/folder-description',
 			items: await adapter.folderItems(target, gitPath, _url),
-		}) : res.send(_meta['Content-Type'] === 'application/json' ? fs.readFileSync(target, 'utf8') : data);
+		}) : res.send(fs.readFileSync(target, _meta['Content-Type'] === 'application/json' ? 'utf8' : undefined));
 	},
 
 };

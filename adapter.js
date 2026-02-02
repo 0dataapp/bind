@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import mime from 'mime';
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -15,6 +14,9 @@ const git = simpleGit(_storage, {
 }).clean(CleanOptions.FORCE);
 
 // await git.pull('origin');
+
+import { fileTypeFromBuffer } from 'file-type';
+import mime from 'mime';
 
 const mod = {
 
@@ -56,10 +58,30 @@ const mod = {
 
 	dataPath: (handle, url) => path.join(_storage, url),
 	
+	fakeJSON (e) {
+		if (!['{', '['].includes(e.trim()[0]))
+			return false;
+
+		try {
+			return JSON.parse(e);
+		} catch (e) {
+			return false
+		}
+	},
+
+	async guessMimeType (data) {
+		const mime = await fileTypeFromBuffer(data);
+		if (mime)
+			return mime.mime;
+		
+		return mod.fakeJSON(data.toString()) ? 'application/json' : 'text/plain';
+	},
+
 	meta: async (gitPath, isFolder, target) => fs.existsSync(target) ? Object.assign({
 		ETag: (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
 	}, !isFolder ? {
 		'Content-Length': fs.statSync(target).size,
+		'Content-Type': await mod.guessMimeType(fs.readFileSync(target)),
 	} : {}) : {},
 
 	put (target, _folders, meta) {
