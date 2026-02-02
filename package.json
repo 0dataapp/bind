@@ -1,7 +1,7 @@
 {
   "name": "rs-git",
   "scripts": {
-    "start": "nodemon --watch main.js --watch start.js start.js",
+    "start": "nodemon --watch main.js --watch adapter.js --watch start.js start.js",
     "test": "vitest"
   },
   "devDependencies": {
