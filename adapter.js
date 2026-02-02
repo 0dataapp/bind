@@ -5,6 +5,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const _storage = path.join(__dirname, 'data');
+
 const mod = {
 
 	_resolvePath: (handle, url) => path.join(__dirname, '__storage', handle, url),
@@ -42,6 +44,8 @@ const mod = {
 
 	  return output;
 	},
+
+	dataPath: (handle, url) => path.join(_storage, url),
 
 };
 

@@ -86,7 +86,7 @@ const mod = {
 		if (req.method === 'PUT' && req.headers['content-range'])
 				return res.status(400).end();
 
-		const target = path.join(_storage, _url);
+		const target = adapter.dataPath(handle, _url);
 		
 		if (req.method === 'PUT' && fs.existsSync(target) && fs.statSync(target).isDirectory())
 			return res.status(409).end();
@@ -95,7 +95,7 @@ const mod = {
 			if (_url.split('/').reduce((coll, item) => {
 				return coll.concat(`${ coll.at(-1) || '' }/${ item }`);
 			}, []).filter(url => {
-				const _path = path.join(_storage, url);
+				const _path = adapter.dataPath(handle, url);
 				return fs.existsSync(_path) && fs.statSync(_path).isFile();
 			}).length)
 				return res.status(409).end();
