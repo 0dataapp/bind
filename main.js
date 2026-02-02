@@ -100,8 +100,13 @@ const mod = {
 		if (!permissions)
 			return res.status(401).end();
 
-		const target = path.join(_storage, _url);
-		
+		const scope = _url.match(/^\/[^\/]+\//).shift()
+		// if (!Object.keys(permissions).includes(`/${ scope }/`))
+		// 	return res.status(401).end();
+
+		if (['PUT', 'DELETE'].includes(req.method) && !permissions[scope].includes('w'))
+			return res.status(401).end();
+
 		res.set({
 			'Access-Control-Allow-Origin': req.headers['origin'] || '*',
 			'Access-Control-Expose-Headers': 'Content-Length, Content-Type, ETag',	
@@ -116,6 +121,8 @@ const mod = {
 		if (req.method === 'PUT' && req.headers['content-range'])
 				return res.status(400).end();
 
+		const target = path.join(_storage, _url);
+		
 		if (req.method === 'PUT' && fs.existsSync(target) && fs.statSync(target).isDirectory())
 			return res.status(409).end();
 
