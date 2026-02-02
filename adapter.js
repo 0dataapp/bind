@@ -78,7 +78,7 @@ const mod = {
 		return mod.fakeJSON(data.toString()) ? 'application/json' : 'text/plain';
 	},
 
-	meta: async (handle, _url) => {
+	async meta (handle, _url) {
 		const target = mod.dataPath(handle, _url);
 
 		if (!fs.existsSync(target))
