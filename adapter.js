@@ -34,7 +34,7 @@ const mod = {
     }
   },
 
-  permissions (handle, token) {
+  permission (handle, token) {
 	  const user = mod._readJson(mod._resolvePath(handle, 'auth.json'));
 	  if (!user)
 	  	return;
