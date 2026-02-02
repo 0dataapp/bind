@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 import { fileTypeFromBuffer } from 'file-type';
 
-const prefix = '/storage';
+const prefix = 'storage';
 const _storage = path.join(__dirname, 'data');
 
 const git = simpleGit(_storage, {
@@ -45,14 +45,14 @@ const mod = {
 	async handle (req, res, next) {
 		// await git.pull('origin');
 		const isFolder = req.url.endsWith('/');
-		const _url = req.url.split(new RegExp(`^\\${ prefix }`)).pop();
+		const _url = req.url.split(new RegExp(`^\\/${ prefix }`)).pop();
 		const target = path.join(_storage, _url);
 		
 		if (req.url.toLowerCase().match('/.well-known/webfinger'))
 			return res.json({
 				links: [{
 					rel: 'remotestorage',
-					href: req.protocol + '://' + req.get('host') + prefix,
+					href: `${ req.protocol }://${ req.get('host') }/${ prefix }`,
 					type: 'draft-dejong-remotestorage-02',
 				}],
 			});
