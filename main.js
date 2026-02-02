@@ -143,6 +143,7 @@ const mod = {
 			return res.end();
 
 		if (req.method === 'DELETE') {
+			await adapter.deleteChild(target);
 			fs.unlinkSync(target);
 
 			await git.add('./*')
