@@ -102,10 +102,11 @@ const mod = {
 
 		const isFolder = req.url.endsWith('/');
 		const gitPath = `.${ _url }`;
+		const meta = await adapter.meta(git, gitPath, isFolder, target);
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
 			!fs.existsSync(target) && req.headers['if-match']
-			|| fs.existsSync(target) && req.headers['if-match'] && req.headers['if-match'] !== await mod.etag(gitPath, isFolder)
+			|| fs.existsSync(target) && req.headers['if-match'] && req.headers['if-match'] !== meta.ETag
 			|| fs.existsSync(target) && req.headers['if-none-match']
 			))
 			return res.status(412).end();
@@ -114,7 +115,7 @@ const mod = {
 			return res.status(404).send('Not found');
 
 		if (req.method === 'GET' && fs.existsSync(target) && req.headers['if-none-match'])
-			if (req.headers['if-none-match'].split(',').map(e => e.trim()).includes(await mod.etag(gitPath, isFolder)))
+			if (req.headers['if-none-match'].split(',').map(e => e.trim()).includes(meta.ETag))
 				return res.status(304).end();
 
 		if (req.method === 'PUT') {
@@ -127,18 +128,16 @@ const mod = {
 				// .push('origin');
 		}
 
-		const etag = await mod.etag(gitPath, isFolder);
 		const data = isFolder ? null : fs.readFileSync(target);
 
-		const meta = {
+		const _meta = Object.assign(req.method === 'PUT' ? await adapter.meta(git, gitPath, isFolder, target) : meta, {
 			'Content-Type': isFolder ? 'application/ld+json' : await mod.guessMimeType(data),
-			ETag: etag,
-		};
+		});
 
 		if (!isFolder)
-			meta['Content-Length'] = fs.statSync(target).size;
+			_meta['Content-Length'] = fs.statSync(target).size;
 
-		res.set(meta).status(200);
+		res.set(_meta).status(200);
 
 		if (req.method === 'HEAD')
 			return res.end();
@@ -154,7 +153,7 @@ const mod = {
 		}
 
 		if (!isFolder)
-			return res.send(meta['Content-Type'] === 'application/json' ? fs.readFileSync(target, 'utf8') : data);
+			return res.send(_meta['Content-Type'] === 'application/json' ? fs.readFileSync(target, 'utf8') : data);
 
 		const tree = (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', gitPath)).trim();
 		return res.json({
