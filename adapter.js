@@ -37,15 +37,15 @@ const mod = {
   permissions (handle, token) {
 	  const user = mod._readJson(mod._resolvePath(handle, 'auth.json'));
 	  if (!user)
-	  	return {};
+	  	return;
 
 	  const data = user.sessions;
 	  if (!data || !data[token])
-	  	return {};
+	  	return;
 
 	  const permissions = data[token].permissions;
 	  if (!permissions)
-	  	return {};
+	  	return;
 	  
 	  const output = {};
 
