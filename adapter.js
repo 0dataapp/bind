@@ -8,6 +8,14 @@ const __dirname = path.dirname(__filename);
 
 const _storage = path.join(__dirname, 'data');
 
+import { simpleGit, CleanOptions } from 'simple-git';
+const git = simpleGit(_storage, {
+	maxConcurrentProcesses: 10,
+	trimmed: true,
+}).clean(CleanOptions.FORCE);
+
+// await git.pull('origin');
+
 const mod = {
 
 	_resolvePath: (handle, url) => path.join(__dirname, '__storage', handle, url),
@@ -48,23 +56,23 @@ const mod = {
 
 	dataPath: (handle, url) => path.join(_storage, url),
 	
-	meta: async (git, gitPath, isFolder, target) => fs.existsSync(target) ? {
+	meta: async (gitPath, isFolder, target) => fs.existsSync(target) ? {
 		ETag: (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
 	} : {},
 
-	put (target, _folders, meta, git) {
+	put (target, _folders, meta) {
 		return git.add('./*')
 			.commit('sync')
 			// .push('origin');
 	},
 
-	delete (target, _folders, git) {
+	delete (target, _folders) {
 		return git.add('./*')
 			.commit('sync')
 			// .push('origin');
 	},
 
-	async folderItems (target, git, gitPath, _url) {
+	async folderItems (target, gitPath, _url) {
 		const tree = (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', gitPath)).trim();
 
 		return !tree.length ? {} : tree.split('\n').map(e => {

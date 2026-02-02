@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import mime from 'mime';
-import { simpleGit, CleanOptions } from 'simple-git';
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -10,15 +9,9 @@ const __dirname = path.dirname(__filename);
 import { fileTypeFromBuffer } from 'file-type';
 
 const prefix = 'storage';
-const _storage = path.join(__dirname, 'data');
-
-const git = simpleGit(_storage, {
-	maxConcurrentProcesses: 10,
-	trimmed: true,
-}).clean(CleanOptions.FORCE);
 
 const mod = {
-	
+
 	fakeJSON (e) {
 		if (!['{', '['].includes(e.trim()[0]))
 			return false;
@@ -51,7 +44,6 @@ const mod = {
 				}],
 			});
 
-		// await git.pull('origin');
 		const [handle, _url] = req.url.match(new RegExp(`^\\/(\\w+)\\/${ prefix }(.*)`)).slice(1);
 		const token = mod._parseToken(req.headers.authorization);
 
@@ -98,7 +90,7 @@ const mod = {
 
 		const isFolder = req.url.endsWith('/');
 		const gitPath = `.${ _url }`;
-		const meta = await adapter.meta(git, gitPath, isFolder, target);
+		const meta = await adapter.meta(gitPath, isFolder, target);
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
 			!fs.existsSync(target) && req.headers['if-match']
@@ -119,12 +111,12 @@ const mod = {
 
 			fs.writeFileSync(target, req.headers['content-type'] === 'application/json' ? JSON.stringify(req.body) : req.body);
 			
-			await adapter.put(target, _folders, meta, git);
+			await adapter.put(target, _folders, meta);
 		}
 
 		const data = isFolder ? null : fs.readFileSync(target);
 
-		const _meta = Object.assign(req.method === 'PUT' ? await adapter.meta(git, gitPath, isFolder, target) : meta, {
+		const _meta = Object.assign(req.method === 'PUT' ? await adapter.meta(gitPath, isFolder, target) : meta, {
 			'Content-Type': isFolder ? 'application/ld+json' : await mod.guessMimeType(data),
 		});
 
@@ -139,14 +131,14 @@ const mod = {
 		if (req.method === 'DELETE') {
 			fs.unlinkSync(target);
 			
-			await adapter.delete(target, _folders, git);
+			await adapter.delete(target, _folders);
 
 			return res.end();
 		}
 
 		return isFolder ? res.json({
 			'@context': 'http://remotestorage.io/spec/folder-description',
-			items: await adapter.folderItems(target, git, gitPath, _url),
+			items: await adapter.folderItems(target, gitPath, _url),
 		}) : res.send(_meta['Content-Type'] === 'application/json' ? fs.readFileSync(target, 'utf8') : data);
 	},
 
