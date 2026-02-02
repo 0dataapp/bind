@@ -57,9 +57,9 @@ const mod = {
 	},
 
 	dataPath: (handle, url) => path.join(_storage, url),
-	gitPath: _url => `.${ _url }`,
+	_gitPath: _url => `.${ _url }`,
 	
-	fakeJSON (e) {
+	_fakeJSON (e) {
 		if (!['{', '['].includes(e.trim()[0]))
 			return false;
 
@@ -70,12 +70,12 @@ const mod = {
 		}
 	},
 
-	async guessMimeType (data) {
+	async _guessMimeType (data) {
 		const mime = await fileTypeFromBuffer(data);
 		if (mime)
 			return mime.mime;
 		
-		return mod.fakeJSON(data.toString()) ? 'application/json' : 'text/plain';
+		return mod._fakeJSON(data.toString()) ? 'application/json' : 'text/plain';
 	},
 
 	async meta (handle, _url) {
@@ -87,7 +87,7 @@ const mod = {
 		const isFolder = fs.statSync(target).isDirectory();
 
 		const meta = {
-			ETag: await mod.etag(_url, isFolder),
+			ETag: await mod._etag(_url, isFolder),
 		};
 
 		if (isFolder)
@@ -95,11 +95,11 @@ const mod = {
 
 		return Object.assign(meta, {
 			'Content-Length': fs.statSync(target).size,
-			'Content-Type': await mod.guessMimeType(fs.readFileSync(target)),
+			'Content-Type': await mod._guessMimeType(fs.readFileSync(target)),
 		});
 	},
 
-	etag: async (_url, isFolder) => (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.gitPath(_url)))).trim().split('\n').shift(),
+	_etag: async (_url, isFolder) => (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod._gitPath(_url)))).trim().split('\n').shift(),
 
 	async put (handle, _url, data, _folders, meta) {
 		const target = mod.dataPath(handle, _url);
@@ -112,7 +112,7 @@ const mod = {
 			.commit('sync')
 			// .push('origin');
 
-		meta.ETag = (await mod.etag(_url, false));
+		meta.ETag = await mod._etag(_url, false);
 	},
 
 	delete (target, _folders) {
@@ -124,7 +124,7 @@ const mod = {
 	async folderItems (handle, _url) {
 		const target = mod.dataPath(handle, _url);
 
-		const tree = (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod.gitPath(_url))).trim();
+		const tree = (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod._gitPath(_url))).trim();
 
 		return !tree.length ? {} : tree.split('\n').map(e => {
 			const [type, hash, size, path] = e.split(/\s+/);
