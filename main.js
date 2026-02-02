@@ -80,17 +80,16 @@ const mod = {
 				return res.status(304).end();
 
 		if (req.method === 'PUT')
-			await adapter.put(target, req.body, _folders, Object.assign(meta, {
+			await adapter.put(handle, _url, req.body, _folders, Object.assign(meta, {
 				'Content-Type': req.headers['content-type'],
 			}));
 
 		const isFolderRequest = req.url.endsWith('/');
-		const _meta = req.method === 'PUT' ? await adapter.meta(handle, _url) : meta;
 
 		if (isFolderRequest)
-			_meta['Content-Type'] = 'application/ld+json';
+			meta['Content-Type'] = 'application/ld+json';
 		
-		res.set(_meta).status(200);
+		res.set(meta).status(200);
 
 		if (req.method === 'HEAD')
 			return res.end();
@@ -107,7 +106,7 @@ const mod = {
 		return isFolderRequest ? res.json({
 			'@context': 'http://remotestorage.io/spec/folder-description',
 			items: await adapter.folderItems(target, gitPath, _url),
-		}) : res.send(fs.readFileSync(target, _meta['Content-Type'] === 'application/json' ? 'utf8' : undefined));
+		}) : res.send(fs.readFileSync(target, meta['Content-Type'] === 'application/json' ? 'utf8' : undefined));
 	},
 
 };
