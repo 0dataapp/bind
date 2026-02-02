@@ -51,7 +51,7 @@ const mod = {
 			});
 
 		// await git.pull('origin');
-		const _url = req.url.split(new RegExp(`^\\/${ prefix }`)).pop();
+		const _url = req.url.match(new RegExp(`^\\/${ prefix }(.*)`)).pop();
 		const target = path.join(_storage, _url);
 		
 		if (!req.headers.authorization)
