@@ -145,6 +145,8 @@ const mod = {
 		if (req.method === 'DELETE') {
 			await adapter.deleteChild(target);
 			fs.unlinkSync(target);
+			
+			await adapter.deleteParents(_folders);
 
 			await git.add('./*')
 				.commit('sync')

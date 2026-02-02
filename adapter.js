@@ -53,7 +53,9 @@ const mod = {
 
 	putParents: () => {},
 	putChild: () => {},
+
 	deleteChild: () => {},
+	deleteParents: () => {},
 
 };
 
