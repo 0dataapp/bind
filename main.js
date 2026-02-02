@@ -41,11 +41,6 @@ const mod = {
 	},
 
 	async handle (req, res, next) {
-		// await git.pull('origin');
-		const isFolder = req.url.endsWith('/');
-		const _url = req.url.split(new RegExp(`^\\/${ prefix }`)).pop();
-		const target = path.join(_storage, _url);
-		
 		if (req.url.toLowerCase().match('/.well-known/webfinger'))
 			return res.json({
 				links: [{
@@ -55,6 +50,11 @@ const mod = {
 				}],
 			});
 
+		// await git.pull('origin');
+		const isFolder = req.url.endsWith('/');
+		const _url = req.url.split(new RegExp(`^\\/${ prefix }`)).pop();
+		const target = path.join(_storage, _url);
+		
 		if (!req.headers.authorization)
 			return res.status(401).end();
 
