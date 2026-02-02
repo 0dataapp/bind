@@ -19,8 +19,6 @@ const git = simpleGit(_storage, {
 
 const mod = {
 
-	_relativePath: (url, prefix) => url.split(prefix).slice(1).join(prefix),
-
 	etag: async (gitPath, isFolder) => (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
 
 	fakeJSON (e) {
@@ -152,10 +150,9 @@ const mod = {
 					size: size === '-' ? null : parseInt(size),
 				};
 			}).reduce((coll, item) => {
-				const _path = path.join(_url, item.name);
-				coll[mod._relativePath(item.name, _url.slice(1))] = Object.assign(item.type === 'tree' ? {} : {
+				coll[item.name.match(new RegExp(`^${ _url.slice(1) }(.*)`)).pop()] = Object.assign(item.type === 'tree' ? {} : {
 					'Content-Length': item.size,
-					'Content-Type': mime.getType(_path) || 'application/json',
+					'Content-Type': mime.getType(path.join(_url, item.name)) || 'application/json',
 				}, {
 					ETag: item.hash,
 				});
