@@ -5,8 +5,7 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "express": "^5.2.1",
-    "vitest": "^4.0.18"
+    "express": "^5.2.1"
   },
   "dependencies": {
     "file-type": "^21.3.0",
