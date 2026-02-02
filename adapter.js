@@ -101,7 +101,11 @@ const mod = {
 
 	etag: async (_url, isFolder) => (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.gitPath(_url)))).trim().split('\n').shift(),
 
-	put (target, _folders, meta) {
+	put (target, data, _folders, meta) {
+		fs.mkdirSync(path.dirname(target), { recursive: true });
+
+		fs.writeFileSync(target, meta['Content-Type'] === 'application/json' ? JSON.stringify(data) : data);
+		
 		return git.add('./*')
 			.commit('sync')
 			// .push('origin');

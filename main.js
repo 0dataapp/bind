@@ -79,13 +79,10 @@ const mod = {
 			if (req.headers['if-none-match'].split(',').map(e => e.trim()).includes(meta.ETag))
 				return res.status(304).end();
 
-		if (req.method === 'PUT') {
-			fs.mkdirSync(path.dirname(target), { recursive: true });
-
-			fs.writeFileSync(target, req.headers['content-type'] === 'application/json' ? JSON.stringify(req.body) : req.body);
-			
-			await adapter.put(target, _folders, meta);
-		}
+		if (req.method === 'PUT')
+			await adapter.put(target, req.body, _folders, Object.assign(meta, {
+				'Content-Type': req.headers['content-type'],
+			}));
 
 		const isFolderRequest = req.url.endsWith('/');
 		const _meta = req.method === 'PUT' ? await adapter.meta(handle, _url) : meta;
