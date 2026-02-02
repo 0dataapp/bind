@@ -121,6 +121,7 @@ const mod = {
 			await adapter.putParents(_folders);
 
 			fs.writeFileSync(target, req.headers['content-type'] === 'application/json' ? JSON.stringify(req.body) : req.body);
+			await adapter.putChild(target, meta);
 
 			await git.add('./*')
 				.commit('sync')
