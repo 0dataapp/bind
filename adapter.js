@@ -56,9 +56,11 @@ const mod = {
 
 	dataPath: (handle, url) => path.join(_storage, url),
 	
-	meta: async (gitPath, isFolder, target) => fs.existsSync(target) ? {
+	meta: async (gitPath, isFolder, target) => fs.existsSync(target) ? Object.assign({
 		ETag: (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
-	} : {},
+	}, !isFolder ? {
+		'Content-Length': fs.statSync(target).size,
+	} : {}) : {},
 
 	put (target, _folders, meta) {
 		return git.add('./*')

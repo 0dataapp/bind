@@ -120,9 +120,6 @@ const mod = {
 			'Content-Type': isFolder ? 'application/ld+json' : await mod.guessMimeType(data),
 		});
 
-		if (!isFolder)
-			_meta['Content-Length'] = fs.statSync(target).size;
-
 		res.set(_meta).status(200);
 
 		if (req.method === 'HEAD')
