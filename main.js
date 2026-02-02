@@ -51,7 +51,6 @@ const mod = {
 			});
 
 		// await git.pull('origin');
-		const isFolder = req.url.endsWith('/');
 		const _url = req.url.split(new RegExp(`^\\/${ prefix }`)).pop();
 		const target = path.join(_storage, _url);
 		
@@ -84,6 +83,7 @@ const mod = {
 			}).length)
 				return res.status(409).end();
 
+		const isFolder = req.url.endsWith('/');
 		const gitPath = `.${ _url }`;
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
