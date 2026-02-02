@@ -58,8 +58,11 @@ const mod = {
 			// .push('origin');
 	},
 
-	deleteChild () {},
-	deleteParents () {},
+	delete (target, _folders, git) {
+		return git.add('./*')
+			.commit('sync')
+			// .push('origin');
+	},
 
 	async folderItems (target, git, gitPath, _url) {
 		const tree = (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', gitPath)).trim();
