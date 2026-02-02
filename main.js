@@ -79,6 +79,7 @@ const mod = {
 	},
 
 	async handle (req, res, next) {
+		// console.info(req.method, req.url);
 		if (req.url.toLowerCase().match('/.well-known/webfinger'))
 			return res.json({
 				links: [{
@@ -191,9 +192,10 @@ const mod = {
 		if (!isFolder)
 			return res.send(meta['Content-Type'] === 'application/json' ? fs.readFileSync(target, 'utf8') : data);
 
+		const tree = (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', gitPath)).trim();
 		return res.json({
 			'@context': 'http://remotestorage.io/spec/folder-description',
-			items: (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', gitPath)).trim().split('\n').map(e => {
+			items: !tree.length ? {} : tree.split('\n').map(e => {
 				const [type, hash, size, path] = e.split(/\s+/);
 				return {
 					name: type === 'tree' ? `${ path }/` : path,
