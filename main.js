@@ -45,13 +45,13 @@ const mod = {
 			return res.json({
 				links: [{
 					rel: 'remotestorage',
-					href: `${ req.protocol }://${ req.get('host') }/${ prefix }`,
+					href: `${ req.protocol }://${ req.get('host') }/me/${ prefix }`,
 					type: 'draft-dejong-remotestorage-02',
 				}],
 			});
 
 		// await git.pull('origin');
-		const _url = req.url.match(new RegExp(`^\\/${ prefix }(.*)`)).pop();
+		const [handle, _url] = req.url.match(new RegExp(`^\\/(\\w+)\\/${ prefix }(.*)`)).slice(1);
 		const target = path.join(_storage, _url);
 		
 		if (!req.headers.authorization)
