@@ -121,8 +121,10 @@ const mod = {
 			// .push('origin');
 	},
 
-	async folderItems (target, gitPath, _url) {
-		const tree = (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', gitPath)).trim();
+	async folderItems (handle, _url) {
+		const target = mod.dataPath(handle, _url);
+
+		const tree = (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod.gitPath(_url))).trim();
 
 		return !tree.length ? {} : tree.split('\n').map(e => {
 			const [type, hash, size, path] = e.split(/\s+/);

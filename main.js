@@ -102,10 +102,9 @@ const mod = {
 			return res.end();
 		}
 
-		const gitPath = `.${ _url }`;
 		return isFolderRequest ? res.json({
 			'@context': 'http://remotestorage.io/spec/folder-description',
-			items: await adapter.folderItems(target, gitPath, _url),
+			items: await adapter.folderItems(handle, _url),
 		}) : res.send(fs.readFileSync(target, meta['Content-Type'] === 'application/json' ? 'utf8' : undefined));
 	},
 
