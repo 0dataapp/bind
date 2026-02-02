@@ -63,8 +63,7 @@ const mod = {
 			if (_folders.filter(e => fs.existsSync(e) && fs.statSync(e).isFile()).length)
 				return res.status(409).end();
 
-		const gitPath = `.${ _url }`;
-		const meta = await adapter.meta(target, gitPath);
+		const meta = await adapter.meta(handle, _url);
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
 			!fs.existsSync(target) && req.headers['if-match']
@@ -89,7 +88,7 @@ const mod = {
 		}
 
 		const isFolder = req.url.endsWith('/');
-		const _meta = Object.assign(req.method === 'PUT' ? await adapter.meta(target, gitPath) : meta, isFolder ? {
+		const _meta = Object.assign(req.method === 'PUT' ? await adapter.meta(handle, _url) : meta, isFolder ? {
 			'Content-Type': 'application/ld+json',
 		} : {});
 
@@ -106,6 +105,7 @@ const mod = {
 			return res.end();
 		}
 
+		const gitPath = `.${ _url }`;
 		return isFolder ? res.json({
 			'@context': 'http://remotestorage.io/spec/folder-description',
 			items: await adapter.folderItems(target, gitPath, _url),

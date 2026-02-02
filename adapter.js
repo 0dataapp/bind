@@ -57,6 +57,7 @@ const mod = {
 	},
 
 	dataPath: (handle, url) => path.join(_storage, url),
+	gitPath: _url => `.${ _url }`,
 	
 	fakeJSON (e) {
 		if (!['{', '['].includes(e.trim()[0]))
@@ -77,14 +78,16 @@ const mod = {
 		return mod.fakeJSON(data.toString()) ? 'application/json' : 'text/plain';
 	},
 
-	meta: async (target, gitPath) => {
+	meta: async (handle, _url) => {
+		const target = mod.dataPath(handle, _url);
+
 		if (!fs.existsSync(target))
 			return {};
 
 		const isFolder = fs.statSync(target).isDirectory();
-		
+
 		const meta = {
-			ETag: (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
+			ETag: (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.gitPath(_url)))).trim().split('\n').shift(),
 		};
 
 		if (isFolder)
