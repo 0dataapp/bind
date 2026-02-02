@@ -40,6 +40,8 @@ const mod = {
 		return mod.fakeJSON(data.toString()) ? 'application/json' : 'text/plain';
 	},
 
+	_parseToken: e => (!e || !e.trim()) ? null : e.split('Bearer ').pop(),
+
 	async handle (req, res, next) {
 		if (req.url.toLowerCase().match('/.well-known/webfinger'))
 			return res.json({
@@ -52,11 +54,13 @@ const mod = {
 
 		// await git.pull('origin');
 		const [handle, _url] = req.url.match(new RegExp(`^\\/(\\w+)\\/${ prefix }(.*)`)).slice(1);
-		const target = path.join(_storage, _url);
-		
-		if (!req.headers.authorization)
+		const token = mod._parseToken(req.headers.authorization);
+
+		if (!token)
 			return res.status(401).end();
 
+		const target = path.join(_storage, _url);
+		
 		res.set({
 			'Access-Control-Allow-Origin': req.headers['origin'] || '*',
 			'Access-Control-Expose-Headers': 'Content-Length, Content-Type, ETag',	
