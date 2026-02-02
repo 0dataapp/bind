@@ -42,6 +42,42 @@ const mod = {
 
 	_parseToken: e => (!e || !e.trim()) ? null : e.split('Bearer ').pop(),
 
+	_resolvePath: (handle, url) => path.join(__dirname, '__storage', handle, url),
+
+	_readJson (path) {
+    try {
+      const content = fs.readFileSync(path);
+      return content ? JSON.parse(content) : null;
+    } catch (e) {
+      if (e.code !== 'ENOENT')
+      	console.error('reading JSON failed:', e);
+
+      return null;
+    }
+  },
+
+  _access (handle, token) {
+	  const user = mod._readJson(mod._resolvePath(handle, 'auth.json'));
+	  if (!user)
+	  	return {};
+
+	  const data = user.sessions;
+	  if (!data || !data[token])
+	  	return {};
+
+	  const permissions = data[token].permissions;
+	  if (!permissions)
+	  	return {};
+	  
+	  const output = {};
+
+	  for (const category in permissions) {
+	    output[category] = Object.keys(permissions[category]).sort();
+	  }
+
+	  return output;
+	},
+
 	async handle (req, res, next) {
 		if (req.url.toLowerCase().match('/.well-known/webfinger'))
 			return res.json({
@@ -57,6 +93,11 @@ const mod = {
 		const token = mod._parseToken(req.headers.authorization);
 
 		if (!token)
+			return res.status(401).end();
+
+		const permissions = mod._access(handle, token);
+
+		if (!permissions)
 			return res.status(401).end();
 
 		const target = path.join(_storage, _url);
