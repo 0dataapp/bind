@@ -51,6 +51,8 @@ const mod = {
 		ETag: (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', gitPath))).trim().split('\n').shift(),
 	} : {},
 
+	putParents: () => {},
+
 };
 
 export default mod;

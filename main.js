@@ -91,13 +91,11 @@ const mod = {
 		if (req.method === 'PUT' && fs.existsSync(target) && fs.statSync(target).isDirectory())
 			return res.status(409).end();
 
+		const _folders = _url.split('/').slice(0, -1).reduce((coll, item) => {
+			return coll.concat(`${ coll.at(-1) || '' }/${ item }`);
+		}, []).map(e => adapter.dataPath(handle, e));
 		if (req.method === 'PUT' && !fs.existsSync(target))
-			if (_url.split('/').reduce((coll, item) => {
-				return coll.concat(`${ coll.at(-1) || '' }/${ item }`);
-			}, []).filter(url => {
-				const _path = adapter.dataPath(handle, url);
-				return fs.existsSync(_path) && fs.statSync(_path).isFile();
-			}).length)
+			if (_folders.filter(e => fs.existsSync(e) && fs.statSync(e).isFile()).length)
 				return res.status(409).end();
 
 		const isFolder = req.url.endsWith('/');
@@ -119,8 +117,9 @@ const mod = {
 				return res.status(304).end();
 
 		if (req.method === 'PUT') {
-			const folder = path.dirname(target);
-			fs.mkdirSync(folder, { recursive: true });
+			fs.mkdirSync(path.dirname(target), { recursive: true });
+			await adapter.putParents(_folders);
+
 			fs.writeFileSync(target, req.headers['content-type'] === 'application/json' ? JSON.stringify(req.body) : req.body);
 
 			await git.add('./*')
