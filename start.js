@@ -1,5 +1,5 @@
 import express from 'express';
-import main from './main.js';
+import main from './rs-bind/main.js';
 import adapter from './adapter.js';
 
 const port = process.env.PORT || 3000;
