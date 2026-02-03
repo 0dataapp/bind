@@ -101,7 +101,7 @@ const mod = {
 
 	_etag: async (_url, isFolder) => (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod._gitPath(_url)))).trim().split('\n').shift(),
 
-	async put (handle, _url, data, _folders, meta) {
+	async put (handle, _url, data, ancestors, meta) {
 		const target = mod.dataPath(handle, _url);
 
 		fs.mkdirSync(path.dirname(target), { recursive: true });
@@ -115,7 +115,7 @@ const mod = {
 		meta.ETag = await mod._etag(_url, false);
 	},
 
-	delete (target, _folders) {
+	delete (target, ancestors) {
 		fs.unlinkSync(target);
 		return git.add('./*')
 			.commit('sync')
