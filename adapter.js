@@ -116,6 +116,7 @@ const mod = {
 	},
 
 	delete (target, _folders) {
+		fs.unlinkSync(target);
 		return git.add('./*')
 			.commit('sync')
 			// .push('origin');
