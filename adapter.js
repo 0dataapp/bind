@@ -93,9 +93,11 @@ const mod = {
 		if (isFolder)
 			return meta;
 
+		const stat = fs.statSync(target);
 		return Object.assign(meta, {
-			'Content-Length': fs.statSync(target).size,
+			'Content-Length': stat.size,
 			'Content-Type': await mod._guessMimeType(fs.readFileSync(target)),
+			'Last-Modified': stat.mtime.toUTCString(),
 		});
 	},
 
@@ -136,9 +138,11 @@ const mod = {
 				size: size === '-' ? null : parseInt(size),
 			};
 		}).reduce((coll, item) => {
+			const _path = path.join(_url, item.name);
 			coll[item.name.match(new RegExp(`^${ _url.slice(1) }(.*)`)).pop()] = Object.assign(item.type === 'tree' ? {} : {
 				'Content-Length': item.size,
-				'Content-Type': mime.getType(path.join(_url, item.name)) || 'application/json',
+				'Content-Type': mime.getType(_path) || 'application/json',
+				'Last-Modified': fs.statSync(mod.dataPath(handle, _url)).mtime.toUTCString(),
 			}, {
 				ETag: item.hash,
 			});
