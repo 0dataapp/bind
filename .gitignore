@@ -13,3 +13,13 @@ package-lock.json
 !.env-sample
 data
 rs-bind/
+
+# SVELTE
+.npmrc
+.svelte-kit
+build
+
+# PROTECTED
+# ignore root pages in (protected) which are not authwalled
+./src/routes/(protected)/+page.*
+./src/routes/(protected)/+server.*

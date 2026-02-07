@@ -1,0 +1,24 @@
+import { test, expect } from '@playwright/test';
+import { load } from './+layout.js';
+
+test.describe('home', () => {
+
+  test.beforeEach(({ page }) => page.goto('/'));
+
+  test.describe('title', () => {
+
+    test('head', async ({ page }) => expect(await page.title()).toEqual(load().title));
+
+    test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(load().title));
+    
+  });
+
+  test.describe('login', () => {
+
+    test('links to page', ({ page }) => expect(page.locator('a.login')).toHaveAttribute('href', '/login'));
+
+    test('text', ({ page }) => expect(page.locator('a.login')).toHaveText('Sign in'));
+    
+  });
+
+});
