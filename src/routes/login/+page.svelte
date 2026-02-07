@@ -1,4 +1,4 @@
-<form method="POST" action="?/login">
+<form method="POST">
 	<label for="handle">handle</label>
 	<input
 	  id="handle"

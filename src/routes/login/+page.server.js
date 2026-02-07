@@ -5,7 +5,7 @@ import { fail, redirect } from '@sveltejs/kit';
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
 	
-	login: async ({ cookies, request, url }) => {
+	default: async ({ cookies, request, url }) => {
 		const data = await request.formData();
 		const handle = data.get('handle');
 		const password = data.get('password');
