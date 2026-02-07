@@ -17,8 +17,9 @@ export const actions = {
 
 		cookies.set('sessionid', await db.createSession(user), { path: '/' });
 
-			// redirect(303, url.searchParams.get('redirectTo'));
-		return redirect(303, '/dash');
+		const { target } = Object.fromEntries(new URLSearchParams(url.search));
+
+		return redirect(303, target ? decodeURIComponent(target) : '/dash');
 	},
 
 };
