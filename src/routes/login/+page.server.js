@@ -1,6 +1,6 @@
 import { db } from '$lib/db.svelte';
 
-import { fail, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
