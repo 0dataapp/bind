@@ -2,7 +2,7 @@ import { CHEAP_LOGINS } from '$env/static/private';
 
 const sessions = {};
 
-export let db = $state({
+export const db = $state({
 
 	getUser: handle => CHEAP_LOGINS.split(',').map(e => {
 		const [handle, hash] = e.split(':');
@@ -14,10 +14,11 @@ export let db = $state({
 	createSession: user => {
 		const session = `${ new Date().toJSON() }-${ Math.random().toString() }`;
 
-		sessions[session] = user.handle
+		sessions[session] = user.handle;
 
 		return session;
 	},
 
 	getSession: session => sessions[session],
+	
 });
