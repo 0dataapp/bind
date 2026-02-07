@@ -1,4 +1,5 @@
 import { RS_SERVER_URI, RS_TOKEN } from '$env/static/private';
+import { building } from '$app/environment';
 
 const scopes = {};
 
@@ -30,15 +31,26 @@ const mod = {
 	}),
 
 	getTokens: async () => {
+		if (!RS_SERVER_URI)
+			throw new Error('RS_SERVER_URI not set');
+
+		if (!RS_TOKEN)
+			throw new Error('RS_TOKEN not set');
+
 		const res = await mod.fetch();
-		Object.assign(scopes, await res.json());
+
+		if ([200, 404].includes(res.status))
+			return Object.assign(scopes, res.status === 200 ? await res.json() : {});
+
+		throw new Error(`RS_SERVER_URI response status: ${ res.status }`);
 	},
 
 	putTokens: data => mod.fetch('PUT', JSON.stringify(data)),
 
 };
 
-(async () => mod.getTokens())();
+if (!building)
+	(async () => mod.getTokens())();
 
 export const tokens = $state({
 

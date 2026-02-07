@@ -47,7 +47,7 @@ export const actions = {
 		const token = await tokens.createToken(userName, scopes);
 
 		const state = url.searchParams.get('state');
-		return redirect(301, `${ true ? '/' : url.searchParams.get('redirect_uri') }#access_token=${ token }${ state ? `&state=${ state }` : ''}`);
+		return redirect(301, `${ url.searchParams.get('redirect_uri') }#access_token=${ token }${ state ? `&state=${ state }` : ''}`);
 	},
 
 };
