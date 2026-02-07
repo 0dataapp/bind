@@ -3,9 +3,8 @@ import { db } from '$lib/db.svelte';
 import { redirect } from '@sveltejs/kit';
 
 /** @type {import('./$types').LayoutServerLoad} */
-export async function load({ cookies }) {
-	const user = await db.getUser(db.getSession(cookies.get('sessionid')));
-	return !user ? redirect(307, '/login') : {
-		user,
+export async function load({ locals, url }) {
+	return !locals.user ? redirect(307, `/login?target=${ encodeURIComponent(`${ url.pathname }${ url.search }`) }`) : {
+		user: locals.user,
 	};
 }
