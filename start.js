@@ -18,7 +18,6 @@ express()
     limit: '1mb',
     type: '*/*',
   }), bind.storage({
-    prefix,
     getScope: tokens.getScope,
     storage,
   }))
