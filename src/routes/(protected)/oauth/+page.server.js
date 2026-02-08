@@ -42,9 +42,10 @@ export const actions = {
 	default: async ({ request, url, locals }) => {
 		const formData = await request.formData();
 
-		const userName = locals.user.handle;
-		const scopes = url.searchParams.get('scope');
-		const token = await tokens.createToken(userName, scopes);
+		const token = await tokens.createToken(locals.user.handle, {
+			scope: url.searchParams.get('scope'),
+			client_id: url.searchParams.get('client_id'),
+		});
 
 		const state = url.searchParams.get('state');
 		return redirect(301, `${ url.searchParams.get('redirect_uri') }#access_token=${ token }${ state ? `&state=${ state }` : ''}`);
