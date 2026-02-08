@@ -52,7 +52,7 @@ const mod = {
 if (!building)
 	(async () => mod.getTokens())();
 
-export const tokens = $state({
+export const tokens = {
 
 	createToken: async (handle, _scopes) => {
 		const scopePaths = mod.makeScopePaths(_scopes.split(' '));
@@ -71,4 +71,4 @@ export const tokens = $state({
 
 	getScopes: token => scopes[token],
 
-});
+};
