@@ -7,14 +7,18 @@ import { tokens } from './src/lib/oauth/main.node.js';
 
 import { handler } from './build/handler.js';
 
+const prefix = 'storage';
 const port = 3000;
 express()
-  // .use(express.json())
-  // .use(express.raw({
-  //   limit: '1mb',
-  //   type: '*/*',
-  // }))
-  .use(bind.handler({
+  .use(bind.options())
+  .use(bind.webfinger({
+    prefix,
+  }))
+  .use(`/${ prefix }`, express.json(), express.raw({
+    limit: '1mb',
+    type: '*/*',
+  }), bind.storage({
+    prefix,
     getScope: tokens.getScope,
     storage,
   }))
