@@ -8,12 +8,6 @@ const __dirname = path.dirname(__filename);
 const _storage = path.join(__dirname, '__storage');
 
 import { simpleGit, CleanOptions } from 'simple-git';
-const git = simpleGit(_storage, {
-	maxConcurrentProcesses: 10,
-	trimmed: true,
-}).clean(CleanOptions.FORCE);
-
-// await git.pull('origin');
 
 import { fileTypeFromBuffer } from 'file-type';
 import mime from 'mime';
@@ -79,7 +73,7 @@ const mod = {
 		});
 	},
 
-	_etag: async (_url, isFolder) => (await git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod._gitPath(_url)))).trim().split('\n').shift(),
+	_etag: async (_url, isFolder) => (await mod.git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod._gitPath(_url)))).trim().split('\n').shift(),
 
 	async put (handle, _url, data, ancestors, meta) {
 		const target = mod.dataPath(handle, _url);
@@ -88,7 +82,7 @@ const mod = {
 
 		fs.writeFileSync(target, meta['Content-Type'] === 'application/json' ? JSON.stringify(data) : data);
 		
-		await git.add('./*')
+		await mod.git.add('./*')
 			.commit('sync')
 			// .push('origin');
 
@@ -97,7 +91,7 @@ const mod = {
 
 	delete (target, ancestors) {
 		fs.unlinkSync(target);
-		return git.add('./*')
+		return mod.git.add('./*')
 			.commit('sync')
 			// .push('origin');
 	},
@@ -105,7 +99,7 @@ const mod = {
 	async folderItems (handle, _url) {
 		const target = mod.dataPath(handle, _url);
 
-		const tree = (await git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod._gitPath(_url))).trim();
+		const tree = (await mod.git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod._gitPath(_url))).trim();
 
 		return !tree.length ? {} : tree.split('\n').map(e => {
 			const [type, hash, size, path] = e.split(/\s+/);
@@ -129,6 +123,17 @@ const mod = {
 		}, {});
 	},
 
+	async setupEverything () {
+		mod.git = simpleGit(_storage, {
+			maxConcurrentProcesses: 10,
+			trimmed: true,
+		}).clean(CleanOptions.FORCE);
+
+		// await git.pull('origin');
+	},
+
 };
+
+mod.setupEverything();
 
 export default mod;
