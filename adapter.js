@@ -125,6 +125,9 @@ const mod = {
 
 	gitPull: () => mod.git.pull('origin'),
 	async setupEverything () {
+		if (!fs.existsSync(_storage))
+			await simpleGit().clone(process.env.GIT_REMOTE, _storage);
+
 		mod.git = simpleGit(_storage, {
 			maxConcurrentProcesses: 10,
 			trimmed: true,
