@@ -123,13 +123,14 @@ const mod = {
 		}, {});
 	},
 
+	gitPull: () => mod.git.pull('origin'),
 	async setupEverything () {
 		mod.git = simpleGit(_storage, {
 			maxConcurrentProcesses: 10,
 			trimmed: true,
 		}).clean(CleanOptions.FORCE);
 
-		// await git.pull('origin');
+		mod.gitPull();
 	},
 
 };
