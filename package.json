@@ -4,6 +4,7 @@
   "scripts": {
     "start": "vite dev",
     "build": "vite build",
+    "preview": "npm run build && ORIGIN=http://localhost:3000 node start",
     "test": "npm run test:e2e && npm run test:unit -- --run",
     "test:e2e": "playwright test",
     "test:e2e:watch": "playwright test --ui",
