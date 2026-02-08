@@ -1,6 +1,6 @@
 import express from 'express';
 
-import bind from './rs-bind/main.js';
+import bind from 'remotestorage-middleware';
 
 import storage from './adapter.js';
 import { tokens } from './src/lib/oauth/main.node.js';
