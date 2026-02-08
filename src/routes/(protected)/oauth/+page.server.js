@@ -1,4 +1,4 @@
-import { tokens } from '$lib/tokens.svelte';
+import { tokens } from '$lib/oauth/main.svelte';
 
 import { error, redirect } from '@sveltejs/kit';
 

@@ -1,6 +1,4 @@
-import { RS_SERVER_URI, RS_TOKEN } from '$env/static/private';
-import { building } from '$app/environment';
-
+const params = {};
 const scopes = {};
 
 const mod = {
@@ -21,20 +19,20 @@ const mod = {
 	  return scopePaths;
 	},
 
-	fetch: (method = 'GET', body) => fetch(`${ RS_SERVER_URI }/rs-bind/tokens.json`, {
+	fetch: (method = 'GET', body) => fetch(`${ params.RS_SERVER_URI }/rs-bind/tokens.json`, {
 	  headers: {
 		  'Content-Type': 'application/json',
-		  'Authorization': `Bearer ${ RS_TOKEN }`,
+		  'Authorization': `Bearer ${ params.RS_TOKEN }`,
 		},
 	  method,
 	  body,
 	}),
 
 	getTokens: async () => {
-		if (!RS_SERVER_URI)
+		if (!params.RS_SERVER_URI)
 			throw new Error('RS_SERVER_URI not set');
 
-		if (!RS_TOKEN)
+		if (!params.RS_TOKEN)
 			throw new Error('RS_TOKEN not set');
 
 		const res = await mod.fetch();
@@ -49,10 +47,14 @@ const mod = {
 
 };
 
-if (!building)
-	(async () => mod.getTokens())();
+export const _tokens = {
 
-export const tokens = {
+	configure: object => {
+		Object.assign(params, object);
+
+		if (!params.building)
+			mod.getTokens();
+	},
 
 	createToken: async (handle, _scopes) => {
 		const scopePaths = mod.makeScopePaths(_scopes.split(' '));
