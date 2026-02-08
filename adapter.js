@@ -12,6 +12,19 @@ import { simpleGit, CleanOptions } from 'simple-git';
 import { fileTypeFromBuffer } from 'file-type';
 import mime from 'mime';
 
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function() {
+  	var context = this, args = arguments;
+  	clearTimeout(timeout);
+  	if (immediate && !timeout) func.apply(context, args);
+  	timeout = setTimeout(function() {
+  		timeout = null;
+  		if (!immediate) func.apply(context, args);
+  	}, wait);
+  };
+};
+
 const mod = {
 
 	_resolvePath: (handle, url) => path.join(__dirname, '__storage', handle, url),
@@ -84,16 +97,20 @@ const mod = {
 		
 		await mod.git.add('./*')
 			.commit('sync')
-			// .push('origin');
+
+		mod.gitPush();
 
 		meta.ETag = await mod._etag(_url, false);
 	},
 
-	delete (target, ancestors) {
+	async delete (target, ancestors) {
 		fs.unlinkSync(target);
-		return mod.git.add('./*')
-			.commit('sync')
-			// .push('origin');
+		await mod.git.add('./*')
+			.commit('sync');
+
+		mod.gitPush();
+
+		return
 	},
 
 	async folderItems (handle, _url) {
@@ -124,6 +141,8 @@ const mod = {
 	},
 
 	gitPull: () => mod.git.pull('origin'),
+	gitPush: debounce(() => mod.git.push('origin'), 5000),
+
 	async setupEverything () {
 		if (!fs.existsSync(_storage))
 			await simpleGit().clone(process.env.GIT_REMOTE, _storage);
