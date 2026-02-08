@@ -1,5 +1,3 @@
-import { db } from '$lib/db.svelte';
-
 import { redirect } from '@sveltejs/kit';
 
 /** @type {import('./$types').LayoutServerLoad} */
