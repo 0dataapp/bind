@@ -1,7 +1,9 @@
 import express from 'express';
 
-import main from './rs-bind/main.js';
-import adapter from './adapter.js';
+import bind from './rs-bind/main.js';
+
+import storage from './adapter.js';
+import { tokens } from './src/lib/oauth/main.node.js';
 
 import { handler } from './build/handler.js';
 
@@ -12,6 +14,9 @@ express()
   //   limit: '1mb',
   //   type: '*/*',
   // }))
-  .use(main.handler(adapter))
+  .use(bind.handler({
+    scope: tokens.getScope,
+    storage,
+  }))
   .use(handler)
   .listen(port, () => console.info(`> Running on port ` + port));

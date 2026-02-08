@@ -52,6 +52,6 @@ export const _tokens = {
 		return token;
 	},
 
-	getScopes: (handle, token) => (scopes[handle] || {})[token],
+	getScope: (handle, token) => ((scopes[handle] || {})[token] || {}).scope,
 
 };
