@@ -34,29 +34,7 @@ const mod = {
     }
   },
 
-  permission (handle, token) {
-	  const user = mod._readJson(mod._resolvePath(handle, 'auth.json'));
-	  if (!user)
-	  	return;
-
-	  const data = user.sessions;
-	  if (!data || !data[token])
-	  	return;
-
-	  const permissions = data[token].permissions;
-	  if (!permissions)
-	  	return;
-	  
-	  const output = {};
-
-	  for (const category in permissions) {
-	    output[category] = Object.keys(permissions[category]).sort();
-	  }
-
-	  return output;
-	},
-
-	dataPath: (handle, url) => path.join(_storage, url),
+  dataPath: (handle, url) => path.join(_storage, url),
 	_gitPath: _url => `.${ _url }`,
 	
 	_fakeJSON (e) {

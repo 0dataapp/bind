@@ -15,7 +15,7 @@ express()
   //   type: '*/*',
   // }))
   .use(bind.handler({
-    scope: tokens.getScope,
+    getScope: tokens.getScope,
     storage,
   }))
   .use(handler)
