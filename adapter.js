@@ -153,6 +153,8 @@ const mod = {
 		}).clean(CleanOptions.FORCE);
 
 		mod.gitPull();
+
+		setInterval(mod.gitPull, 10000);
 	},
 
 };
