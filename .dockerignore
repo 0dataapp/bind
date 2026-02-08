@@ -1,0 +1,14 @@
+# GIT
+.git
+
+# NODE
+node_modules
+package-lock.json
+npm-debug.log
+
+# BUILD
+**/__*/*
+
+# LOCAL
+.env*
+!.env-sample
