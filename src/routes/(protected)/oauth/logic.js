@@ -6,8 +6,8 @@ const mod = {
 			scope,
 			name: scope === '*' ? 'Everything in your storage' : `/${ scope }`,
 			permissions: {
-				r: 'read-only',
-				rw: 'read/write',
+				r: 'Read only',
+				rw: 'Read & Write',
 			}[permissions] || 'unknown',
 		};
 	}),
