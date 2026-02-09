@@ -6,7 +6,7 @@ if [[ ! -f /app/data/.env ]]; then
   cp /app/code/.env-sample /app/data/.env
 fi
 
-mkdir -p /app/data/__storage
+mkdir -p /app/data/gs
 
 chown -R cloudron:cloudron /app/data
 
