@@ -156,6 +156,9 @@ const mod = {
 		mod.gitPull();
 
 		setInterval(mod.gitPull, 10000);
+
+		mod.git.addConfig('user.name', process.env.GIT_CONFIG_NAME || 'me');
+		mod.git.addConfig('user.email', process.env.GIT_CONFIG_EMAIL || 'me@example.com');
 	},
 
 };
