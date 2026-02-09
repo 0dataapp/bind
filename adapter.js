@@ -93,7 +93,7 @@ const mod = {
 
 		fs.mkdirSync(path.dirname(target), { recursive: true });
 
-		fs.writeFileSync(target, meta['Content-Type'] === 'application/json' ? JSON.stringify(data) : data);
+		fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : data);
 		
 		await mod.git.add('./*')
 			.commit('sync')
