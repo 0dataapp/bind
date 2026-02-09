@@ -6,10 +6,10 @@ RUN mkdir -p /app
 WORKDIR /app
 
 # copy package.json in isolation to detect changes
-ADD package.json /app/
+ADD package.json .
 RUN npm install
 
-ADD . /app
+ADD . .
 
 RUN npm run build
 
