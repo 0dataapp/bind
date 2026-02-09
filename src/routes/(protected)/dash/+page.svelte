@@ -2,6 +2,6 @@
 const { data } = $props();
 </script>
 
-<span class="account">{ data.user.handle }</span>
+<pre class="account">{ data.user.handle }@{ data.origin }</pre>
 
 <a href="/logout">Sign out</a>
