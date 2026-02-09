@@ -2,11 +2,6 @@ import { defineConfig } from 'vitest/config';
 import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
-	build: {
-	  rollupOptions: {
-	    external: ['./src/lib/oauth/main.js'],
-	  },
-	},
 	plugins: [sveltekit()],
 	test: {
 		expect: { requireAssertions: true },
