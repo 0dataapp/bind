@@ -1,11 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const _storage = path.join(__dirname, '__storage');
+const _storage = path.join(process.cwd(), '__storage');
 
 import { simpleGit, CleanOptions } from 'simple-git';
 
@@ -27,7 +23,7 @@ function debounce(func, wait, immediate) {
 
 const mod = {
 
-	_resolvePath: (handle, url) => path.join(__dirname, '__storage', handle, url),
+	_resolvePath: (handle, url) => path.join(_storage, handle, url),
 
 	_readJson (path) {
     try {
