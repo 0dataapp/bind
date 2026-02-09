@@ -5,6 +5,7 @@
 	  name="handle"
 	  type="text"
 	  placeholder="me"
+	  autofocus
 	  required
 	  />
 	<label for="password">Password</label>
