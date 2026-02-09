@@ -1,10 +1,10 @@
-import { CHEAP_LOGINS } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 const sessions = {};
 
 export const db = $state({
 
-	getUser: handle => CHEAP_LOGINS.split(',').map(e => {
+	getUser: handle => env.CHEAP_LOGINS.split(',').map(e => {
 		const [handle, hash] = e.split(':');
 		return { handle, hash };
 	}).filter(e => e.handle === handle).shift(),
