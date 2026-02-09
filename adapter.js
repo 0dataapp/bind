@@ -95,22 +95,16 @@ const mod = {
 
 		fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : data);
 		
-		await mod.git.add('./*')
-			.commit('sync')
-
-		mod.gitPush();
+		
+		await mod.gitCommit();
 
 		meta.ETag = await mod._etag(_url, false);
 	},
 
 	async delete (target, ancestors) {
 		fs.unlinkSync(target);
-		await mod.git.add('./*')
-			.commit('sync');
-
-		mod.gitPush();
-
-		return
+		
+		return mod.gitCommit();
 	},
 
 	async folderItems (handle, _url) {
@@ -142,6 +136,13 @@ const mod = {
 
 	gitPull: () => mod.git.pull('origin'),
 	gitPush: debounce(() => mod.git.push('origin'), 5000),
+	async gitCommit () {
+		await mod.git.add('./*').commit('sync');
+		
+		mod.gitPush();
+		
+		return
+	},
 
 	async setupEverything () {
 		if (!fs.existsSync(_storage))
