@@ -1,4 +1,4 @@
-import { _tokens } from './main.js';
+import { _tokens } from 'token-store';
 
 _tokens.configure(process.env);
 

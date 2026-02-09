@@ -3,7 +3,7 @@ import express from 'express';
 import bind from 'remotestorage-middleware';
 
 import storage from './adapter.js';
-import { tokens } from './src/lib/oauth/main.node.js';
+import { tokens } from './tokens.js';
 
 import { handler } from './build/handler.js';
 

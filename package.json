@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "remotestorage-middleware": "0dataapp/remotestorage-middleware",
+    "token-store": "0dataapp/token-store",
     "normalize.css": "^8.0.1",
     "file-type": "^21.3.0",
     "mime": "^4.1.0",
