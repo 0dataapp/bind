@@ -14,6 +14,7 @@ express()
   .use(bind.webfinger({
     prefix,
   }))
+  .enable('trust proxy')
   .use(`/${ prefix }`, express.json(), express.raw({
     limit: '1mb',
     type: '*/*',
