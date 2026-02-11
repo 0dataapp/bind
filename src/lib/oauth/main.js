@@ -45,7 +45,9 @@ export const _tokens = {
 	createToken: async (handle, data) => {
 		const token = mod.generateToken();
 
-		(scopes[handle] = scopes[handle] || {})[token] = data;
+		(scopes[handle] = scopes[handle] || {})[token] = Object.assign(data, {
+			createdAt: new Date(),
+		});
 
 		await mod.putTokens(scopes);
 
