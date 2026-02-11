@@ -4,8 +4,8 @@
   "scripts": {
     "start": "vite dev",
     "build": "vite build",
-    "preview": "npm run build && nodemon --watch main.js --watch adapter.js --watch start.js --exec npm run production",
-    "production": "node --env-file=.env start.js",
+    "preview": "npm run build && nodemon --watch main.js --watch adapter.js --watch start.js --exec \"node --env-file=.env start.js\"",
+    "production": "node start.js",
     "test": "npm run test:e2e && npm run test:unit -- --run",
     "test:e2e": "playwright test",
     "test:e2e:watch": "playwright test --ui",
