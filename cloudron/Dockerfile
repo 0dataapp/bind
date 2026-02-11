@@ -14,6 +14,6 @@ RUN npm run build
 ENV PORT 3000
 EXPOSE 3000
 
-ENV DATA_DIRECTORY /app/data/gs
+ENV DATA_DIRECTORY /app/data/__local
 
 CMD [ "cloudron/start.sh" ]
