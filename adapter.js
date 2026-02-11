@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const _storage = path.join(process.env.DATA_DIRECTORY || process.cwd(), '__storage');
+const _storage = path.join(process.env.DATA_DIRECTORY || process.cwd(), '__main');
 
 import { simpleGit, CleanOptions } from 'simple-git';
 
