@@ -8,6 +8,8 @@ import { simpleGit, CleanOptions } from 'simple-git';
 import { fileTypeFromBuffer } from 'file-type';
 import mime from 'mime';
 
+const debounceSeconds = 1.5;
+
 function debounce(func, wait, immediate) {
   var timeout;
   return function() {
@@ -130,7 +132,7 @@ const mod = {
 	},
 
 	gitPull: () => mod.git.pull('origin'),
-	gitPush: debounce(() => mod.git.push('origin'), 5000),
+	gitPush: debounce(() => mod.git.push('origin'), debounceSeconds * 1000),
 	async gitCommit () {
 		await mod.git.add('./*').commit('sync');
 		
