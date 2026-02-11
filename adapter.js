@@ -43,6 +43,9 @@ const mod = {
 
   dataPath: (handle, url) => path.join(_storage, url),
 	_gitPath: _url => `.${ _url }`,
+	_isIgnored: e => [
+		'.DS_Store',
+	].includes(path.basename(e)),
 	
 	_fakeJSON (e) {
 		if (!['{', '['].includes(e.trim()[0]))
@@ -102,6 +105,8 @@ const mod = {
 
 	async delete (target, ancestors) {
 		fs.unlinkSync(target);
+
+		ancestors.filter(e => !fs.readdirSync(e).filter(e => !mod._isIgnored(e)).length).forEach(e => fs.rmdirSync(e));
 		
 		return mod.gitCommit();
 	},
