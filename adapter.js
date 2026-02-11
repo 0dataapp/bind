@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
-const _storage = path.join(process.env.DATA_DIRECTORY || process.cwd(), '__main');
+import crypto from 'crypto'
+const _storage = path.join(process.env.DATA_DIRECTORY || process.cwd(), '__main', crypto.createHash('sha256').update(process.env.GIT_REMOTE).digest('hex').substring(0, 8));
 
 import { simpleGit, CleanOptions } from 'simple-git';
 
