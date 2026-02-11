@@ -9,6 +9,7 @@ import { fileTypeFromBuffer } from 'file-type';
 import mime from 'mime';
 
 const debounceSeconds = 1.5;
+const pollSeconds = 5;
 
 function debounce(func, wait, immediate) {
   var timeout;
@@ -152,7 +153,7 @@ const mod = {
 
 		mod.gitPull();
 
-		setInterval(mod.gitPull, 10000);
+		setInterval(mod.gitPull, pollSeconds * 1000);
 
 		mod.git.addConfig('user.name', process.env.GIT_CONFIG_NAME || 'me');
 		mod.git.addConfig('user.email', process.env.GIT_CONFIG_EMAIL || 'me@example.com');
