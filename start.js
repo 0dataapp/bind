@@ -8,7 +8,7 @@ import { tokens } from './tokens.js';
 import { handler } from './build/handler.js';
 
 const prefix = 'storage';
-const port = 3000;
+const port = process.env.PORT || 3000;
 express()
   .use(bind.options())
   .use(bind.webfinger({
