@@ -91,10 +91,9 @@ const mod = {
 
 		fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : data);
 		
-		
 		await mod.gitCommit();
 
-		meta.ETag = await mod._etag(_url, false);
+		Object.assign(meta, await mod.meta(handle, _url));
 	},
 
 	async delete (target, ancestors) {
