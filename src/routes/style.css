@@ -1,0 +1,40 @@
+:root {
+	--background: #eee;
+	--body-color: #333;
+	--body-cap: 400px;
+	--spacing: 20px;
+	--corner: 3px;
+	--link-color: #237fa1;
+	--border-size: 2px;
+	--border: var(--border-size) solid #e6e6e6;
+	font-size: 12pt;
+}
+
+body {
+	color: var(--body-color);
+}
+
+wrap {
+	background: var(--background);
+
+	display: grid;
+	place-items: center;
+	min-height: 100vh;
+}
+
+focus {
+	--background: #f9f9f9;
+
+	display: block;
+
+	max-width: var(--body-cap);
+	min-width: 300px;
+	padding: var(--spacing);
+	border-radius: var(--corner);
+		
+	background: var(--background);
+}
+
+pre {
+	padding: var(--spacing);
+}

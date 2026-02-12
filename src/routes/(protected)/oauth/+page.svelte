@@ -2,7 +2,7 @@
 const { data } = $props();
 </script>
 
-The app at <code>{ data.client_id }</code> would to like access:
+<p>The app at <code>{ data.client_id }</code> would to like access:</p>
 
 <table>
 <tbody>
@@ -16,8 +16,10 @@ The app at <code>{ data.client_id }</code> would to like access:
 </table>
 
 <form method="POST">
-  <input type="submit" value="yes" />
-  <a href={ `${ data.redirect_uri }#error=access_denied` }>no</a>
+  <fieldset role="group">
+    <input class="secondary" type="submit" value="Allow" />
+    <a class="contrast" role="button" href={ `${ data.redirect_uri }#error=access_denied` }>Deny</a>
+  </fieldset>
 </form>
 
 

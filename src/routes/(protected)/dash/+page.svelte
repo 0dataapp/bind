@@ -2,6 +2,11 @@
 const { data } = $props();
 </script>
 
-<pre class="account">{ data.user.handle }@{ data.origin }</pre>
+<form>
+  <fieldset role="group">
+    <pre class="account">{ data.user.handle }@{ data.origin }</pre>
+    <button>copy</button>
+  </fieldset>
+</form>
 
 <a href="/logout">Sign out</a>
