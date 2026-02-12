@@ -62,8 +62,11 @@ const mod = {
 		const type = await fileTypeFromBuffer(data);
 		if (type)
 			return type.mime;
+
+		if (mod._fakeJSON(data.toString()))
+			return 'application/json';
 		
-		return mod._fakeJSON(data.toString()) ? 'application/json' : mime.getType(_path);
+		return mime.getType(_path) || 'text/plain';
 	},
 
 	async meta (handle, _url) {
