@@ -58,12 +58,12 @@ const mod = {
 		}
 	},
 
-	async _guessMimeType (data) {
-		const mime = await fileTypeFromBuffer(data);
-		if (mime)
-			return mime.mime;
+	async _guessMimeType (data, _path) {
+		const type = await fileTypeFromBuffer(data);
+		if (type)
+			return type.mime;
 		
-		return mod._fakeJSON(data.toString()) ? 'application/json' : 'text/plain';
+		return mod._fakeJSON(data.toString()) ? 'application/json' : mime.getType(_path);
 	},
 
 	async meta (handle, _url) {
@@ -84,7 +84,7 @@ const mod = {
 		const stat = fs.statSync(target);
 		return Object.assign(meta, {
 			'Content-Length': stat.size,
-			'Content-Type': await mod._guessMimeType(fs.readFileSync(target)),
+			'Content-Type': await mod._guessMimeType(fs.readFileSync(target), target),
 			'Last-Modified': stat.mtime.toUTCString(),
 		});
 	},
