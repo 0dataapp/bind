@@ -58,13 +58,20 @@ const mod = {
 		}
 	},
 
+	_fakeHTML: e => e.startsWith('<!DOCTYPE html>'),
+
 	async _guessMimeType (data, _path) {
 		const type = await fileTypeFromBuffer(data);
 		if (type)
 			return type.mime;
 
-		if (mod._fakeJSON(data.toString()))
+		const string = data.toString();
+
+		if (mod._fakeJSON(string))
 			return 'application/json';
+		
+		if (mod._fakeHTML(string))
+			return 'text/html';
 		
 		return mime.getType(_path) || 'text/plain';
 	},
