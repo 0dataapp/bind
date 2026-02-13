@@ -10,4 +10,4 @@ mkdir -p /app/data/__local
 
 chown -R cloudron:cloudron /app/data
 
-exec /usr/local/bin/gosu cloudron:cloudron node --env-file=/app/data/.env start.js
+exec /usr/local/bin/gosu cloudron:cloudron node --env-file=/app/data/.env build
