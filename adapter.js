@@ -99,7 +99,7 @@ const mod = {
 		});
 	},
 
-	_etag: async (_url, isFolder) => `"${ (await mod.git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod._gitPath(_url)))).trim().split('\n').shift() }"`,
+	_etag: async (_url, isFolder) => `"${ (await mod.git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod._gitPath(isFolder ? _url.replace(/\/$/, '') : _url)))).trim().split('\n').pop() }"`,
 
 	async put (handle, _url, data, ancestors, meta) {
 		const target = mod.dataPath(handle, _url);
