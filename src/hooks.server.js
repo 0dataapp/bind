@@ -64,7 +64,7 @@ const _handle = (middleware, path) => async ({ event, resolve }) => {
 
 /** @type {import('@sveltejs/kit').Handle} */
 const main = async ({ event, resolve }) => {
-	event.locals_handler = await db.getUser(db.getSession(event.cookies.get('sessionid')));
+	event.locals.user = await db.getUser(db.getSession(event.cookies.get('sessionid')));
 	return resolve(event);
 };
 
