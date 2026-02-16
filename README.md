@@ -1,4 +1,4 @@
-# rs-git
+# bind-vcs
 
 Git-backed remoteStorage server
 
