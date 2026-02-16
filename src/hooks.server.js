@@ -1,6 +1,6 @@
 import bind from 'remotestorage-middleware';
 
-import storage from '../adapter.js';
+import storage from '$lib/adapter.js';
 import { tokens } from '$lib/tokens.js';
 
 import { sequence } from '@sveltejs/kit/hooks';
