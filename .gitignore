@@ -19,5 +19,5 @@ build
 
 # PROTECTED
 # ignore root pages in (protected) which are not authwalled
-src/routes/(protected)/+page.*
-src/routes/(protected)/+server.*
+src/routes/(pass)/(protected)/+page.*
+src/routes/(pass)/(protected)/+server.*
