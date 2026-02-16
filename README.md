@@ -8,6 +8,7 @@ Git-backed remoteStorage server.
 | - | - |
 | [SvelteKit](https://svelte.dev/docs/kit) | framework, UI components, routing and redirects, navigation without HTTP requests, fast builds and reloads with `vite` |
 | + [adapter-node](https://svelte.dev/docs/kit/adapter-node) | build as Node.js server |
+| [Pico](https://picocss.com) | styles mostly without CSS classes |
 | [Vitest](https://vitest.dev) | logic or unit tests in `*-tests.js` |
 | [Playwright](https://playwright.dev) | interface tests in `ui-tests.js` |
 
