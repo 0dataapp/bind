@@ -1,6 +1,6 @@
 # bind-vcs
 
-Git-backed remoteStorage server
+Git-backed remoteStorage server.
 
 ## Architecture
 

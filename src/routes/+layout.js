@@ -1,7 +1,7 @@
 /** @type {import('./$types').LayoutLoad} */
 export function load() {
 	return {
-		title: 'auth-proof',
+		title: 'bind',
 		navigation: [
 			{ path: '/', title: 'home' },
 		],
