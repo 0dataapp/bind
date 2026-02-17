@@ -25,7 +25,11 @@ const mod = {
 				if (db)
 					return db;
 
-				return (db = new LowSync(new JSONFileSync(path.join(folder, `${ collection }.json`)), { items: [] }));
+				db = new LowSync(new JSONFileSync(path.join(folder, `${ collection }.json`)), { items: [] })
+
+				db.read();
+
+				return db;
 			},
 
 			create: obj => {
