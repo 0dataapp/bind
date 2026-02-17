@@ -11,7 +11,8 @@ export default defineConfig({
 				test: {
 					name: 'server',
 					environment: 'node',
-					include: ['src/**/tests.{js,ts}'],
+					include: ['src/**/*-tests.{js,ts}'],
+					exclude: ['**/ui-tests.{js,ts}'],
 				},
 			},
 		],
