@@ -1,11 +1,8 @@
-import { db } from '$lib/db.svelte';
-
+import { auth } from '$lib/better-auth/config';
 import { redirect } from '@sveltejs/kit';
 
-/** @type {import('./$types').RequestHandler} */
-export function GET(event) {
-	event.locals.user = null;
-	event.cookies.delete('sessionid', { path: '/' });
-
-	return redirect(301, '/');
+/** @type {import('./$types').LayoutServerLoad} */
+export async function GET({ request }) {
+  await auth.api.signOut({ headers: request.headers });
+  return redirect(307, '/');
 };
