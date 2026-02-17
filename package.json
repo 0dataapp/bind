@@ -1,5 +1,5 @@
 {
-  "name": "rs-git",
+  "name": "bind-vcs",
   "type": "module",
   "scripts": {
     "start": "vite dev",
