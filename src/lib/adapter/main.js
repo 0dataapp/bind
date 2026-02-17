@@ -83,8 +83,13 @@ const _adapterMethods = ({
     findMany ({ model, where, limit, offset, sortBy }) {
       this._log('findMany', { model, where, limit, offset, sortBy });
 
-      return _filterItems(this._getItems(getModelName(model)), where);
+      const result = _filterItems(this._getItems(getModelName(model)), where);
+
+      return (!sortBy ? result : result.sort(this[sortBy.direction === 'desc' ? '_sortDescending' : '_sortAscending'](e => e[sortBy.field]))).slice(0, limit);
     },
+
+    _sortAscending: callback => (a, b) => ((a, b) => (a < b) ? -1 : ((a > b) ? 1 : 0))(callback(a), callback(b)),
+    _sortDescending: callback => (a, b) => ((a, b) => (a > b) ? -1 : ((a < b) ? 1 : 0))(callback(a), callback(b)),
 
     update ({ model, where, update }) {
       this._log('update', { model, where, update });

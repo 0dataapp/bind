@@ -236,7 +236,7 @@ describe('genericAdapter', () => {
 			create: data => methods.create({ data }),
 			
 			findOne: where => methods.findOne({ where }),
-			findMany: where => methods.findMany({ where }),
+			findMany: ({ where, limit, sortBy }) => methods.findMany({ where, limit, sortBy }),
 			
 			update: (where, update) => methods.update({ where, update }),
 			updateMany: (where, update) => methods.updateMany({ where, update }),
@@ -312,7 +312,9 @@ describe('genericAdapter', () => {
 				[field]: Math.random().toString(),
 			}));
 
-			expect(adapter.findMany([{ field, operator: 'eq', value }])).toEqual([]);
+			expect(adapter.findMany({
+				where: [{ field, operator: 'eq', value }],
+			})).toEqual([]);
 		});
 
 		it('returns array', () => {
@@ -328,7 +330,60 @@ describe('genericAdapter', () => {
 				[field]: value + value,
 			}), item].forEach(adapter.create);
 
-			expect(adapter.findMany([{ field, operator: 'eq', value }])).toEqual([item]);
+			expect(adapter.findMany({
+				where: [{ field, operator: 'eq', value }],
+			})).toEqual([item]);
+		});
+
+		it('slices at limit', () => {
+			const collection = Math.random().toString();
+			const adapter = _adapter({ collection });
+
+			const length = Math.max(Date.now() % 10, 5);
+			const field = Math.random().toString();
+			const value = Math.random().toString();
+
+			const slice = Math.min(Math.max(Date.now() % 10, 1), 3);
+			
+			const items = Array.from({ length }, e => adapter.create(uItem({
+				[field]: value,
+			})));
+
+			expect(adapter.findMany({
+				where: [{ field, operator: 'eq', value }],
+				limit: length - slice,
+			},)).toEqual(items.slice(0, -slice));
+		});
+
+		it('sorts by sortField', () => {
+			const collection = Math.random().toString();
+			const adapter = _adapter({ collection });
+
+			const length = Math.max(Date.now() % 10, 5);
+			const field = Math.random().toString();
+			const value = Math.random().toString();
+
+			const slice = Math.min(Math.max(Date.now() % 10, 1), 3);
+			
+			const items = Array.from({ length }, (e, i) => adapter.create(uItem({
+				[field]: value,
+				sortField: length - i,
+			})));
+
+			expect(adapter.findMany({
+				where: [{ field, operator: 'eq', value }],
+				sortBy: {
+					field: 'sortField',
+				},
+			},)).toEqual(items.slice().reverse());
+
+			expect(adapter.findMany({
+				where: [{ field, operator: 'eq', value }],
+				sortBy: {
+					field: 'sortField',
+					direction: 'desc',
+				},
+			},)).toEqual(items);
 		});
 
 	});
@@ -382,14 +437,18 @@ describe('genericAdapter', () => {
 			});
 			adapter.create(item2);
 
-			expect(adapter.findMany([{ field, operator: 'eq', value }])).toEqual([item1, item2]);
+			expect(adapter.findMany({
+				where: [{ field, operator: 'eq', value }],
+			})).toEqual([item1, item2]);
 
 			const update = Math.random().toString();
 			adapter.update([{ field, operator: 'eq', value }], {
 				[field]: update,
 			})
 
-			expect(adapter.findMany([{ field, operator: 'eq', value }])).toEqual([item2]);
+			expect(adapter.findMany({
+				where: [{ field, operator: 'eq', value }],
+			})).toEqual([item2]);
 		});
 
 	});
@@ -426,7 +485,9 @@ describe('genericAdapter', () => {
 				[field]: update,
 			})).toEqual(length);
 
-			expect(adapter.findMany([{ field, operator: 'eq', value }])).toEqual([]);
+			expect(adapter.findMany({
+				where: [{ field, operator: 'eq', value }],
+			})).toEqual([]);
 		});
 
 	});
@@ -464,9 +525,13 @@ describe('genericAdapter', () => {
 			});
 			adapter.create(item2);
 
-			expect(adapter.findMany([{ field, operator: 'eq', value }])).toEqual([item1, item2]);
+			expect(adapter.findMany({
+				where: [{ field, operator: 'eq', value }],
+			})).toEqual([item1, item2]);
 			expect(adapter.delete([{ field, operator: 'eq', value }])).toEqual(undefined);
-			expect(adapter.findMany([{ field, operator: 'eq', value }])).toEqual([item2]);
+			expect(adapter.findMany({
+				where: [{ field, operator: 'eq', value }],
+			})).toEqual([item2]);
 		});
 
 	});
@@ -504,9 +569,13 @@ describe('genericAdapter', () => {
 			});
 			adapter.create(item2);
 
-			expect(adapter.findMany([{ field, operator: 'eq', value }])).toEqual([item1, item2]);
+			expect(adapter.findMany({
+				where: [{ field, operator: 'eq', value }],
+			})).toEqual([item1, item2]);
 			expect(adapter.deleteMany([{ field, operator: 'eq', value }])).toEqual(2);
-			expect(adapter.findMany([{ field, operator: 'eq', value }])).toEqual([]);
+			expect(adapter.findMany({
+				where: [{ field, operator: 'eq', value }],
+			})).toEqual([]);
 		});
 
 	});
