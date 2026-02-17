@@ -43,7 +43,7 @@ const mod = {
 			},
 
 			delete: id => {
-				_this.db().update(({ items }) => items.splice(items.findIndex(e => e.id === id)));
+				_this.db().update(({ items }) => items.splice(items.findIndex(e => e.id === id), 1));
 			},
 
 		});
