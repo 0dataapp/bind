@@ -1,22 +1,19 @@
-<form method="POST">
-	<label for="handle">handle</label>
-	<input
-	  id="handle"
-	  name="handle"
-	  type="text"
-	  placeholder="me"
-	  autofocus
-	  required
-	  />
-	<label for="password">Password</label>
-	<input
-		id="password"
-		name="password"
-		type="password"
-	  placeholder="…"
-	  required
-		/>
+<script>
+import { signIn } from '$lib/better-auth/client.js';
+import { goto } from "$app/navigation";
 
-	<input type="submit" value="Continue" />
-</form>
+const didSubmit = state => signIn.email({
+	email: state.email,
+	password: state.password,
+	fetchOptions: {
+		onSuccess: () => goto('/dash'),
+		onError: context => state.setError(context.error.message),
+	},
+});
 
+import AccountForm from '$lib/AccountForm.svelte';
+</script>
+
+<AccountForm { didSubmit } />
+
+<a class="signup" href="/signup">Create account</a>
