@@ -7,16 +7,16 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const folder = '__tests';
+const _folder = path.join(__dirname, folder);
 
 describe('collection', () => {
 
 	afterAll(() => {
-		const _folder = path.join(__dirname, folder);
 	  fs.readdirSync(_folder).forEach(e => fs.unlinkSync(path.join(_folder, e)));
-	})
+	});
 
 	const _collection = e => mod.collection(e || Math.random().toString(), {
-		folder,
+		folder: _folder,
 	});
 
 	it('throws if not string', () => {

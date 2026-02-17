@@ -14,7 +14,7 @@ const mod = {
 		if (!collection)
 			throw new Error('missing collection name');
 
-		const folder = path.join(__dirname, params.folder || '__data');
+		const folder = params.folder || path.join(__dirname, '__data');
 		fs.mkdirSync(folder, { recursive: true });
 
 		let db;
