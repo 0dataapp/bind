@@ -26,7 +26,7 @@
     "file-type": "^21.3.0",
     "mime": "^4.1.0",
     "normalize.css": "^8.0.1",
-    "remotestorage-middleware": "0dataapp/remotestorage-middleware#6773ef2",
+    "bind-middleware": "0dataapp/bind-middleware#6773ef2",
     "simple-git": "^3.30.0",
     "token-store": "0dataapp/token-store#a9a27c1"
   }

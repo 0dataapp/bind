@@ -1,4 +1,4 @@
-import bind from 'remotestorage-middleware';
+import bind from 'bind-middleware';
 
 import storage from '$lib/adapter.js';
 import { tokens } from '$lib/tokens.js';
