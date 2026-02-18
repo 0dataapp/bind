@@ -9,8 +9,6 @@ import { tokens } from '$lib/tokens.js';
 
 import { sequence } from '@sveltejs/kit/hooks';
 
-import { db } from '$lib/db.svelte';
-
 const _handle = (middleware, path) => async ({ event, resolve }) => {
   if (path && !event.url.pathname.startsWith(path))
     return resolve(event);
@@ -66,12 +64,6 @@ const _handle = (middleware, path) => async ({ event, resolve }) => {
   });
 };
 
-/** @type {import('@sveltejs/kit').Handle} */
-const main = async ({ event, resolve }) => {
-	event.locals.user = await db.getUser(db.getSession(event.cookies.get('sessionid')));
-	return resolve(event);
-};
-
 const prefix = 'storage';
 export const handle = sequence(
   ({ event, resolve }) => svelteKitHandler({ event, resolve, auth, building }),
@@ -83,5 +75,4 @@ export const handle = sequence(
   _handle(bind.webfinger({
     prefix,
   })),
-  main,
 );
