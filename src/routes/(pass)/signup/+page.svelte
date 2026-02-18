@@ -1,6 +1,6 @@
 <script>
 import { signUp } from '$lib/better-auth/client';
-import { goto } from "$app/navigation";
+import { goto } from '$app/navigation';
 
 const didSubmit = state => signUp.email({
 	email: state.email,

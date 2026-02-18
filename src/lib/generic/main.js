@@ -1,4 +1,4 @@
-import { createAdapterFactory } from "better-auth/adapters";
+import { createAdapterFactory } from 'better-auth/adapters';
 import jsonQ from 'js-jsonq';
 import db from '$lib/database/main.js';
 
