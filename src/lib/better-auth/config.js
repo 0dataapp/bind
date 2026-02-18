@@ -5,7 +5,9 @@ import { createAuthMiddleware } from 'better-auth/api';
 import { genericAdapter } from '$lib/generic/main.js';
 import usernames from '$lib/username/main.js';
 import database from '$lib/database/main.js';
+import { env } from '$env/dynamic/private';
 export const auth = betterAuth({
+  secret: env.BETTER_AUTH_SECRET,
   database: genericAdapter({
     // options
   }),
