@@ -4,7 +4,7 @@
   "scripts": {
     "start": "vite dev",
     "build": "vite build",
-    "preview": "npm run build && nodemon --watch adapter.js --exec \"node --env-file=.env build\"",
+    "preview": "npm run build && nodemon --watch src/lib/storage.js --exec \"node --env-file=.env build\"",
     "production": " build",
     "test": "npm run test:e2e && npm run test:unit -- --run",
     "test:e2e": "playwright test",

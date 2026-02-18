@@ -4,7 +4,7 @@ import { building } from '$app/environment';
 
 import bind from 'bind-middleware';
 
-import storage from '$lib/adapter.js';
+import storage from '$lib/storage.js';
 import { tokens } from '$lib/tokens.js';
 
 import { sequence } from '@sveltejs/kit/hooks';
