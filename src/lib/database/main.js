@@ -21,7 +21,7 @@ const mod = {
 		const _this = {};
 		return Object.assign(_this, {
 
-			db: () => {
+			_db: () => {
 				if (db)
 					return db;
 
@@ -33,21 +33,21 @@ const mod = {
 			},
 
 			create: obj => {
-				_this.db().update(({ items }) => items.push(obj));
+				_this._db().update(({ items }) => items.push(obj));
 
 				return obj;
 			},
 
-			getItems: () => _this.db().data.items,
+			getItems: () => _this._db().data.items,
 
 			update: (id, obj) => {
-				_this.db().update(({ items }) => Object.assign(items.filter(e => e.id === id).shift(), obj));
+				_this._db().update(({ items }) => Object.assign(items.filter(e => e.id === id).shift(), obj));
 
 				return obj;
 			},
 
 			delete: id => {
-				_this.db().update(({ items }) => items.splice(items.findIndex(e => e.id === id), 1));
+				_this._db().update(({ items }) => items.splice(items.findIndex(e => e.id === id), 1));
 			},
 
 		});
