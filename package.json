@@ -24,6 +24,7 @@
   "dependencies": {
     "@picocss/pico": "^2.1.1",
     "bind-middleware": "0dataapp/bind-middleware#6773ef2",
+    "better-auth": "^1.4.18",
     "js-jsonq": "^1.0.3",
     "lowdb": "^7.0.1",
     "normalize.css": "^8.0.1",
