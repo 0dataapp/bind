@@ -8,6 +8,8 @@ const __dirname = path.dirname(__filename);
 import { LowSync } from 'lowdb';
 import { JSONFileSync } from 'lowdb/node';
 
+import { env } from '$env/dynamic/private';
+
 import { ulid } from "ulid";
 
 const mod = {
@@ -16,7 +18,7 @@ const mod = {
 		if (!collection)
 			throw new Error('missing collection name');
 
-		const folder = params.folder || path.join(__dirname, '__data');
+		const folder = env.DATA_DIRECTORY || params.folder || path.join(__dirname, '__data');
 		fs.mkdirSync(folder, { recursive: true });
 
 		let db;
