@@ -36,7 +36,7 @@ export function load({ url }) {
 
 import { auth } from '$lib/better-auth/config';
 import { redirect } from '@sveltejs/kit';
-import { tokens } from '$lib/tokens';
+import oauth from '$lib/oauth-implicit/main.js';
 
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
@@ -44,9 +44,9 @@ export const actions = {
 	default: async ({ request, url }) => {
 		const formData = await request.formData();
 
-		const token = await tokens.createToken((await auth.api.getSession({
+		const token = await oauth.createToken((await auth.api.getSession({
 			headers: request.headers,
-		})).user.username, {
+		})).user.id, {
 			scope: url.searchParams.get('scope'),
 			client_id: url.searchParams.get('client_id'),
 		});

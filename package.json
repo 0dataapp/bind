@@ -27,7 +27,6 @@
     "js-jsonq": "^1.0.3",
     "lowdb": "^7.0.1",
     "normalize.css": "^8.0.1",
-    "token-store": "0dataapp/token-store#a9a27c1",
     "ulid": "^3.0.2"
   }
 }
