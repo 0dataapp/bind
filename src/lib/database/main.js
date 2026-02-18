@@ -8,6 +8,8 @@ const __dirname = path.dirname(__filename);
 import { LowSync } from 'lowdb';
 import { JSONFileSync } from 'lowdb/node';
 
+import { ulid } from "ulid";
+
 const mod = {
 
 	collection (collection, params = {}) {
@@ -51,7 +53,9 @@ const mod = {
 			},
 
 		});
-	}
+	},
+
+	generateId: () => ulid().toLowerCase(),
 
 };
 

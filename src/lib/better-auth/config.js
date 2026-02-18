@@ -4,6 +4,7 @@ import { createAuthMiddleware } from 'better-auth/api';
 
 import { genericAdapter } from '$lib/generic/main.js';
 import usernames from '$lib/username/main.js';
+import database from '$lib/database/main.js';
 export const auth = betterAuth({
   database: genericAdapter({
     // options
@@ -20,6 +21,9 @@ export const auth = betterAuth({
     },
   },
   advanced: {
+    database: {
+      generateId: database.generateId,
+    },
     cookiePrefix: 'bind',
   },
   disablePaths: ['/is-username-available'],
