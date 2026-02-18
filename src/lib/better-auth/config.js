@@ -2,7 +2,7 @@ import { betterAuth } from 'better-auth';
 import { username } from 'better-auth/plugins';
 import { createAuthMiddleware } from 'better-auth/api';
 
-import { genericAdapter } from '$lib/adapter/main.js';
+import { genericAdapter } from '$lib/generic/main.js';
 import usernames from '$lib/username/main.js';
 export const auth = betterAuth({
   database: genericAdapter({
