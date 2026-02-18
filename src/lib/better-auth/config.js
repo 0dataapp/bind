@@ -6,4 +6,7 @@ export const auth = betterAuth({
     // options
   }),
   emailAndPassword: { enabled: true },
+  advanced: {
+    cookiePrefix: 'bind',
+  },
 });
