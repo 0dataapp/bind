@@ -35,7 +35,7 @@ const mod = {
 		return fs.existsSync(target) ? JSON.parse(fs.readFileSync(mod._metaPath(target), 'utf8')) : {}
 	},
 
-	_etag: () => `"${ new Date().toJSON() }"`,
+	_etag: () => new Date().toJSON(),
 
 	put (handle, _url, data, ancestors, meta) {
 		const target = mod.dataPath(handle, _url);
@@ -45,7 +45,7 @@ const mod = {
 			ETag: mod._etag(),
 		})));
 		
-		fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : data);
+		fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
 		fs.writeFileSync(mod._metaPath(target), JSON.stringify(Object.assign(meta, {
 			ETag: mod._etag(),
 			'Content-Length': Buffer.isBuffer(data) ? data.length : fs.statSync(target).size,
