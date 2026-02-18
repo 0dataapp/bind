@@ -6,7 +6,10 @@ const didSubmit = state => signIn.email({
 	email: state.email,
 	password: state.password,
 	fetchOptions: {
-		onSuccess: () => goto('/dash'),
+		onSuccess: () => {
+			const { target } = Object.fromEntries(new URLSearchParams(location.search));
+			return goto(target ? decodeURIComponent(target) : '/dash');
+		},
 		onError: context => state.setError(context.error.message),
 	},
 });
