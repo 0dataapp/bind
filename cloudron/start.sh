@@ -3,7 +3,7 @@
 # ensure that this file executable in the app repo: chmod +x start.sh.
 
 if [[ ! -f /app/data/.env ]]; then
-  cp /app/code/.env-sample /app/data/.env
+  echo "BETTER_AUTH_SECRET=\"$( openssl rand -base64 32 )\"\n" > /app/data/.env
 fi
 
 mkdir -p /app/data/__local
