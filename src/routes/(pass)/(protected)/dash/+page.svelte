@@ -4,7 +4,7 @@ const { data } = $props();
 
 <form>
   <fieldset role="group">
-    <pre class="account">{ data.user.handle }@{ data.origin }</pre>
+    <pre class="account">{ JSON.stringify(data.session.user.email) }@{ data.origin }</pre>
     <button>copy</button>
   </fieldset>
 </form>
