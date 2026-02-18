@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth';
 
 import { genericAdapter } from '$lib/adapter/main.js';
+import usernames from '$lib/username/main.js';
 export const auth = betterAuth({
   database: genericAdapter({
     // options
@@ -19,4 +20,10 @@ export const auth = betterAuth({
   advanced: {
     cookiePrefix: 'bind',
   },
+  disablePaths: ['/is-username-available'],
+  plugins: [
+    username({
+      displayUsernameNormalization: () => '',
+    }),
+  ],
 });

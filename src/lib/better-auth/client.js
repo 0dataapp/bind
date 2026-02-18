@@ -1,3 +1,9 @@
 import { createAuthClient } from 'better-auth/svelte';
 
-export const { signIn, signUp } = createAuthClient();
+import { usernameClient } from 'better-auth/client/plugins';
+
+export const { signIn, signUp } = createAuthClient({
+	plugins: [
+		usernameClient(),
+	],
+});
