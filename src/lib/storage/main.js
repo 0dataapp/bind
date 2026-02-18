@@ -9,7 +9,7 @@ const metaSuffix = '.meta.json';
 
 const mod = {
 
-	_resolvePath: (handle, url) => path.join(__dirname, '__storage', handle, url),
+	_resolvePath: (handle, url) => path.join(__dirname, '__files', handle, url),
 
 	_readJson (path) {
     try {
