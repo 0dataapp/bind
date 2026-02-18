@@ -23,7 +23,7 @@ const mod = {
     }
   },
 
-  dataPath: (handle, url) => mod._resolvePath(handle, path.join('data', url)),
+  dataPath: (handle, url) => mod._resolvePath(handle, url),
 
 	_metaPath: target => `${ target }${ metaSuffix }`,
 	_isIgnored: e => e.endsWith(metaSuffix) || [
