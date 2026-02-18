@@ -6,6 +6,16 @@ export const auth = betterAuth({
     // options
   }),
   emailAndPassword: { enabled: true },
+  user: {
+    additionalFields: {
+      role: {
+        type: ['user', 'admin'],
+        required: false,
+        defaultValue: 'user',
+        input: false, // disallow setting role
+      },
+    },
+  },
   advanced: {
     cookiePrefix: 'bind',
   },
