@@ -1,7 +1,3 @@
-import { tokens } from '$lib/tokens';
-
-import { error, redirect } from '@sveltejs/kit';
-
 const mod = {
 
 	error: params => {
@@ -25,6 +21,8 @@ const mod = {
 
 };
 
+import { error } from '@sveltejs/kit';
+
 /** @type {import('./$types').PageServerLoad} */
 export function load({ url }) {
 	const params = Object.fromEntries(url.searchParams);
@@ -36,13 +34,19 @@ export function load({ url }) {
 	};
 }
 
+import { auth } from '$lib/better-auth/config';
+import { redirect } from '@sveltejs/kit';
+import { tokens } from '$lib/tokens';
+
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
 	
-	default: async ({ request, url, locals }) => {
+	default: async ({ request, url }) => {
 		const formData = await request.formData();
 
-		const token = await tokens.createToken(locals.user.handle, {
+		const token = await tokens.createToken((await auth.api.getSession({
+			headers: request.headers,
+		})).user.username, {
 			scope: url.searchParams.get('scope'),
 			client_id: url.searchParams.get('client_id'),
 		});
