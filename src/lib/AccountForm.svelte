@@ -15,28 +15,30 @@ export let didSubmit;
 
 	didSubmit(state);
 } }>
-	{#if state.error }
-		<p><error>{ state.error }</error></p>
-	{/if}
 
-	<label for="email">Email</label>
-	<input
-	  id="email"
-	  type="email"
-	  placeholder="me@example.com"
-	  required
-	  bind:value={ state.email }
-	  />
-	<label for="password">Password</label>
-	<input
-		id="password"
-		type="password"
-	  placeholder="…"
-	  required
-		bind:value={ state.password }
-		/>
+{#if state.error }
+	<p><error>{ state.error }</error></p>
+{/if}
 
-	<input type="submit" value="Continue" />
+<label for="email">Email</label>
+<input
+  id="email"
+  type="email"
+  placeholder="me@example.com"
+  required
+  bind:value={ state.email }
+  />
+<label for="password">Password</label>
+<input
+	id="password"
+	type="password"
+  placeholder="…"
+  required
+	bind:value={ state.password }
+	/>
+
+<input type="submit" value="Continue" />
+
 </form>
 
 <style>
