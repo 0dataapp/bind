@@ -1,4 +1,7 @@
 <script>
+/** @type {import('./$types').PageProps} */
+const { data } = $props();
+
 import { signIn } from '$lib/better-auth/client.js';
 import { goto } from '$app/navigation';
 
@@ -23,4 +26,8 @@ import AccountForm from '$lib/AccountForm.svelte';
 
 <AccountForm { ...propsProps } />
 
+{#if !data.DISABLE_SIGNUPS }
+
 <a class="signup" href="/signup">Create account</a>
+	
+{/if}
