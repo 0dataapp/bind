@@ -1,4 +1,5 @@
 <script>
+/** @type {import('./$types').PageProps} */
 const { data } = $props();
 </script>
 
