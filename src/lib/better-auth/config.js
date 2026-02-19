@@ -5,9 +5,11 @@ import { createAuthMiddleware } from 'better-auth/api';
 import { genericAdapter } from '$lib/generic/main.js';
 import usernames from '$lib/username/main.js';
 import database from '$lib/database/main.js';
+import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
 export const auth = betterAuth({
-  secret: env.BETTER_AUTH_SECRET,
+  secret: building ? 'BUILD_SECRET_ONLY' : env.BETTER_AUTH_SECRET,
+  baseURL: building ? 'http://localhost' : env.BETTER_AUTH_URL,
   database: genericAdapter({
     // options
   }),
