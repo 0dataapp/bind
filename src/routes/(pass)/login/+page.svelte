@@ -2,7 +2,7 @@
 import { signIn } from '$lib/better-auth/client.js';
 import { goto } from '$app/navigation';
 
-const props = {
+const propsProps = {
 
 	didSubmit: state => signIn[state.username ? 'username' : 'email'](Object.assign({
 		fetchOptions: {
@@ -21,6 +21,6 @@ const props = {
 import AccountForm from '$lib/AccountForm.svelte';
 </script>
 
-<AccountForm { ...props } />
+<AccountForm { ...propsProps } />
 
 <a class="signup" href="/signup">Create account</a>
