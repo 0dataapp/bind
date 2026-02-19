@@ -7,7 +7,7 @@ WORKDIR /app
 
 # copy package.json in isolation to detect changes
 ADD package.json .
-RUN npm install
+RUN npm install --omit=dev
 
 ADD . .
 
