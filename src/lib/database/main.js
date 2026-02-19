@@ -18,7 +18,7 @@ const mod = {
 		if (!collection)
 			throw new Error('missing collection name');
 
-		const folder = env.DATA_DIRECTORY || params.folder || path.join(__dirname, '__data');
+		const folder = path.join(env.DATA_DIRECTORY || params.folder || __dirname, '__db');
 		fs.mkdirSync(folder, { recursive: true });
 
 		let db;
