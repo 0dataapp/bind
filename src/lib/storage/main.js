@@ -7,9 +7,12 @@ const __dirname = path.dirname(__filename);
 
 const metaSuffix = '.meta.json';
 
+import { env } from '$env/dynamic/private';
+const folder = env.DATA_DIRECTORY || path.join(__dirname, '__files');
+
 const mod = {
 
-	_resolvePath: (handle, url) => path.join(__dirname, '__files', handle, url),
+	_resolvePath: (handle, url) => path.join(folder, handle, url),
 
 	_readJson (path) {
     try {
