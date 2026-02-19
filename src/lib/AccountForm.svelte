@@ -1,15 +1,18 @@
 <script>
 const state = {
-	email: '',
+	emailorhandle: '',
 	password: '',
 	setError: message => state.error = message,
 };
 
 export let didSubmit;
+export let acceptHandle = false;
 </script>
 
 <form id="account-form" onsubmit={ event => {
 	event.preventDefault();
+
+	state[acceptHandle && !state.emailOrHandle.match('@') ? 'username' : 'email'] = state.emailOrHandle;
 	
 	state.error = null;
 
@@ -20,13 +23,13 @@ export let didSubmit;
 	<p><error>{ state.error }</error></p>
 {/if}
 
-<label for="email">Email</label>
+<label for="emailOrHandle">{ acceptHandle ? 'Email or Handle' : 'Email' }</label>
 <input
-  id="email"
-  type="email"
-  placeholder="me@example.com"
+  id="emailOrHandle"
+  type={ acceptHandle ? 'text' : 'email' }
+  placeholder={ acceptHandle ? 'me' : 'me@example.com' }
   required
-  bind:value={ state.email }
+  bind:value={ state.emailOrHandle }
   />
 <label for="password">Password</label>
 <input
