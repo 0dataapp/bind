@@ -2,6 +2,6 @@
 export function load({ data }) {
 	return {
 		title: 'Dashboard',
-		origin: data.origin,
+		origin: (data || {}).origin,
 	};
 }
