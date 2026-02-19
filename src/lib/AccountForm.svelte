@@ -23,9 +23,9 @@ export let acceptHandle = false;
 	<p><error>{ state.error }</error></p>
 {/if}
 
-<label for="emailOrHandle">{ acceptHandle ? 'Email or Handle' : 'Email' }</label>
+<label for={ acceptHandle ? 'emailOrHandle' : 'email' }>{ acceptHandle ? 'Email or Handle' : 'Email' }</label>
 <input
-  id="emailOrHandle"
+  id={ acceptHandle ? 'emailOrHandle' : 'email' }
   type={ acceptHandle ? 'text' : 'email' }
   placeholder={ acceptHandle ? 'me' : 'me@example.com' }
   required
