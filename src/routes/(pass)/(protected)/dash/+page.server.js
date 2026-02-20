@@ -3,4 +3,4 @@ export function load({ request }) {
 	return {
 		origin: request.headers.get('host'),
 	};
-}
+};
