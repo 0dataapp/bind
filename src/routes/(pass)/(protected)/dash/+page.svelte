@@ -17,5 +17,3 @@ import CopyButton from '$lib/CopyButton.svelte';
     <CopyButton text={ mod.account } />
   </fieldset>
 </form>
-
-<a href="/logout">Sign out</a>
