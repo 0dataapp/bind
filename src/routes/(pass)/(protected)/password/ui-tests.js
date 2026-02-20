@@ -112,6 +112,8 @@ test.describe('password', () => {
         });
         
       });
+
+      sessionTest('dash', ({ page }) => expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard'));
       
     });
     
