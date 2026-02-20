@@ -1,4 +1,4 @@
-# bind-vcs
+# bind
 
 Git-backed remoteStorage server.
 

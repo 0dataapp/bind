@@ -1,5 +1,5 @@
 {
-  "name": "bind-vcs",
+  "name": "bind",
   "type": "module",
   "scripts": {
     "start": "vite dev",
