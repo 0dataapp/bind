@@ -1,4 +1,6 @@
-import { env } from '$env/dynamic/private';
+const env = {}
+import { config } from 'dotenv'; // sveltekit $env not available in playwright
+config({ processEnv: env });
 
 /** @type {import('./$types').LayoutLoad} */
 export function load() {
