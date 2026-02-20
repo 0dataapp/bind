@@ -35,8 +35,8 @@ export function load({ url }) {
 }
 
 import { auth } from '$lib/better-auth/config';
-import { redirect } from '@sveltejs/kit';
 import oauth from '$lib/oauth-implicit/main.js';
+import { redirect } from '@sveltejs/kit';
 
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
