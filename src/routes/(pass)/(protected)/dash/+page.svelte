@@ -17,3 +17,5 @@ import CopyButton from '$lib/CopyButton.svelte';
     <CopyButton text={ mod.account } />
   </fieldset>
 </form>
+
+<a href="/password">Change password</a>
