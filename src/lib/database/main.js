@@ -14,11 +14,13 @@ import { ulid } from "ulid";
 
 const mod = {
 
+	_subdirectory: () => '__db',
+
 	collection (collection, params = {}) {
 		if (!collection)
 			throw new Error('missing collection name');
 
-		const folder = path.join(env.DATA_DIRECTORY || params.folder || __dirname, '__db');
+		const folder = path.join(env.DATA_DIRECTORY || params.folder || __dirname, mod._subdirectory());
 		fs.mkdirSync(folder, { recursive: true });
 
 		let db;

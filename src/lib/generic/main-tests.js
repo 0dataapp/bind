@@ -1,5 +1,6 @@
 import { describe, it, expect, afterAll } from 'vitest';
 import { _jsonQParams, _filterItems, _adapterMethods } from './main.js';
+import database from '../database/main.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -8,7 +9,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const folder = path.join(__dirname, '__tests');
+const _DATA_DIRECTORY = path.join(__dirname, '../../../__testing');
+const folder = path.join(_DATA_DIRECTORY, database._subdirectory());
 
 const uItem = params => Object.assign({
 	id: Math.random().toString(),
@@ -228,7 +230,7 @@ describe('genericAdapter', () => {
 		collection = Math.random().toString(),
 	} = {}) => {
 		const methods = _adapterMethods({
-			folder,
+			folder: _DATA_DIRECTORY,
 		}, () => collection);
 
 		return {

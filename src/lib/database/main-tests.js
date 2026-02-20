@@ -6,17 +6,17 @@ import mod from './main.js';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const folder = '__tests';
-const _folder = path.join(__dirname, folder);
+const _DATA_DIRECTORY = path.join(__dirname, '../../../__testing');
+const folder = path.join(_DATA_DIRECTORY, mod._subdirectory());
 
 describe('collection', () => {
 
 	afterAll(() => {
-	  fs.readdirSync(_folder).forEach(e => fs.unlinkSync(path.join(_folder, e)));
+	  fs.readdirSync(folder).forEach(e => fs.unlinkSync(path.join(folder, e)));
 	});
 
 	const _collection = e => mod.collection(e || Math.random().toString(), {
-		folder: _folder,
+		folder: _DATA_DIRECTORY,
 	});
 
 	it('throws if not string', () => {
@@ -42,7 +42,7 @@ describe('collection', () => {
 				id: Math.random().toString(),
 			};
 			_collection(collection).create(item);
-			expect(JSON.parse(fs.readFileSync(path.join(__dirname, folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [item] });
+			expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [item] });
 		});
 
 	});
@@ -86,7 +86,7 @@ describe('collection', () => {
 			const item = { id, key };
 			db.update(id, item);
 
-			expect(JSON.parse(fs.readFileSync(path.join(__dirname, folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [item] });
+			expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [item] });
 		});
 
 	});
@@ -111,7 +111,7 @@ describe('collection', () => {
 
 			db.delete(id);
 			
-			expect(JSON.parse(fs.readFileSync(path.join(__dirname, folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [] });
+			expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [] });
 		});
 
 	});
