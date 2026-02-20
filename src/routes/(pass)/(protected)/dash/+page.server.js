@@ -1,6 +1,6 @@
 /** @type {import('./$types').PageServerLoad} */
-export function load(event) {
+export function load({ request }) {
 	return {
-		origin: event.request.headers.get('host'),
+		origin: request.headers.get('host'),
 	};
 }
