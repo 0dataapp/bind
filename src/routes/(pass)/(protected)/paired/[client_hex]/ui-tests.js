@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
-import { load } from './+page.js';
+import { load } from './+page.server.js';
 import stub from '../../../lib/stub.js';
 
 const _load = load({});
 
-test.describe('dash', () => {
+test.describe('paired', () => {
 
-  test.beforeEach(({ page }) => page.goto('/dash'));
+  test.beforeEach(({ page }) => page.goto('/paired'));
 
   test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
 
@@ -34,26 +34,12 @@ test.describe('dash', () => {
       
     });
 
-    sessionTest.skip('account', ({ page, account }) => expect(page.locator('.account')).toHaveText(account.email));
+    sessionTest.describe('form', () => {
 
-    sessionTest('paired', ({ page }) => expect(page.locator('a[href="/paired"]')).toHaveText('Connected apps'));
+      sessionTest.describe('submit', () => {
 
-    sessionTest('password', ({ page }) => expect(page.locator('a[href="/password"]')).toHaveText('Change password'));
-
-    sessionTest.describe('logout', () => {
-
-      sessionTest('text', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));
-
-      sessionTest('success', async ({ page }) => {
-        await page.locator('a[href="/logout"]').click();
-
-        await expect(page).not.toHaveURL(/\/dash/);
-
-        expect(new URL(await page.url()).pathname).toBe('/');
-
-        await page.goto('/dash');
-
-        await expect(page).toHaveURL(/\/login/)
+        sessionTest('value', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Revoke access'));
+        
       });
       
     });

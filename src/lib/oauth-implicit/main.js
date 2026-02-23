@@ -38,6 +38,9 @@ const mod = {
 
 	getScope: (userId, token) => _db.getItems().filter(e => e.userId === userId && e.token === token).map(mod._hydrate).shift()?.data?.scope,
 
+	authorizations: userId => _db.getItems().filter(e => e.userId === userId).map(mod._hydrate),
+	revokeClient: (userId, client) => Promise.all(mod.authorizations(userId).filter(e => e.data.client_id === client).map(e => _db.delete(e.id))),
+
 };
 
 export default mod

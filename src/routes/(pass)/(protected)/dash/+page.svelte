@@ -18,4 +18,9 @@ import CopyButton from '$lib/CopyButton.svelte';
   </fieldset>
 </form>
 
-<a href="/password">Change password</a>
+<p>
+  <a href="/paired">Connected apps</a>
+</p>
+<p>
+  <a href="/password">Change password</a>
+</p>
