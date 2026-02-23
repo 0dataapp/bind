@@ -42,6 +42,8 @@ test.describe('dash', () => {
 
     sessionTest('password', ({ page }) => expect(page.locator('a[href="/password"]')).toHaveText('Change password'));
 
+    sessionTest('delete', ({ page }) => expect(page.locator('a[href="/delete"]')).toHaveText('Delete account'));
+
     sessionTest.describe('logout', () => {
 
       sessionTest('text', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));

@@ -7,6 +7,7 @@ import usernames from '$lib/username/main.js';
 import database from '$lib/database/main.js';
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
+
 export const auth = betterAuth({
   secret: building ? 'BUILD_SECRET_ONLY' : env.BETTER_AUTH_SECRET,
   baseURL: building ? 'http://localhost' : env.BETTER_AUTH_URL,
@@ -22,6 +23,9 @@ export const auth = betterAuth({
         defaultValue: 'user',
         input: false, // disallow setting role
       },
+    },
+    deleteUser: {
+      enabled: true,
     },
   },
   advanced: {

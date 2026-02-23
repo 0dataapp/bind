@@ -32,3 +32,7 @@ import CopyButton from '$lib/CopyButton.svelte';
 <p>
   <a href="/username">Change username</a>
 </p>
+<p>
+  <a href="/delete">Delete account</a>
+</p>
+
