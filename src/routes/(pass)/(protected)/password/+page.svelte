@@ -1,6 +1,5 @@
 <script>
 import { changePassword } from '$lib/better-auth/client';
-import { goto } from '$app/navigation';
 
 const state = {
 	oldPassword: '',
