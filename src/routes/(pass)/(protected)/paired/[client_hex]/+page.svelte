@@ -1,13 +1,6 @@
 <script>
-import util from '$lib/util.js';
-
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
-
-const mod = {
-
-
-};
 </script>
 
 <ul>
