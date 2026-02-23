@@ -42,11 +42,12 @@ export const auth = betterAuth({
         return;
 
       let username, response;
+      let tries = 0;
       const check = username => auth.api.isUsernameAvailable({
         body: { username },
       });
       while (!response || !response?.available)
-        response = await check(username = usernames.generate());
+        response = await check(username = usernames.generate(3 + tries++ / 10));
 
       return {
         context: {
