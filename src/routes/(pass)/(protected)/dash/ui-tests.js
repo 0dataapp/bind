@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { load } from './+page.js';
-import stub from '../../stub.js';
+import stub from '../../../lib/stub.js';
 
 const _load = load({});
 
