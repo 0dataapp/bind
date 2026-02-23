@@ -83,7 +83,7 @@ const mod = {
 			return Object.assign(coll, {
 				[item]: JSON.parse(fs.readFileSync(mod._metaPath(_path), 'utf8')),
 			});
-		}, {})
+		}, {});
 	},
 
 };
