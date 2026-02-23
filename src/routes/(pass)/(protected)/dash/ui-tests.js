@@ -38,6 +38,8 @@ test.describe('dash', () => {
 
     sessionTest('paired', ({ page }) => expect(page.locator('a[href="/paired"]')).toHaveText('Connected apps'));
 
+    sessionTest('username', ({ page }) => expect(page.locator('a[href="/username"]')).toHaveText('Change username'));
+
     sessionTest('password', ({ page }) => expect(page.locator('a[href="/password"]')).toHaveText('Change password'));
 
     sessionTest.describe('logout', () => {

@@ -26,3 +26,6 @@ import CopyButton from '$lib/CopyButton.svelte';
 <p>
   <a href="/password">Change password</a>
 </p>
+<p>
+  <a href="/username">Change username</a>
+</p>
