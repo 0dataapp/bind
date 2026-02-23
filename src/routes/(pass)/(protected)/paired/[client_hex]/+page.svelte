@@ -10,8 +10,3 @@ const { data } = $props();
 <form method="POST">
   <input type="submit" value="Revoke access" />
 </form>
-
-
-
-
-
