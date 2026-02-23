@@ -11,6 +11,8 @@ const mod = {
 import CopyButton from '$lib/CopyButton.svelte';
 </script>
 
+<p>You can use the following storage address with remoteStorage-compatible apps:</p>
+
 <form>
   <fieldset role="group">
     <pre class="account">{ mod.account }</pre>
