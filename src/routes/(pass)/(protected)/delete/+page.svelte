@@ -1,48 +1,19 @@
 <script>
-import { deleteUser } from '$lib/better-auth/client';
-import { goto } from '$app/navigation';
-
 const state = {
 	password: '',
 	confirm: '',
-	setError: message => state.error = message,
 };
 
-const mod = {
-
-	onsubmit: event => {
-		event.preventDefault();
-
-		if (state.confirm !== 'CONFIRM')
-			return state.setError('Confirmation incorrect')
-
-		state.error = null;
-
-		deleteUser({
-			password: state.password,
-			fetchOptions: {
-				onSuccess: () => {
-					goto('/');
-				},
-				onError: context => {
-					state.password = '';
-					state.confirm = '';
-					
-					state.setError(context.error.message)
-				},
-			},
-		});
-	},
-
-};
+/** @type {import('./$types').PageProps} */
+let { data, form } = $props();
 
 import Flash from '$lib/Flash.svelte';
 </script>
 
-<form onsubmit={ mod.onsubmit }>
+<form method="POST">
 
-{#if state.error }
-	<Flash type="error" message={ state.error } />
+{#if form?.error }
+	<Flash type="error" message={ form?.error } />
 {/if}
 
 <p>This will immediately and irreversibly delete all your data.</p>
@@ -50,6 +21,7 @@ import Flash from '$lib/Flash.svelte';
 <label for="password">Password</label>
 <input
 	id="password"
+	name="password"
 	type="password"
   placeholder="…"
   required
@@ -59,6 +31,7 @@ import Flash from '$lib/Flash.svelte';
 <label for="confirm">Confirmation (type <code>CONFIRM</code>)</label>
 <input
 	id="confirm"
+	name="confirm"
 	type="text"
   placeholder="…"
   required
