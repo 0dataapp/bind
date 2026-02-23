@@ -22,7 +22,7 @@ import oauth from '$lib/oauth-implicit/main.js';
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
 	
-	default: async ({ request, parent, params }) => {
+	default: async ({ request, params }) => {
 		await oauth.revokeClient((await auth.api.getSession({
 			headers: request.headers,
 		})).user.id, util.hex.decode(params.client_hex));
