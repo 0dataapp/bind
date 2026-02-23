@@ -42,8 +42,6 @@ import { redirect } from '@sveltejs/kit';
 export const actions = {
 	
 	default: async ({ request, url }) => {
-		const formData = await request.formData();
-
 		const token = await oauth.createToken((await auth.api.getSession({
 			headers: request.headers,
 		})).user.id, {
