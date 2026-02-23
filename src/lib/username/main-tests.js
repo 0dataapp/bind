@@ -21,4 +21,13 @@ describe('generate', () => {
 		expect(items.filter(e => e.match(/[ilo10]/i))).toEqual([]);
 	});
 
+	it('throws if input under 3', () => {
+		expect(() => mod.generate(2)).toThrow(/length too short/);
+	});
+
+	it('fills to length', () => {
+		const length = Math.max(Date.now() % 10, 4);
+		expect(mod.generate(length)).toMatch(new RegExp(`^${ Array.from({ length }, (e, i) => i % 2 ? '[0-9]' : '[a-z]').join('') }$`));
+	});
+
 });
