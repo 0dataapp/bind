@@ -8,6 +8,7 @@ import database from '$lib/database/main.js';
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
 import oauth from '$lib/oauth-implicit/main.js';
+import storage from '$lib/storage/main.js';
 
 export const auth = betterAuth({
   secret: building ? 'BUILD_SECRET_ONLY' : env.BETTER_AUTH_SECRET,
@@ -29,6 +30,7 @@ export const auth = betterAuth({
       enabled: true,
       beforeDelete: async (user, request) => {
         await oauth.revokeAll(user.id);
+        await storage.erase(user.id);
       },
     },
   },

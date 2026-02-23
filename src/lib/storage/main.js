@@ -86,6 +86,10 @@ const mod = {
 		}, {});
 	},
 
+	erase (handle) {
+		return fs.rmSync(mod.dataPath(handle, '/'), { recursive: true, force: true });
+	},
+
 };
 
 export default mod;
