@@ -23,6 +23,9 @@ import CopyButton from '$lib/CopyButton.svelte';
 <p>
   <a href="/paired">Connected apps</a>
 </p>
+
+<hr>
+
 <p>
   <a href="/password">Change password</a>
 </p>
