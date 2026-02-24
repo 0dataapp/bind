@@ -25,5 +25,10 @@ export default defineConfig(({ mode }) => {
 			port: env.PORT,
 			allowedHosts: [ env.HOST ],
 		},
+		build: {
+			rollupOptions: {
+				external: ['dotenv'],
+			},
+		},
 	};
 });
