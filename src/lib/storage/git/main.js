@@ -1,8 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+import { env } from '$env/dynamic/private';
+const folder = path.join(env.DATA_DIRECTORY || __dirname, '__storage/git');
+
 import crypto from 'crypto'
-const _storage = path.join(process.env.DATA_DIRECTORY || process.cwd(), '__main', crypto.createHash('sha256').update(process.env.GIT_REMOTE).digest('hex').substring(0, 8));
 
 import { simpleGit, CleanOptions } from 'simple-git';
 
@@ -27,7 +33,7 @@ function debounce(func, wait, immediate) {
 
 const mod = {
 
-	_resolvePath: (handle, url) => path.join(_storage, handle, url),
+	_resolvePath: (handle, url) => path.join(mod._storage, handle, url),
 
 	_readJson (path) {
     try {
@@ -41,7 +47,7 @@ const mod = {
     }
   },
 
-  dataPath: (handle, url) => path.join(_storage, url),
+  dataPath: (handle, url) => path.join(mod._storage, url),
 	_gitPath: _url => `.${ _url }`,
 	_isIgnored: e => [
 		'.DS_Store',
@@ -159,10 +165,12 @@ const mod = {
 	},
 
 	async setupEverything () {
-		if (!fs.existsSync(_storage))
-			await simpleGit().clone(process.env.GIT_REMOTE, _storage);
+		mod._storage = path.join(folder, crypto.createHash('sha256').update(env.GIT_REMOTE).digest('hex').substring(0, 8));
 
-		mod.git = simpleGit(_storage, {
+		if (!fs.existsSync(mod._storage))
+			await simpleGit().clone(env.GIT_REMOTE, mod._storage);
+
+		mod.git = simpleGit(mod._storage, {
 			maxConcurrentProcesses: 10,
 			trimmed: true,
 		}).clean(CleanOptions.FORCE);
@@ -171,12 +179,10 @@ const mod = {
 
 		setInterval(mod.gitPull, pollSeconds * 1000);
 
-		mod.git.addConfig('user.name', process.env.GIT_CONFIG_NAME || 'me');
-		mod.git.addConfig('user.email', process.env.GIT_CONFIG_EMAIL || 'me@example.com');
+		mod.git.addConfig('user.name', env.GIT_CONFIG_NAME || 'me');
+		mod.git.addConfig('user.email', env.GIT_CONFIG_EMAIL || 'me@example.com');
 	},
 
 };
-
-mod.setupEverything();
 
 export default mod;

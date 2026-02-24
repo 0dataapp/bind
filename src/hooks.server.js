@@ -8,6 +8,9 @@ import bind from 'bind-middleware';
 import disk from '$lib/storage/disk/main.js';
 import git from '$lib/storage/git/main.js';
 
+if (env.STORAGE_ADAPTER === 'git')
+  git.setupEverything();
+
 import oauth from '$lib/oauth-implicit/main.js';
 
 import { sequence } from '@sveltejs/kit/hooks';

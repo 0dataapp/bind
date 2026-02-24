@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 const metaSuffix = '.meta.json';
 
 import { env } from '$env/dynamic/private';
-const folder = path.join(env.DATA_DIRECTORY || __dirname, '__storage');
+const folder = path.join(env.DATA_DIRECTORY || __dirname, '__storage/disk');
 
 const mod = {
 
