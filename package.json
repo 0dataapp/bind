@@ -12,7 +12,9 @@
     "test:unit": "vitest"
   },
   "devDependencies": {
-    "@playwright/test": "^1.49.1"
+    "@playwright/test": "^1.49.1",
+    "module-alias": "^2.3.4",
+    "vitest": "^3.2.3"
   },
   "dependencies": {
     "@picocss/pico": "^2.1.1",
@@ -26,12 +28,10 @@
     "express": "^5.2.1",
     "js-jsonq": "^1.0.3",
     "lowdb": "^7.0.1",
-    "module-alias": "^2.3.4",
     "normalize.css": "^8.0.1",
     "simple-git": "^3.30.0",
     "svelte": "^5.46.4",
     "ulid": "^3.0.2",
-    "vite": "^7.0.4",
-    "vitest": "^3.2.3"
+    "vite": "^7.0.4"
   }
 }
