@@ -1,6 +1,4 @@
-const env = {}
-import { config } from 'dotenv'; // sveltekit $env not available in playwright
-config({ processEnv: env });
+import { env } from '$env/dynamic/private';
 
 import { redirect } from '@sveltejs/kit';
 
