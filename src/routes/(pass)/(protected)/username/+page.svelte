@@ -18,7 +18,7 @@ const mod = {
 			username: state.username,
 			fetchOptions: {
 				onSuccess: () => {
-					invalidateAll(); // force svelte to re-run load function so that updated username appears on dash https://svelte.dev/docs/kit/load#Rerunning-load-functions-Manual-invalidation
+					invalidateAll(); // force svelte to re-run load function so that updated username appears on dash https://svelte.dev/docs/kit/load#Rerunning-load-functions-Manual-invalidation; better solution might be lazy evaluation https://svelte.dev/docs/svelte/compiler-warnings#state_referenced_locally
 
 					state.username = '';
 
