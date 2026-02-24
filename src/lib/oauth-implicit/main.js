@@ -16,7 +16,7 @@ const mod = {
 	},
 
 	_hydrate: object => {
-	  return typeof object.data !== 'string' ? object : Object.assign(object, {
+	  return typeof object.data !== 'string' ? object : Object.assign(structuredClone(object), {
 	    createdAt: new Date(object.createdAt),
 	    data: JSON.parse(object.data),
 	  });
