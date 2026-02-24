@@ -27,10 +27,10 @@ export const handle = sequence(
 	  storage: env.STORAGE_ADAPTER === 'git' ? git : disk,
 	}), `/${ prefix }`),
   bind.sveltekit(bind.webfinger({
-    prefix,
-    swapHandle: handle => {
+    storagePath: handle => {
     	const user = _db.getItems().filter(e => e.username === handle).shift();
-    	return user ? user.id : '';
+    	return `/${ prefix }/${ user ? user.id : '' }`;
     },
+    authPath: '/oauth',
   })),
 );
