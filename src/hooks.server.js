@@ -1,10 +1,13 @@
 import { auth } from '$lib/better-auth/config.js';
 import { svelteKitHandler } from 'better-auth/svelte-kit';
 import { building } from '$app/environment';
+import { env } from '$env/dynamic/private';
 
 import bind from 'bind-middleware';
 
-import storage from '$lib/storage/disk/main.js';
+import disk from '$lib/storage/disk/main.js';
+import git from '$lib/storage/git/main.js';
+
 import oauth from '$lib/oauth-implicit/main.js';
 
 import { sequence } from '@sveltejs/kit/hooks';
@@ -18,7 +21,7 @@ export const handle = sequence(
   bind.sveltekit(bind.cors()),
 	bind.sveltekit(bind.storage({
 	  getScope: oauth.getScope,
-	  storage,
+	  storage: env.STORAGE_ADAPTER === 'git' ? git : disk,
 	}), `/${ prefix }`),
   bind.sveltekit(bind.webfinger({
     prefix,
