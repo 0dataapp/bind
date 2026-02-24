@@ -1,8 +1,8 @@
+import data from './data.js';
+
 /** @type {import('./$types').PageLoad} */
 export function load() {
-	return {
-		title: 'Delete account',
-	};
+	return data;
 };
 
 import { auth } from '$lib/better-auth/config';

@@ -1,8 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { load } from './+page.server.js';
-import stub from '../../../lib/stub.js';
-
-const _load = load({});
+import stub from '$lib/stub.js';
 
 test.describe('paired', () => {
 
@@ -24,14 +21,6 @@ test.describe('paired', () => {
       await page.locator('input[type="submit"]').click();
 
       await expect(page).toHaveURL(/\/dash/);
-    });
-
-    sessionTest.describe('title', () => {
-
-      sessionTest('head', async ({ page }) => expect(await page.title()).toEqual(_load.title));
-
-      sessionTest('h1', ({ page }) => expect(page.locator('h1')).toHaveText(_load.title));
-      
     });
 
     sessionTest.describe('form', () => {

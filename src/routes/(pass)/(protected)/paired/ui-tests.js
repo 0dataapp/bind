@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { load } from './+page.server.js';
-import stub from '../../../lib/stub.js';
+import stub from '$lib/stub.js';
 
-const _load = load({});
+const _load = load({
+  parent: () => ({}),
+});
 
 test.describe('paired', () => {
 

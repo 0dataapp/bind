@@ -24,6 +24,7 @@
     "express": "^5.2.1",
     "js-jsonq": "^1.0.3",
     "lowdb": "^7.0.1",
+    "module-alias": "^2.3.4",
     "normalize.css": "^8.0.1",
     "svelte": "^5.46.4",
     "ulid": "^3.0.2",

@@ -1,8 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { load } from './+page.server.js';
-import stub from '../../../lib/stub.js';
-
-const _load = load({});
+import data from './data.js';
+import stub from '$lib/stub.js';
 
 test.describe('password', () => {
 
@@ -28,9 +26,9 @@ test.describe('password', () => {
 
     sessionTest.describe('title', () => {
 
-      sessionTest('head', async ({ page }) => expect(await page.title()).toEqual(_load.title));
+      sessionTest('head', async ({ page }) => expect(await page.title()).toEqual(data.title));
 
-      sessionTest('h1', ({ page }) => expect(page.locator('h1')).toHaveText(_load.title));
+      sessionTest('h1', ({ page }) => expect(page.locator('h1')).toHaveText(data.title));
       
     });
 
