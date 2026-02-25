@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { load } from './+page.js';
 import stub from '$lib/stub.js';
+import logic from './logic.js';
 
 test.describe('sources', () => {
 
@@ -34,7 +35,11 @@ test.describe('sources', () => {
       
     });
 
-    sessionTest('github', ({ page }) => expect(page.locator('.github')).toHaveText('GitHub'));
+    logic.providers.forEach(e => {
+
+      sessionTest(e.slug, ({ page }) => expect(page.locator(`.${ e.slug }`)).toHaveText(e.name));
+
+    });
     
   });
 
