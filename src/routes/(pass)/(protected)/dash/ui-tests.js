@@ -36,6 +36,8 @@ test.describe('dash', () => {
 
     sessionTest.skip('account', ({ page, account }) => expect(page.locator('.account')).toHaveText(account.email));
 
+    sessionTest('sources', ({ page }) => expect(page.locator('a[href="/sources"]')).toHaveText('Data sources'));
+
     sessionTest('paired', ({ page }) => expect(page.locator('a[href="/paired"]')).toHaveText('Connected apps'));
 
     sessionTest('username', ({ page }) => expect(page.locator('a[href="/username"]')).toHaveText('Change username'));

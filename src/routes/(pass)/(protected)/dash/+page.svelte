@@ -21,6 +21,10 @@ import CopyButton from '$lib/CopyButton.svelte';
 </form>
 
 <p>
+  <a href="/sources">Data sources</a>
+</p>
+
+<p>
   <a href="/paired">Connected apps</a>
 </p>
 

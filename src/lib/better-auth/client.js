@@ -8,6 +8,11 @@ export const {
 
 	changePassword,
 	updateUser,
+
+	linkSocial,
+	listAccounts,
+	unlinkAccount,
+	
 } = createAuthClient({
 	plugins: [
 		usernameClient(),
