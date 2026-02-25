@@ -32,9 +32,9 @@ test.describe('oauth', () => {
       await page.locator('input[type="submit"]').click();
 
       await expect(page).toHaveURL(/\/dash/);
-    });
 
-    sessionTest.beforeEach(({ page }) => page.goto('/oauth'));
+      await page.goto('/oauth');
+    });
 
     sessionTest.describe('title', () => {
 

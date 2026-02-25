@@ -26,6 +26,8 @@ test.describe('paired', () => {
       await page.locator('input[type="submit"]').click();
 
       await expect(page).toHaveURL(/\/dash/);
+
+      await page.goto('/paired');
     });
 
     sessionTest.describe('title', () => {

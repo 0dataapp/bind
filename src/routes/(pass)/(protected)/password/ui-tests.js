@@ -24,6 +24,8 @@ test.describe('password', () => {
       await page.locator('input[type="submit"]').click();
 
       await expect(page).toHaveURL(/\/dash/);
+
+      await page.goto('/password');
     });
 
     sessionTest.describe('title', () => {

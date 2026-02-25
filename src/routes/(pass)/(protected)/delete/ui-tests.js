@@ -2,9 +2,9 @@ import { test, expect } from '@playwright/test';
 import data from './data.js';
 import stub from '$lib/stub.js';
 
-test.describe('password', () => {
+test.describe('delete', () => {
 
-  test.beforeEach(({ page }) => page.goto('/password'));
+  test.beforeEach(({ page }) => page.goto('/delete'));
 
   test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
 
@@ -22,6 +22,8 @@ test.describe('password', () => {
       await page.locator('input[type="submit"]').click();
 
       await expect(page).toHaveURL(/\/dash/);
+
+      await page.goto('/delete');
     });
 
     sessionTest.describe('title', () => {
