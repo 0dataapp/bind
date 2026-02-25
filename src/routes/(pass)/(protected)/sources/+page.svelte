@@ -55,7 +55,7 @@ mod.setup();
 <h4>Unlink account</h4>
 
 {#each mod.linked as e }
-	<button class={ e.slug } onclick={ () => mod.unlink(e.account) }>{ e.name }</button>
+	<button onclick={ () => mod.unlink(e.account) }>{ e.name }</button>
 {/each}
 
 {/if}
