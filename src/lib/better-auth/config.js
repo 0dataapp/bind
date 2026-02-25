@@ -13,10 +13,13 @@ import storage from '$lib/storage/disk/main.js';
 export const auth = betterAuth({
   secret: building ? 'BUILD_SECRET_ONLY' : env.BETTER_AUTH_SECRET,
   baseURL: building ? 'http://localhost' : env.BETTER_AUTH_URL,
+  
   database: genericAdapter({
     // options
   }),
+
   emailAndPassword: { enabled: true },
+
   user: {
     additionalFields: {
       role: {
@@ -34,18 +37,14 @@ export const auth = betterAuth({
       },
     },
   },
-  advanced: {
-    database: {
-      generateId: database.generateId,
-    },
-    cookiePrefix: 'bind',
-  },
+
   disablePaths: ['/is-username-available'],
   plugins: [
     username({
       displayUsernameNormalization: () => '',
     }),
   ],
+
   hooks: {
     before: createAuthMiddleware(async ctx => {
       if (ctx.path !== '/sign-up/email')
@@ -69,5 +68,12 @@ export const auth = betterAuth({
         },
       };
     }),
+  },
+
+  advanced: {
+    database: {
+      generateId: database.generateId,
+    },
+    cookiePrefix: 'bind',
   },
 });
