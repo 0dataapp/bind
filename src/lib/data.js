@@ -1,8 +1,11 @@
+const _providers = {
+	github: 'GitHub',
+};
+
 const mod = {
 
-	providers: Object.entries({
-		github: 'GitHub',
-	}).map(([slug, name]) => ({ slug, name })),
+	_providers,
+	providers: Object.entries(_providers).map(([slug, name]) => ({ slug, name })),
 
 };
 
