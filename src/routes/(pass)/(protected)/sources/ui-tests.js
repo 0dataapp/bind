@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { load } from './+page.js';
 import stub from '$lib/stub.js';
-import logic from './logic.js';
+import data from '$lib/data.js';
 
 test.describe('sources', () => {
 
@@ -35,7 +35,7 @@ test.describe('sources', () => {
       
     });
 
-    logic.providers.forEach(e => {
+    data.providers.forEach(e => {
 
       sessionTest(e.slug, ({ page }) => expect(page.locator(`.${ e.slug }`)).toHaveText(e.name));
 

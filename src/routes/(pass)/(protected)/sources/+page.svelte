@@ -1,5 +1,6 @@
 <script>
 import { linkSocial, listAccounts, unlinkAccount } from '$lib/better-auth/client.js';
+import data from '$lib/data.js';
 import logic from './logic.js';
 
 const mod = {
@@ -8,8 +9,8 @@ const mod = {
 	setAccounts (data) {
 		mod._accounts = data.filter(e => e.providerId !== 'credential');
 
-		mod.available = logic.providers.filter(e => !mod._accounts.map(e => e.providerId).includes(e.slug));
-		mod.linked = mod._accounts.map(account => Object.assign(logic.providers.filter(e => account.providerId === e.slug).shift(), {
+		mod.available = data.providers.filter(e => !mod._accounts.map(e => e.providerId).includes(e.slug));
+		mod.linked = mod._accounts.map(account => Object.assign(data.providers.filter(e => account.providerId === e.slug).shift(), {
 			account,
 		}));
 	},
