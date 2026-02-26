@@ -20,6 +20,18 @@ const mod = {
 		},
 	},
 
+	dehydrate: object => {
+	  return Object.assign(object, {
+	  	data: JSON.stringify(object.data),
+	  });
+	},
+	hydrate: object => {
+	  return typeof object.data !== 'string' ? object : Object.assign(structuredClone(object), {
+	    createdAt: new Date(object.createdAt),
+	    data: JSON.parse(object.data),
+	  });
+	},
+
 };
 
 export default mod;
