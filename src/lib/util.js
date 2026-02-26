@@ -1,9 +1,11 @@
 const mod = {
 
-	group: (e, callback) => e.reduce((coll, item) => Object.assign(coll, {
-		[callback(item)]: (coll[callback(item)] || []).concat(item),
-	}), {}),
-	groupList: (e, callback) => Object.entries(mod.group(e, callback)).map(([key, value]) => ({ key, value })),
+	group: {
+		asObject: (e, callback) => e.reduce((coll, item) => Object.assign(coll, {
+				[callback(item)]: (coll[callback(item)] || []).concat(item),
+			}), {}),
+		asArray: (e, callback) => Object.entries(mod.group.asObject(e, callback)).map(([key, values]) => ({ key, values })),
+	},
 
 	sort: {
 		asc: callback => (a, b) => ((a, b) => (a < b) ? -1 : ((a > b) ? 1 : 0))(callback(a), callback(b)),

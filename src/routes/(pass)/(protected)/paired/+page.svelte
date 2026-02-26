@@ -7,7 +7,7 @@ const { data } = $props();
 
 const mod = {
 
-	groupings: Object.entries(util.group(data.connections, e => e.data.client_id)).map(([key, values]) => ({ key, values })),
+	groupings: util.group.asArray(data.connections, e => e.data.client_id),
 
 };
 </script>
