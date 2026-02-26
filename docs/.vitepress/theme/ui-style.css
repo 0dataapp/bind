@@ -1,0 +1,60 @@
+:root {
+--vp-c-bg: var(--zd-bg-main);
+  --vp-sidebar-bg-color: var(--zd-bg-main2);
+
+  --vp-c-text-1: var(--zd-text-main);
+  --vp-c-brand-1: var(--zd-text-main);
+
+  --vp-home-hero-name-color: var(--zd-accent);
+
+  --vp-c-bg-soft: var(--zd-bg-alt);
+  --vp-button-alt-bg: var(--zd-bg-alt);
+
+  --vp-button-brand-bg: var(--zd-accent);
+
+  --vp-nav-logo-height: 60px;
+}
+
+.VPNavBarExtra, .VPNavBarAppearance {
+  display: none !important;
+}
+
+.nodeLabel p {
+  line-height: unset !important;
+}
+
+.edgeLabel foreignObject {
+  --size: 36px;
+  width: var(--size);
+  height: var(--size);
+  padding: var(--zd-spacing);
+
+  div {
+    display: block !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-radius: var(--zd-corner);
+  }
+}
+
+@media (min-width: 450px) {
+  .ways {
+    display: flex;
+    justify-content: center;
+
+    .way {
+      padding: calc(var(--zd-spacing) * 2);
+
+      width: 40%;
+
+      text-align: center;
+
+      &:nth-child(1) svg {
+        max-width: 92% !important;
+      }
+
+      &:nth-child(2) {
+        max-width: 94% !important;
+      }
+    }
+  }
+}
