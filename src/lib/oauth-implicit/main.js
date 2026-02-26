@@ -18,7 +18,7 @@ const mod = {
 			userId,
 			token,
 			createdAt: new Date(),
-			data: data,
+			data,
 		}));
 
 		return token;
