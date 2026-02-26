@@ -1,7 +1,6 @@
 <script>
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
-console.log(data);
 </script>
 
 <label for="source-select">Choose source</label>
