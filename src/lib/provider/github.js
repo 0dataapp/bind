@@ -9,6 +9,8 @@ const mod = {
 
 		config: token => ({
 			url: `${ prefix }/user/repos?${ new URLSearchParams({
+				sort: 'updated',
+				direction: 'desc',
 				per_page: 100,
 			}) }`,
 			headers: {
