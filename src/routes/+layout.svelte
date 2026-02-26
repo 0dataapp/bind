@@ -13,6 +13,8 @@ let { children, data } = $props();
 	<title>{ page.data.title }</title>
 
 	<link rel="icon" href="data:;base64,=">
+
+	<meta name="referrer" content="no-referrer" />
 </svelte:head>
 
 <wrap>
