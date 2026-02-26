@@ -39,6 +39,7 @@ const mod = {
 				createdAt: new Date(data.created_at),
 				updatedAt: new Date(data.updated_at),
 				defaultBranch: data.default_branch,
+				cloneURL: data.clone_url,
 				data,
 			}));
 		},
