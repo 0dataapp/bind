@@ -1,5 +1,6 @@
 <script>
 import { unlinkAccount } from '$lib/better-auth/client.js';
+import { goto } from '$app/navigation';
 
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
@@ -8,6 +9,7 @@ const mod = {
 
 	unlink: async account => {
 		await unlinkAccount(account);
+		return goto('/sources');
 	},
 
 };
