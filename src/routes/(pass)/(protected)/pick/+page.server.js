@@ -18,7 +18,7 @@ export async function load({ request }) {
 			
 			const list = util.groupList(repos, e => order[+e.isPrivate]);
 
-			return list.sort(util.sortConform(order, e => e.key)).map(({ key, value: options }) => ({
+			return list.sort(util.sort.conform(order, e => e.key)).map(({ key, value: options }) => ({
 				account: e,
 				label: `${ _abstract._map[e.providerId].name } (${ key })`,
 				options,
