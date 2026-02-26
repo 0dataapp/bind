@@ -18,7 +18,7 @@ const mod = {
 	linked: [],
 
 	link: slug => linkSocial(Object.assign({
-		callbackURL: '/sources',
+		callbackURL: `/sources/${ slug }`,
 	}, logic.params(slug))),
 
 	setup: async () => {
