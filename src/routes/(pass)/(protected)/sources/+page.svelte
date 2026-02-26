@@ -28,7 +28,7 @@ const mod = {
 			return;
 
 		mod.setAccounts(data);
-	}
+	},
 
 };
 
