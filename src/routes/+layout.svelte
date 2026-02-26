@@ -23,6 +23,8 @@ let { children, data } = $props();
 
 {@render children?.()}
 
+{#if data.navigation.length }
+	
 <hr>
 
 <footer>
@@ -32,6 +34,8 @@ let { children, data } = $props();
 		{/each}
 	</nav>
 </footer>
+
+{/if}
 
 </focus>
 
