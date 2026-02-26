@@ -5,25 +5,60 @@ import { goto } from '$app/navigation';
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
 
+let value = $state(data.selected);
+let raw = $state('');
+
 const mod = {
 
-	unlink: async account => {
-		await unlinkAccount(account);
+	onChange: sel => raw = JSON.stringify(sel),
+
+	unlink: async () => {
+		await unlinkAccount(data.account);
 		return goto('/sources');
 	},
 
 };
+
+console.log(value, data.groups);
+
+import Svelecte from 'svelecte';
 </script>
 
-<label for="source-select">Choose default source</label>
-<select id="source-select">
-	{#each data.groups as e }
-	<optgroup label={ e.label }>
-	  {#each e.options as e }
-	  	<option>{ e.name }</option>
-	  {/each}
-	</optgroup>
-	{/each}
-</select>
+<form method="POST">
 
-<button onclick={ mod.unlink }>Unlink</button>
+<p>Authorized apps can read/write data to selected sources.</p>
+
+<div class="Svelecte-container">
+	<Svelecte
+	  bind:value
+	  multiple
+	  valueAsObject
+	  options={ data.groups }
+	  onChange={ mod.onChange }
+	/>
+</div>
+
+<input type="hidden" name="sources" value={ raw } />
+
+<input type="submit" value="Continue" />
+
+</form>
+
+<hr>
+
+<button class="secondary" onclick={ mod.unlink }>Unlink</button>
+
+<style>
+.Svelecte-container {
+	margin: var(--spacing) 0;
+}
+.Svelecte-container :global(.svelecte .sv-input--text)  {
+	padding: unset !important;
+	height: unset !important;
+	--pico-outline-width: 0;
+}
+
+.Svelecte-container :global(.svelecte .sv-item--content)  {
+	padding: 4px 0;
+}
+</style>

@@ -33,14 +33,16 @@ const mod = {
 			// web_commit_signoff_required: false
 
 			return json.filter(e => !e.archived && !e.disabled && !e.is_template).map(data => ({
-				id: data.id,
+				id: data.id.toString(),
 				name: data.name,
+				scopedName: data.full_name,
 				isPrivate: data.private || (data.visibility === 'private'),
 				createdAt: new Date(data.created_at),
 				updatedAt: new Date(data.updated_at),
 				defaultBranch: data.default_branch,
 				cloneURL: data.clone_url,
-				data,
+				ownerId: data.owner.id.toString(),
+				payload: data,
 			}));
 		},
 
