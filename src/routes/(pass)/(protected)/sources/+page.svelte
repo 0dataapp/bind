@@ -1,5 +1,5 @@
 <script>
-import { linkSocial, listAccounts, unlinkAccount } from '$lib/better-auth/client.js';
+import { linkSocial, listAccounts } from '$lib/better-auth/client.js';
 import _data from '$lib/data.js';
 import logic from './logic.js';
 
@@ -21,11 +21,6 @@ const mod = {
 		callbackURL: '/sources',
 	}, logic.params(slug))),
 
-	unlink: async account => {
-		await unlinkAccount(account);
-		mod.setAccounts(mod._accounts.filter(e => e.id !== account.id));
-	},
-
 	setup: async () => {
 		const { data } = await listAccounts();
 		
@@ -38,8 +33,21 @@ const mod = {
 };
 
 mod.setup();
-
 </script>
+
+{#if mod.linked.length }
+	
+<h4>Connected</h4>
+
+<ul>
+{#each mod.linked as e }
+	<li>
+		<a href={ `/sources/${ e.slug }` }>{ e.name }</a>
+	</li>
+{/each}
+</ul>
+
+{/if}
 
 {#if mod.available.length }
 
@@ -47,16 +55,6 @@ mod.setup();
 
 {#each mod.available as e }
 	<button class={ e.slug } onclick={ () => mod.link(e.slug) }>{ e.name }</button>
-{/each}
-
-{/if}
-
-{#if mod.linked.length }
-	
-<h4>Unlink account</h4>
-
-{#each mod.linked as e }
-	<button onclick={ () => mod.unlink(e.account) }>{ e.name }</button>
 {/each}
 
 {/if}
