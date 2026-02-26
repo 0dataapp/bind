@@ -1,6 +1,7 @@
 <script>
 import 'normalize.css';
 import '@picocss/pico';
+import '../../docs/.vitepress/theme/zero-data.css';
 import './style.css';
 
 import { page } from '$app/state';
