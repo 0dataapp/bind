@@ -1,6 +1,6 @@
 import { auth } from '$lib/better-auth/config';
 import db from '$lib/database/main.js';
-const _db = db.collection('account_source');
+import util from '$lib/util.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ request }) {
@@ -12,7 +12,7 @@ export async function load({ request }) {
 		accounts: await Promise.all(accounts.filter(e => e.providerId !== 'credential').map(async e => {
 
 			if (e.providerId === 'github')
-				e._sources = (await _db.getItems()).filter(source => source.accountId === e.id).length;
+				e._sources = (await db.collection('account_source').getItems()).filter(source => source.accountId === e.id).map(util.hydrate);
 			
 			return e;
 		})),

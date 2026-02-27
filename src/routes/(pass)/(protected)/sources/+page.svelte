@@ -28,8 +28,14 @@ const mod = {
 {#each mod.linked as e }
 	<li>
 		<a href={ `/sources/${ e.slug }` }>{ e.name }</a>
-		{#if e.account._sources === 0 }
+		{#if e.account._sources && !e.account._sources.length }
 			<strong> (no sources selected)</strong>
+		{:else if e.account._sources && e.account._sources.length }
+			<ul>
+				{#each e.account._sources as e }
+					<li><a href={ e.data.webURL } target="_blank">{ e.data.scopedName }</a></li>
+				{/each}
+			</ul>
 		{/if}
 	</li>
 {/each}
