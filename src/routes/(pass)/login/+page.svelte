@@ -11,7 +11,7 @@ const propsProps = {
 		fetchOptions: {
 			onSuccess: () => {
 				const { target } = Object.fromEntries(new URLSearchParams(location.search));
-				return goto(target ? decodeURIComponent(target) : '/dash');
+				return goto(target && ['/', encodeURIComponent('/')].filter(e => target.startsWith(e)).length ? decodeURIComponent(target) : '/dash');
 			},
 			onError: context => state.setError(context.error.message),
 		},
