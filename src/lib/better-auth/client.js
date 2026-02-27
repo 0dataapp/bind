@@ -10,7 +10,6 @@ export const {
 	updateUser,
 
 	linkSocial,
-	listAccounts,
 	unlinkAccount,
 	
 } = createAuthClient({
