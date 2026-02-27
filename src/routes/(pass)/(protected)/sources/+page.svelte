@@ -6,12 +6,10 @@ import logic from './logic.js';
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
 
-const accounts = data.accounts.filter(e => e.providerId !== 'credential');
-
 const mod = {
 
-	available: _data.providers.filter(e => !accounts.map(e => e.providerId).includes(e.slug)),
-	linked: accounts.map(account => Object.assign(_data.providers.filter(e => account.providerId === e.slug).shift(), {
+	available: _data.providers.filter(e => !data.accounts.map(e => e.providerId).includes(e.slug)),
+	linked: data.accounts.map(account => Object.assign(_data.providers.filter(e => account.providerId === e.slug).shift(), {
 		account,
 	})),
 
