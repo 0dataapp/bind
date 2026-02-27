@@ -1,38 +1,27 @@
 <script>
-import { linkSocial, listAccounts } from '$lib/better-auth/client.js';
+import { linkSocial } from '$lib/better-auth/client.js';
 import _data from '$lib/data.js';
 import logic from './logic.js';
 
+/** @type {import('./$types').PageProps} */
+const { data } = $props();
+
+console.log(data);
+
+const accounts = data.accounts.filter(e => e.providerId !== 'credential');
+
 const mod = {
 
-	_accounts: [],
-	setAccounts (data) {
-		mod._accounts = data.filter(e => e.providerId !== 'credential');
-
-		mod.available = _data.providers.filter(e => !mod._accounts.map(e => e.providerId).includes(e.slug));
-		mod.linked = mod._accounts.map(account => Object.assign(_data.providers.filter(e => account.providerId === e.slug).shift(), {
-			account,
-		}));
-	},
-	available: [],
-	linked: [],
+	available: _data.providers.filter(e => !accounts.map(e => e.providerId).includes(e.slug)),
+	linked: accounts.map(account => Object.assign(_data.providers.filter(e => account.providerId === e.slug).shift(), {
+		account,
+	})),
 
 	link: slug => linkSocial(Object.assign({
 		callbackURL: `/sources/${ slug }`,
 	}, logic.params(slug))),
 
-	setup: async () => {
-		const { data } = await listAccounts();
-		
-		if (!data)
-			return;
-
-		mod.setAccounts(data);
-	},
-
 };
-
-mod.setup();
 </script>
 
 {#if mod.linked.length }
