@@ -7,7 +7,7 @@ const mod = {
 
 	_generateToken: () => Array.from(crypto.getRandomValues(new Uint8Array(32)), byte => byte.toString(16).padStart(2, '0')).join(''),
 
-	createToken: (userId, data) => {
+	createToken (userId, data) {
 		const token = mod._generateToken();
 
 		_db.create(util.dehydrate({
