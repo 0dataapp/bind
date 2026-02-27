@@ -158,8 +158,9 @@ const genericAdapter = _config => createAdapterFactory({
     adapterId: 'generic-adapter',
     adapterName: 'Generic Adapter',
     supportsDates: false,
-    supportsBooleans: true,
+    supportsBooleans: false,
     supportsJSON: false,
+    supportsNumericIds: false,
   },
 
   adapter: ({ getModelName }) => _adapterMethods(_config, getModelName),
