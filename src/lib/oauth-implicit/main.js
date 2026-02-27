@@ -3,9 +3,6 @@ const _db = db.collection('oauth_implicit_grant');
 
 import util from '$lib/util.js';
 
-const params = {};
-const scopes = {};
-
 const mod = {
 
 	_generateToken: () => Array.from(crypto.getRandomValues(new Uint8Array(32)), byte => byte.toString(16).padStart(2, '0')).join(''),
