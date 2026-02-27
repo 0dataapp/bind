@@ -49,6 +49,8 @@ export const auth = betterAuth({
     accountLinking: {
       allowDifferentEmails: true,
     },
+
+    encryptOAuthTokens: true,
   },
 
   disablePaths: ['/is-username-available'],
