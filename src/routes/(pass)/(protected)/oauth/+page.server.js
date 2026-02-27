@@ -22,15 +22,20 @@ const mod = {
 };
 
 import { error } from '@sveltejs/kit';
+import logic from './logic.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ url }) {
 	const params = Object.fromEntries(url.searchParams);
+	
 	const message = mod.error(params);
 	return message ? error(400, {
 		message,
 	}) : {
-		params,
+		title: 'Authorize',
+		redirect_uri: params.redirect_uri,
+		client_id: params.client_id,
+		scopes: logic.parseScopes(params.scope),
 	};
 }
 
