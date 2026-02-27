@@ -1,4 +1,5 @@
 const _providers = {
+	credential: 'local disk',
 	github: 'GitHub',
 };
 

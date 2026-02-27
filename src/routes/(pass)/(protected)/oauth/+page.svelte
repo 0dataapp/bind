@@ -3,20 +3,39 @@
 const { data } = $props();
 </script>
 
-<p>The app at <code>{ data.client_id }</code> would to like access:</p>
+<p>The app at <code>{ data.client_id }</code> would to like access</p>
 
 <table>
 <tbody>
 {#each data.scopes as e}
 <tr>
-  <td>{ e.name }</td>
-  <td>({ e.permissions })</td>
+  <td>
+    <code>{ e.name }</code>
+  </td>
+  <td>
+    <code>{ e.permissions }</code>
+  </td>
 </tr>
 {/each}
 </tbody>
 </table>
 
+<p>using data source</p>
+
 <form method="POST">
+  <select name="store" required>
+    {#each data.stores as e }
+      {#if e._sources }
+        <optgroup label={ e.name }>
+          {#each e._sources as item }
+            <option value={ `${ e.id }:${ item.id }` }>{ item.data.scopedName }</option>
+          {/each}
+        </optgroup>
+        {:else}
+        <option value={ e.id }>{ e.name }</option>
+      {/if}
+    {/each}
+  </select>
   <fieldset role="group">
     <input class="secondary" type="submit" value="Allow" />
     <a class="contrast" role="button" href={ `${ data.redirect_uri }#error=access_denied` }>Deny</a>

@@ -47,3 +47,8 @@ focus {
 pre {
 	padding: var(--spacing);
 }
+
+table {
+	--pico-background-color: transparent;
+	--pico-table-border-color: transparent;
+}
