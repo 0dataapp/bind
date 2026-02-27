@@ -21,6 +21,16 @@ const mod = {
 			return _provider.data(await res.json());
 		},
 
+		invalidate (params) {
+		  const config = mod._map[provider].invalidate.config(params);
+		  
+		  config.headers = Object.assign(config.headers || {}, {
+		  	'Content-Type': 'application/json',
+		  });
+
+		  return fetch(config.url, config);
+		},
+
 	}),
 
 };

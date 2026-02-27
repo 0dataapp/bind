@@ -9,6 +9,7 @@ import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
 import oauth from '$lib/oauth-implicit/main.js';
 import storage from '$lib/storage/disk/main.js';
+import _abstract from '$lib/provider/_abstract.js';
 
 export const auth = betterAuth({
   secret: building ? 'BUILD_SECRET_ONLY' : env.BETTER_AUTH_SECRET,
@@ -77,6 +78,27 @@ export const auth = betterAuth({
             },
           },
         };
+      },
+      '/unlink-account': async () => {
+        const { accessToken } = await auth.api.getAccessToken({
+          body: Object.assign(structuredClone(ctx.body), { accountId: ctx.body.id }),
+          headers: ctx.headers,
+        });
+
+        const callback = {
+          github: () => {
+            ctx.body
+          },
+        }[ctx.body.providerId];
+
+        if (!callback)
+          return
+
+        _abstract.generate(ctx.body.providerId).invalidate({
+          clientId: process.env.GITHUB_CLIENT_ID, 
+          clientSecret: process.env.GITHUB_CLIENT_SECRET,
+          accessToken,
+        });
       },
     }[ctx.path]].filter(e => !!e).map(e => e()).shift()),
   },

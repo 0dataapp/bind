@@ -48,6 +48,26 @@ const mod = {
 
 	},
 
+	invalidate: {
+
+		config ({ clientId, clientSecret, accessToken }) {
+		  const credentials = btoa(`${ clientId }:${ clientSecret }`);
+
+		  return {
+		  	url: `https://api.github.com/applications/${ clientId }/token`,
+		  	method: 'DELETE',
+		  	headers: {
+	        'Authorization': `Basic ${ credentials }`,
+	      },
+	      body: JSON.stringify({
+	      	access_token: accessToken,
+			  }),
+		  };
+		},
+
+	},
+
+
 };
 
 export default mod;
