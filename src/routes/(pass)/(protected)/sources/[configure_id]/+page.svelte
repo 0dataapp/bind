@@ -19,8 +19,6 @@ const mod = {
 
 };
 
-console.log(value, data.groups);
-
 import Svelecte from 'svelecte';
 </script>
 
