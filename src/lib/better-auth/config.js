@@ -23,11 +23,11 @@ export const auth = betterAuth({
 
   user: {
     additionalFields: {
-      role: {
+      trust: {
         type: ['user', 'admin'],
         required: false,
         defaultValue: 'user',
-        input: false, // disallow setting role
+        input: false, // disallow setting trust
       },
     },
     deleteUser: {
