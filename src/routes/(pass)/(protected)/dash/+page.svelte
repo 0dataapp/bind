@@ -2,11 +2,7 @@
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
 
-const mod = {
-
-  account: `${ data.session.user.username }@${ data.origin }`,
-
-};
+const account = `${ data.session.user.username }@${ data.origin }`;
 
 import CopyButton from '$lib/CopyButton.svelte';
 </script>
@@ -15,8 +11,8 @@ import CopyButton from '$lib/CopyButton.svelte';
 
 <form>
   <fieldset role="group">
-    <pre class="account">{ mod.account }</pre>
-    <CopyButton text={ mod.account } />
+    <pre class="account">{ account }</pre>
+    <CopyButton text={ account } />
   </fieldset>
 </form>
 

@@ -5,20 +5,16 @@ import logic from './logic.js';
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
 
-const mod = {
-
-	groupings: util.group.asArray(data.connections, e => e.data.client_id),
-
-};
+const groupings = util.group.asArray(data.connections, e => e.data.client_id);
 </script>
-{#if !mod.groupings.length }
+{#if !groupings.length }
 
 <p>No connected apps</p>
 
 {:else}
 
 <ul>
-{#each mod.groupings as item }
+{#each groupings as item }
 	{@const name = logic.groupName(item.key) }
 	{@const id = item.values.at(0).data.client_id }
 	<li>
