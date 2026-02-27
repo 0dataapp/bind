@@ -58,28 +58,27 @@ export const auth = betterAuth({
   ],
 
   hooks: {
-    before: createAuthMiddleware(async ctx => {
-      if (ctx.path !== '/sign-up/email')
-        return;
+    before: createAuthMiddleware(ctx => [{
+      '/sign-up/email': async () => {
+        let username, response;
+        let tries = 0;
+        const check = username => auth.api.isUsernameAvailable({
+          body: { username },
+        });
+        while (!response || !response?.available)
+          response = await check(username = usernames.generate(3 + tries++ / 10));
 
-      let username, response;
-      let tries = 0;
-      const check = username => auth.api.isUsernameAvailable({
-        body: { username },
-      });
-      while (!response || !response?.available)
-        response = await check(username = usernames.generate(3 + tries++ / 10));
-
-      return {
-        context: {
-          ...ctx,
-          body: {
-            ...ctx.body,
-            username,
+        return {
+          context: {
+            ...ctx,
+            body: {
+              ...ctx.body,
+              username,
+            },
           },
-        },
-      };
-    }),
+        };
+      },
+    }[ctx.path]].filter(e => !!e).map(e => e()).shift()),
   },
 
   advanced: {
