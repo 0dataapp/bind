@@ -22,7 +22,7 @@
     "@sveltejs/kit": "^2.49.5",
     "@sveltejs/vite-plugin-svelte": "^6.0.0",
     "better-auth": "^1.4.19",
-    "bind-middleware": "0dataapp/bind-middleware#047427c",
+    "bind-middleware": "0dataapp/bind-middleware#682ef9e",
     "express": "^5.2.1",
     "file-type": "^21.3.0",
     "js-jsonq": "^1.0.3",
