@@ -28,6 +28,9 @@ const mod = {
 {#each mod.linked as e }
 	<li>
 		<a href={ `/sources/${ e.slug }` }>{ e.name }</a>
+		{#if e.account._sources === 0 }
+			<strong> (no sources selected)</strong>
+		{/if}
 	</li>
 {/each}
 </ul>
