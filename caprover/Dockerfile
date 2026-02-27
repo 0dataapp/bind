@@ -23,4 +23,4 @@ ENV DATA_DIRECTORY="$_DATA_DIRECTORY"
 ENV PORT 3000
 EXPOSE 3000
 
-CMD PROTOCOL_HEADER=x-forwarded-proto HOST_HEADER=x-forwarded-host node build
+CMD [ "node", "build" ]
