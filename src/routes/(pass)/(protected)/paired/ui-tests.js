@@ -2,9 +2,7 @@ import { test, expect } from '@playwright/test';
 import { load } from './+page.server.js';
 import stub from '$lib/stub.js';
 
-const _load = load({
-  parent: () => ({}),
-});
+const _load = load({});
 
 test.describe('paired', () => {
 

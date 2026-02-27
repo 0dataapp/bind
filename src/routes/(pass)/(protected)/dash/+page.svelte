@@ -2,7 +2,7 @@
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
 
-const account = `${ data.session.user.username }@${ data.origin }`;
+const account = `${ data.authenticated.user.username }@${ data.origin }`;
 
 import CopyButton from '$lib/CopyButton.svelte';
 </script>

@@ -21,6 +21,12 @@ const _db = db.collection('user');
 const prefix = 'storage';
 export const handle = sequence(
   ({ event, resolve }) => svelteKitHandler({ event, resolve, auth, building }),
+  async ({ event, resolve }) => {
+    event.locals.authenticated = await auth.api.getSession({
+      headers: event.request.headers,
+    });
+    return resolve(event);
+  },
   bind.sveltekit(bind.cors()),
 	bind.sveltekit(bind.storage({
 	  getScope: oauth.getScope,
