@@ -6,8 +6,6 @@ import logic from './logic.js';
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
 
-console.log(data);
-
 const accounts = data.accounts.filter(e => e.providerId !== 'credential');
 
 const mod = {
