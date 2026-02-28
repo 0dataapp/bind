@@ -27,6 +27,11 @@ export default withMermaid({
     logo: '/identity.svg',
 
     appearance: false,
+
+    outline: {
+      level: [2, 3], // Show h2 and h3 headings
+      label: 'On this page'
+    },
   },
 
   head: [['link', { rel: 'icon', href: 'data:;base64,=' }]],
