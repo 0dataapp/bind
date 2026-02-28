@@ -61,48 +61,52 @@ export const auth = betterAuth({
   ],
 
   hooks: {
-    before: createAuthMiddleware(ctx => [{
-      '/sign-up/email': async () => {
-        let username, response;
-        let tries = 0;
-        const check = username => auth.api.isUsernameAvailable({
-          body: { username },
-        });
-        while (!response || !response?.available)
-          response = await check(username = usernames.generate(3 + tries++ / 10));
+    before: createAuthMiddleware(async ctx => {
+      const res = await Promise.all([{
+        '/sign-up/email': async () => {
+          let username, response;
+          let tries = 0;
+          const check = username => auth.api.isUsernameAvailable({
+            body: { username },
+          });
+          while (!response || !response?.available)
+            response = await check(username = usernames.generate(3 + tries++ / 10));
 
-        return {
-          context: {
-            ...ctx,
-            body: {
-              ...ctx.body,
-              username,
+          return {
+            context: {
+              ...ctx,
+              body: {
+                ...ctx.body,
+                username,
+              },
             },
-          },
-        };
-      },
-      '/unlink-account': async () => {
-        const { accessToken } = await auth.api.getAccessToken({
-          body: Object.assign(structuredClone(ctx.body), { accountId: ctx.body.id }),
-          headers: ctx.headers,
-        });
+          };
+        },
+        '/unlink-account': async () => {
+          const { accessToken } = await auth.api.getAccessToken({
+            body: Object.assign(structuredClone(ctx.body), { accountId: ctx.body.id }),
+            headers: ctx.headers,
+          });
 
-        const callback = {
-          github: () => {
-            ctx.body
-          },
-        }[ctx.body.providerId];
+          const callback = {
+            github: () => {
+              ctx.body
+            },
+          }[ctx.body.providerId];
 
-        if (!callback)
-          return
+          if (callback)
+            await _abstract.generate(ctx.body.providerId).invalidate({
+              clientId: process.env.GITHUB_CLIENT_ID, 
+              clientSecret: process.env.GITHUB_CLIENT_SECRET,
+              accessToken,
+            });
+        },
+      }[ctx.path]].filter(e => !!e).map(e => e()));
 
-        _abstract.generate(ctx.body.providerId).invalidate({
-          clientId: process.env.GITHUB_CLIENT_ID, 
-          clientSecret: process.env.GITHUB_CLIENT_SECRET,
-          accessToken,
-        });
-      },
-    }[ctx.path]].filter(e => !!e).map(e => e()).shift()),
+      return res.shift() || {
+        context: ctx,
+      };
+    }),
   },
 
   advanced: {
