@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
 					test: {
 						name: 'server',
 						environment: 'node',
-    				include: ['src/**/*-tests.{js,ts}'],
+    				include: ['src/**/*-tests.{js,ts}', 'src/**/tests.{js,ts}'],
     				exclude: ['**/ui-tests.{js,ts}'],
 					},
 				},
