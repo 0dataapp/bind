@@ -8,7 +8,7 @@ const { data } = $props();
 
 const mod = {
 
-	available: _data.providers.filter(e => !data.accounts.map(e => e.providerId).includes(e.slug)),
+	available: _data.providers.filter(e => !data.accounts.map(e => e.providerId).includes(e.slug) && e.slug !== 'credential'),
 	linked: data.accounts.map(account => Object.assign(_data.providers.filter(e => account.providerId === e.slug).shift(), {
 		account,
 	})),
