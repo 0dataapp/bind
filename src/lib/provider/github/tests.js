@@ -18,6 +18,16 @@ describe('repos', () => {
 		});
 	});
 
+	test('_tidy', () => {
+		const json = stub.repo.sample();
+		const e = mod.repos._tidy(json);
+		const tidy = e => Object.fromEntries(Object.entries(e).filter(([key]) => !key.endsWith('url')))
+		expect(e).toEqual(Object.assign(tidy(json), {
+			owner: tidy(e.owner),
+		}));
+		expect(json.clone_url).not.toBeUndefined();
+	});
+
 	describe('data', () => {
 
 		test('output', () => {
@@ -33,7 +43,7 @@ describe('repos', () => {
 				cloneURL: json.clone_url,
 				webURL: json.html_url,
 				ownerId: json.owner.id.toString(),
-				payload: json,
+				payload: mod.repos._tidy(json),
 			}]);
 		});
 
