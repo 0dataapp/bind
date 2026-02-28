@@ -20,7 +20,7 @@ describe('repos', () => {
 
 	describe('data', () => {
 
-		test('parse json', () => {
+		test('output', () => {
 			const json = stub.repo.sample();
 			expect(mod.repos.data([json])).toEqual([{
 				id: json.id.toString(),
@@ -37,28 +37,28 @@ describe('repos', () => {
 			}]);
 		});
 
-		test('flag private', () => {
+		test('private', () => {
 			const json = stub.repo.private();
 			expect(mod.repos.data([json])).toMatchObject([{
 				isPrivate: true,
 			}]);
 		});
 
-		test('hide archived', () => {
+		test('archived', () => {
 			const json = stub.repo.sample({
 				archived: true,
 			});
 			expect(mod.repos.data([json])).toEqual([]);
 		});
 
-		test('hide disabled', () => {
+		test('disabled', () => {
 			const json = stub.repo.sample({
 				disabled: true,
 			});
 			expect(mod.repos.data([json])).toEqual([]);
 		});
 
-		test('hide is_template', () => {
+		test('is_template', () => {
 			const json = stub.repo.sample({
 				is_template: true,
 			});

@@ -1,4 +1,4 @@
-import { describe, it, expect, throws, afterAll } from 'vitest';
+import { describe, test, expect, throws, afterAll } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import mod from './main.js';
@@ -19,24 +19,24 @@ describe('collection', () => {
 		folder: _DATA_DIRECTORY,
 	});
 
-	it('throws if not string', () => {
+	test('not string', () => {
 		expect(() => mod.collection()).toThrowError('missing collection name');
 	});
 	
-	it('returns object', () => {
+	test('type', () => {
 		expect(_collection()).toBeTypeOf('object');
 	});
 
 	describe('create', () => {
 
-		it('returns input', () => {
+		test('output', () => {
 			const item = {
 				id: Math.random().toString(),
 			};
 			expect(_collection().create(item)).toBe(item);
 		});
 
-		it('updates file', () => {
+		test('persist', () => {
 			const collection = Math.random().toString();
 			const item = {
 				id: Math.random().toString(),
@@ -49,7 +49,7 @@ describe('collection', () => {
 
 	describe('getItems', () => {
 
-		it('returns items', () => {
+		test('output', () => {
 			const db = _collection();
 
 			const item = {
@@ -64,7 +64,7 @@ describe('collection', () => {
 
 	describe('update', () => {
 
-		it('returns input', () => {
+		test('output', () => {
 			const db = _collection();
 
 			const id = Math.random().toString();
@@ -75,7 +75,7 @@ describe('collection', () => {
 			expect(db.update(id, item)).toBe(item);
 		});
 
-		it('updates file', () => {
+		test('persist', () => {
 			const collection = Math.random().toString();
 			const db = _collection(collection);
 
@@ -93,7 +93,7 @@ describe('collection', () => {
 
 	describe('delete', () => {
 
-		it('returns undefined', () => {
+		test('output', () => {
 			const db = _collection();
 
 			const id = Math.random().toString();
@@ -102,7 +102,7 @@ describe('collection', () => {
 			expect(db.delete(id)).toBe(undefined);
 		});
 
-		it('updates file', () => {
+		test('persist', () => {
 			const collection = Math.random().toString();
 			const db = _collection(collection);
 

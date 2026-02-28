@@ -1,4 +1,4 @@
-import { describe, it, expect, afterAll } from 'vitest';
+import { describe, test, expect, afterAll } from 'vitest';
 import { _jsonQParams, _filterItems, _adapterMethods } from './main.js';
 import database from '../database/main.js';
 import fs from 'fs';
@@ -18,52 +18,52 @@ const uItem = params => Object.assign({
 
 describe('_jsonQParams', () => {
 
-	it('returns array if empty', () => {
+	test('empty', () => {
 		expect(_jsonQParams()).toEqual([]);
 		expect(_jsonQParams([])).toEqual([]);
 	});
 
-	it('parses eq', () => {
+	test('eq', () => {
 		expect(_jsonQParams([{ field: 'email', operator: 'eq', value: 'test@example.com' }])).toEqual([['email', 'eq', 'test@example.com']]);
 	});
 
-	it('parses ne', () => {
+	test('ne', () => {
 		expect(_jsonQParams([{ field: 'status', operator: 'ne', value: 'active' }])).toEqual([['status', 'neq', 'active']]);
 	});
 
-	it('parses in', () => {
+	test('in', () => {
 		expect(_jsonQParams([{ field: 'id', operator: 'in', value: ['1', '2', '3'] }])).toEqual([['id', 'in', ['1', '2', '3']]]);
 	});
 
-	it('parses contains', () => {
+	test('contains', () => {
 		expect(_jsonQParams([{ field: 'name', operator: 'contains', value: 'john' }])).toEqual([['name', 'contains', 'john']]);
 	});
 
-	it('parses starts_with', () => {
+	test('starts_with', () => {
 		expect(_jsonQParams([{ field: 'email', operator: 'starts_with', value: 'admin' }])).toEqual([['email', 'startswith', 'admin']]);
 	});
 
-	it('parses ends_with', () => {
+	test('ends_with', () => {
 		expect(_jsonQParams([{ field: 'email', operator: 'ends_with', value: '@example.com' }])).toEqual([['email', 'endswith', '@example.com']]);
 	});
 
-	it('parses gt', () => {
+	test('gt', () => {
 		expect(_jsonQParams([{ field: 'age', operator: 'gt', value: 18 }])).toEqual([['age', 'gt', 18]]);
 	});
 
-	it('parses gte', () => {
+	test('gte', () => {
 		expect(_jsonQParams([{ field: 'score', operator: 'gte', value: 100 }])).toEqual([['score', 'gte', 100]]);
 	});
 
-	it('parses lt', () => {
+	test('lt', () => {
 		expect(_jsonQParams([{ field: 'price', operator: 'lt', value: 50 }])).toEqual([['price', 'lt', 50]]);
 	});
 
-	it('parses lte', () => {
+	test('lte', () => {
 		expect(_jsonQParams([{ field: 'quantity', operator: 'lte', value: 10 }])).toEqual([['quantity', 'lte', 10]]);
 	});
 
-	it('combines conditions', () => {
+	test('conditions', () => {
 		expect(_jsonQParams([
 			{ field: 'status', operator: 'eq', value: 'active' },
 			{ field: 'age', operator: 'gte', value: 18 },
@@ -73,11 +73,11 @@ describe('_jsonQParams', () => {
 		]);
 	});
 
-	it('unquotes numeric values', () => {
+	test('numeric values', () => {
 		expect(_jsonQParams([{ field: 'count', operator: 'eq', value: 42 }])).toEqual([['count', 'eq', 42]]);
 	});
 
-	it('throws if operator unknown', () => {
+	test('operator unknown', () => {
 		const operator = Math.random().toString();
 		const clause = {
 			field: Math.random().toString(),
@@ -91,12 +91,12 @@ describe('_jsonQParams', () => {
 
 describe('_filterItems', () => {
 
-	it('returns all if empty', () => {
+	test('empty', () => {
 		const item = uItem();
 		expect(_filterItems([item], [])).toEqual([item]);
 	});
 
-	it('filters eq', () => {
+	test('eq', () => {
 		const field = Math.random().toString();
 		const value = Math.random().toString();
 		const item = uItem({
@@ -107,7 +107,7 @@ describe('_filterItems', () => {
 		}), item], [{ field, operator: 'eq', value }])).toEqual([item]);
 	});
 
-	it('filters ne', () => {
+	test('ne', () => {
 		const field = Math.random().toString();
 		const value = Math.random().toString();
 		const item = uItem({
@@ -118,7 +118,7 @@ describe('_filterItems', () => {
 		}), item], [{ field, operator: 'ne', value }])).toEqual([item]);
 	});
 
-	it('filters in', () => {
+	test('in', () => {
 		const field = Math.random().toString();
 		const value = Math.random().toString();
 		const item = uItem({
@@ -129,7 +129,7 @@ describe('_filterItems', () => {
 		}), item], [{ field, operator: 'in', value: [value, Math.random().toString()] }])).toEqual([item]);
 	});
 
-	it('filters contains', () => {
+	test('contains', () => {
 		const field = Math.random().toString();
 		const value = Math.random().toString();
 		const item = uItem({
@@ -140,7 +140,7 @@ describe('_filterItems', () => {
 		}), item], [{ field, operator: 'contains', value }])).toEqual([item]);
 	});
 
-  it('filters starts_with', () => {
+  test('starts_with', () => {
   	const field = Math.random().toString();
   	const value = Math.random().toString();
   	const item = uItem({
@@ -151,7 +151,7 @@ describe('_filterItems', () => {
   	}), item], [{ field, operator: 'starts_with', value }])).toEqual([item]);
   });
 
-  it('filters ends_with', () => {
+  test('ends_with', () => {
   	const field = Math.random().toString();
   	const value = Math.random().toString();
   	const item = uItem({
@@ -162,7 +162,7 @@ describe('_filterItems', () => {
   	}), item], [{ field, operator: 'ends_with', value }])).toEqual([item]);
   });
 
-  it('filters gt', () => {
+  test('gt', () => {
   	const field = Math.random().toString();
   	const value = Math.random();
   	const item = uItem({
@@ -173,7 +173,7 @@ describe('_filterItems', () => {
   	}), item], [{ field, operator: 'gt', value }])).toEqual([item]);
   });
 
-  it('filters gte', () => {
+  test('gte', () => {
   	const field = Math.random().toString();
   	const value = Math.random();
   	const item = uItem({
@@ -184,7 +184,7 @@ describe('_filterItems', () => {
   	}), item], [{ field, operator: 'gte', value }])).toEqual([item]);
   });
 
-  it('filters lt', () => {
+  test('lt', () => {
   	const field = Math.random().toString();
   	const value = Math.random();
   	const item = uItem({
@@ -195,7 +195,7 @@ describe('_filterItems', () => {
   	}), item], [{ field, operator: 'lt', value }])).toEqual([item]);
   });
 
-  it('filters lte', () => {
+  test('lte', () => {
   	const field = Math.random().toString();
   	const value = Math.random();
   	const item = uItem({
@@ -206,7 +206,7 @@ describe('_filterItems', () => {
   	}), item], [{ field, operator: 'lte', value }])).toEqual([item]);
   });
 
-  it('filters multiple', () => {
+  test('multiple', () => {
   	const field = Math.random().toString();
   	const value1 = Math.random().toString();
   	const value2 = Math.random().toString();
@@ -253,12 +253,12 @@ describe('genericAdapter', () => {
 	
 	describe('create', () => {
 
-		it('returns input', () => {
+		test('output', () => {
 			const item = uItem();
 			expect(_adapter().create(item)).toBe(item);
 		});
 
-		it('updates file', () => {
+		test('persist', () => {
 			const collection = Math.random().toString();
 			const item = {
 				id: Math.random().toString(),
@@ -271,7 +271,7 @@ describe('genericAdapter', () => {
 	
 	describe('findOne', () => {
 
-		it('returns null if no match', () => {
+		test('no match', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -284,7 +284,7 @@ describe('genericAdapter', () => {
 			expect(adapter.findOne([{ field, operator: 'eq', value }])).toEqual(null);
 		});
 
-		it('returns result', () => {
+		test('output', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -304,7 +304,7 @@ describe('genericAdapter', () => {
 	
 	describe('findMany', () => {
 
-		it('returns array if no match', () => {
+		test('no match', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -319,7 +319,7 @@ describe('genericAdapter', () => {
 			})).toEqual([]);
 		});
 
-		it('returns array', () => {
+		test('output', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -337,7 +337,7 @@ describe('genericAdapter', () => {
 			})).toEqual([item]);
 		});
 
-		it('slices at limit', () => {
+		test('limit', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -357,7 +357,7 @@ describe('genericAdapter', () => {
 			},)).toEqual(items.slice(0, -slice));
 		});
 
-		it('sorts by sortField', () => {
+		test('sortField', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -392,7 +392,7 @@ describe('genericAdapter', () => {
 	
 	describe('update', () => {
 
-		it('returns null if no match', () => {
+		test('no match', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -405,7 +405,7 @@ describe('genericAdapter', () => {
 			expect(adapter.update([{ field, operator: 'eq', value }])).toEqual(null);
 		});
 
-		it('returns composite', () => {
+		test('output', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -424,7 +424,7 @@ describe('genericAdapter', () => {
 			}));
 		});
 
-		it('updates first only', () => {
+		test('update first only', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -457,7 +457,7 @@ describe('genericAdapter', () => {
 	
 	describe('updateMany', () => {
 
-		it('returns 0 if no match', () => {
+		test('no match', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -470,7 +470,7 @@ describe('genericAdapter', () => {
 			expect(adapter.updateMany([{ field, operator: 'eq', value }])).toEqual(0);
 		});
 
-		it('returns match count', () => {
+		test('output', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -496,7 +496,7 @@ describe('genericAdapter', () => {
 	
 	describe('delete', () => {
 
-		it('does nothing if no match', () => {
+		test('no match', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -512,7 +512,7 @@ describe('genericAdapter', () => {
 			expect(adapter.findMany([{ field, operator: 'ne', value }])).toEqual([item]);
 		});
 
-		it('deletes first only', () => {
+		test('delete first only', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -540,7 +540,7 @@ describe('genericAdapter', () => {
 	
 	describe('deleteMany', () => {
 
-		it('does nothing if no match', () => {
+		test('no match', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -556,7 +556,7 @@ describe('genericAdapter', () => {
 			expect(adapter.findMany([{ field, operator: 'ne', value }])).toEqual([item]);
 		});
 
-		it('deletes matches', () => {
+		test('match', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -584,7 +584,7 @@ describe('genericAdapter', () => {
 
 	describe('count', () => {
 
-		it('returns number of results', () => {
+		test('output', () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
