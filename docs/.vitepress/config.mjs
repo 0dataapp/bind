@@ -29,6 +29,8 @@ export default withMermaid({
     appearance: false,
   },
 
+  head: [['link', { rel: 'icon', href: 'data:;base64,=' }]],
+
   mermaid:{
     theme: 'base',
     themeVariables: {
