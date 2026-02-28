@@ -1,31 +1,20 @@
 <script>
-import { linkSocial } from '$lib/better-auth/client.js';
-import _data from '$lib/data.js';
 import logic from './logic.js';
+import { linkSocial } from '$lib/better-auth/client.js';
+const link = slug => linkSocial(Object.assign({
+	callbackURL: `/sources/${ slug }`,
+}, logic.params(slug)));
 
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
-
-const mod = {
-
-	available: _data.providers.filter(e => !data.accounts.map(e => e.providerId).includes(e.slug) && e.slug !== 'credential'),
-	linked: data.accounts.map(account => Object.assign(_data.providers.filter(e => account.providerId === e.slug).shift(), {
-		account,
-	})),
-
-	link: slug => linkSocial(Object.assign({
-		callbackURL: `/sources/${ slug }`,
-	}, logic.params(slug))),
-
-};
 </script>
 
-{#if mod.linked.length }
+{#if data.linked.length }
 	
 <h4>Connected</h4>
 
 <ul>
-{#each mod.linked as e }
+{#each data.linked as e }
 	<li>
 		<a href={ `/sources/${ e.slug }` }>{ e.name }</a>
 		{#if e.account._sources && !e.account._sources.length }
@@ -43,12 +32,12 @@ const mod = {
 
 {/if}
 
-{#if mod.available.length }
+{#if data.available.length }
 
 <h4>Link account</h4>
 
-{#each mod.available as e }
-	<button class={ e.slug } onclick={ () => mod.link(e.slug) }>{ e.name }</button>
+{#each data.available as e }
+	<button class={ e.slug } onclick={ () => link(e.slug) }>{ e.name }</button>
 {/each}
 
 {/if}
