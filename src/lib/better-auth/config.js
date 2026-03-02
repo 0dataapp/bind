@@ -2,7 +2,7 @@ import { betterAuth } from 'better-auth';
 import { username } from 'better-auth/plugins';
 import { createAuthMiddleware } from 'better-auth/api';
 
-import { genericAdapter } from '$lib/generic/main.js';
+import { genericAdapter } from './generic.js';
 import usernames from '$lib/username/main.js';
 import database from '$lib/database/main.js';
 import { building } from '$app/environment';
