@@ -1,15 +1,15 @@
 const mod = {
 
 	group: {
-		asObject: (e, callback) => e.reduce((coll, item) => Object.assign(coll, {
-				[callback(item)]: (coll[callback(item)] || []).concat(item),
+		asObject: (e, cb) => e.reduce((coll, item) => Object.assign(coll, {
+				[cb(item)]: (coll[cb(item)] || []).concat(item),
 			}), {}),
-		asArray: (e, callback) => Object.entries(mod.group.asObject(e, callback)).map(([key, values]) => ({ key, values })),
+		asArray: (e, cb) => Object.entries(mod.group.asObject(e, cb)).map(([key, values]) => ({ key, values })),
 	},
 
 	sort: {
-		asc: callback => (a, b) => ((a, b) => (a < b) ? -1 : ((a > b) ? 1 : 0))(callback(a), callback(b)),
-		conform: (array, callback) => mod.sort.asc(e => array.indexOf(callback(e))),
+		asc: cb => (a, b) => ((a, b) => (a < b) ? -1 : ((a > b) ? 1 : 0))(cb(a), cb(b)),
+		conform: (array, cb) => mod.sort.asc(e => array.indexOf(cb(e))),
 	},
 
 	hex: {
@@ -20,15 +20,15 @@ const mod = {
 		},
 	},
 
-	dehydrate: object => {
-	  return Object.assign(object, {
-	  	data: JSON.stringify(object.data),
+	dehydrate: e => {
+	  return e.assign(e, {
+	  	data: JSON.stringify(e.data),
 	  });
 	},
-	hydrate: object => {
-	  return typeof object.data !== 'string' ? object : Object.assign(structuredClone(object), {
-	    createdAt: new Date(object.createdAt),
-	    data: JSON.parse(object.data),
+	hydrate: e => {
+	  return typeof e.data !== 'string' ? e : e.assign(structuredClone(e), {
+	    createdAt: new Date(e.createdAt),
+	    data: JSON.parse(e.data),
 	  });
 	},
 
