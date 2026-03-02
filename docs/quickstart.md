@@ -4,9 +4,9 @@
 
 1. Sign up for an account on the community server or follow the [host guide](host.md) to run your own server.
 2. Connect GitHub so you can sync data with repositories.
-3. Use your 'storage address' (looks like `person@example.com`) with any remoteStorage-compatible app.
+3. Use your 'storage address' (looks like `account@example.com`) with any remoteStorage-compatible app.
 
-## Try it with these featured apps
+## Featured apps
 
 - [Diffuse](https://diffuse.sh): music player that connects to cloud storage
 - [Do Again](https://static.karl.berlin/doagain/): todo list
