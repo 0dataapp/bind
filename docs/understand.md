@@ -12,7 +12,10 @@ The standard setup for most apps is like a snowglobe (where you can see inside b
 ```mermaid
 flowchart LR
   you@{ shape: circle } --- app@{ shape: rounded }
-  data@{ shape: das } --- app
+  subgraph app
+    data@{ shape: das }
+  end
+  style app rx:4px,ry:4px
 ```
 
 You're one step removed… You go <em>'through'</em> apps to access your stuff and it's not easy to get it out. When the app isn't available for some reason, you just have to hope it comes back.
