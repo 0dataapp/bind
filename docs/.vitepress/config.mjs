@@ -5,7 +5,7 @@ const env = loadEnv('development', process.cwd(), '');
 
 export default withMermaid({
   title: 'Bind',
-  description: 'Git personal data stores for web apps',
+  description: 'Git personal data store for web apps',
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },

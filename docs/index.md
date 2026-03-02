@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "Bind"
-  text: "Git personal data store for web apps"
+  text: Git personal data store for web apps
   tagline: Bring your own repo
   image:
     src: /identity.svg
