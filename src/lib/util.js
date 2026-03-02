@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 const mod = {
 
 	group: {
@@ -19,6 +21,8 @@ const mod = {
 		  return new TextDecoder().decode(bytes);
 		},
 	},
+
+	hash: e => crypto.createHash('sha256').update(e).digest('hex').substring(0, 8),
 
 	dehydrate: e => {
 	  return e.assign(e, {

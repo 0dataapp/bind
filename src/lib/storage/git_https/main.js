@@ -7,8 +7,7 @@ const __dirname = path.dirname(__filename);
 
 import { env } from '$env/dynamic/private';
 const folder = path.join(env.DATA_DIRECTORY || __dirname, '__storage/git_https');
-
-import crypto from 'crypto'
+import util from '$lib/util';
 
 import { simpleGit, CleanOptions } from 'simple-git';
 
@@ -165,7 +164,7 @@ const mod = {
 	},
 
 	async setupEverything () {
-		mod._storage = path.join(folder, crypto.createHash('sha256').update(env.GIT_REMOTE).digest('hex').substring(0, 8));
+		mod._storage = path.join(folder, util.hash(env.GIT_REMOTE));
 
 		if (!fs.existsSync(mod._storage))
 			await simpleGit().clone(env.GIT_REMOTE, mod._storage);
