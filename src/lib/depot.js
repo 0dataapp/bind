@@ -1,6 +1,6 @@
 import github from './depot/github.js';
 
-const _providers = {
+const asMap = {
 	credential: 'local disk',
 	github: 'GitHub',
 };
@@ -11,8 +11,8 @@ const mod = {
 		github,
 	},
 
-	_providers,
-	asList: Object.entries(_providers).map(([slug, name]) => ({ slug, name })),
+	asMap,
+	asList: Object.entries(asMap).map(([slug, name]) => ({ slug, name })),
 
 	endpoint: provider => ({
 

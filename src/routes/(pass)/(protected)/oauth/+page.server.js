@@ -1,6 +1,6 @@
 import { auth } from '$lib/better-auth/config';
 import db from '$lib/database/main.js';
-import data from '$lib/depot.js';
+import depot from '$lib/depot.js';
 import util from '$lib/util.js';
 
 const mod = {
@@ -29,7 +29,7 @@ const mod = {
 	})).map(async e => {
 
 		Object.assign(e = structuredClone(e), {
-			name: data._providers[e.providerId],
+			name: depot.asMap[e.providerId],
 		});
 
 		if (e.providerId === 'github')
