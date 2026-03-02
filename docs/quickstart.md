@@ -1,3 +1,8 @@
+<script setup>
+import { data as _data } from './apps.data.js'
+const data = _data[0].frontmatter.data;
+</script>
+
 # Quickstart
 
 ## Get an account
@@ -8,18 +13,11 @@
 
 ## Featured apps
 
-- [Diffuse](https://diffuse.sh): music player that connects to cloud storage
-- [Do Again](https://static.karl.berlin/doagain/): todo list
-- [Emoji Log](https://emojilog.rosano.ca): personal tracker via emoji
-- [Grouptabs](https://grouptabs.5apps.com): group expense tracking
-- [Hyperdraft](https://hyperdraft.rosano.ca): turn your text notes into a website
-- [Joybox](https://joybox.rosano.ca): pinboard for audiovisual media.
-- [Kommit](https://kommit.rosano.ca): flashcards with spaced-repetition
-- [Launchlet](https://launchlet.dev): custom JavaScript or CSS for any website via bookmarklet or extension
-- [Litespread](https://www.litespread.com): SQLite and CSV spreadsheet
-- [Litewrite](https://litewrite.net): distraction-free writing
-- [Marco](https://marco.kosmos.org): maps and place bookmarks
-- [memo](https://memo.rosano.ca): brain dumping pad
-- [Webmarks](https://webmarks.5apps.com): bookmarks
+<ul>
+  <li v-for="e of data">
+    <a :href="`#${ e.url }`">{{ e.name }}</a>: 
+    <span>{{ e.description }}</span>
+  </li>
+</ul>
 
 Find more on the [remoteStorage website](https://remotestorage.io/apps.html).
