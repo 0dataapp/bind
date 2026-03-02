@@ -1,5 +1,5 @@
 <script>
-import { updateUser } from '$lib/better-auth/client';
+import { updateUser } from '$lib/auth/client';
 import { invalidateAll } from '$app/navigation';
 
 const state = {

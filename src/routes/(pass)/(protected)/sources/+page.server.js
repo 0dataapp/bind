@@ -1,4 +1,4 @@
-import { auth } from '$lib/better-auth/config';
+import { auth } from '$lib/auth/config';
 import db from '$lib/database/main.js';
 import util from '$lib/util.js';
 import depot from '$lib/depot.js';

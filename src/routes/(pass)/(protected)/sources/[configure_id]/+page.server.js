@@ -2,7 +2,7 @@ import db from '$lib/database/main.js';
 const _db = db.collection('account_source');
 import util from '$lib/util.js';
 
-import { auth } from '$lib/better-auth/config';
+import { auth } from '$lib/auth/config';
 import { redirect } from '@sveltejs/kit';
 import depot from '$lib/depot.js';
 

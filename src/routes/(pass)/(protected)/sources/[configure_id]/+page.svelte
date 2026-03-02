@@ -1,5 +1,5 @@
 <script>
-import { unlinkAccount } from '$lib/better-auth/client.js';
+import { unlinkAccount } from '$lib/auth/client.js';
 import { goto } from '$app/navigation';
 
 /** @type {import('./$types').PageProps} */

@@ -5,7 +5,7 @@ export function load() {
 	return data;
 };
 
-import { auth } from '$lib/better-auth/config';
+import { auth } from '$lib/auth/config';
 import { redirect } from '@sveltejs/kit';
 
 /** @satisfies {import('./$types').Actions} */

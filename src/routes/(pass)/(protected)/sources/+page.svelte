@@ -1,6 +1,6 @@
 <script>
 import logic from './logic.js';
-import { linkSocial } from '$lib/better-auth/client.js';
+import { linkSocial } from '$lib/auth/client.js';
 const link = slug => linkSocial(Object.assign({
 	callbackURL: `/sources/${ slug }`,
 }, logic.params(slug)));

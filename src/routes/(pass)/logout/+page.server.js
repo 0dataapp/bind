@@ -1,4 +1,4 @@
-import { auth } from '$lib/better-auth/config';
+import { auth } from '$lib/auth/config';
 import { redirect } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */

@@ -2,7 +2,7 @@
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
 
-import { signIn } from '$lib/better-auth/client.js';
+import { signIn } from '$lib/auth/client.js';
 import { goto } from '$app/navigation';
 
 const propsProps = {

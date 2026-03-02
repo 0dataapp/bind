@@ -1,5 +1,5 @@
 <script>
-import { changePassword } from '$lib/better-auth/client';
+import { changePassword } from '$lib/auth/client';
 
 const state = {
 	oldPassword: '',

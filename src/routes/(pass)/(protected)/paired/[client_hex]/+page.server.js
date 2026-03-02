@@ -17,7 +17,7 @@ export async function load({ params, locals }) {
 	};
 };
 
-import { auth } from '$lib/better-auth/config';
+import { auth } from '$lib/auth/config';
 
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
