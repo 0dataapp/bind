@@ -4,7 +4,7 @@ import util from '$lib/util.js';
 
 import { auth } from '$lib/better-auth/config';
 import { redirect } from '@sveltejs/kit';
-import _abstract from '$lib/depot.js';
+import depot from '$lib/depot.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ request, params }) {
@@ -13,7 +13,7 @@ export async function load({ request, params }) {
   if (!account)
   	return redirect(307, '/sources')
 
-  const { name } = _abstract._map[params.configure_id];
+  const { name } = depot._map[params.configure_id];
 
   const e = account;
 
@@ -21,7 +21,7 @@ export async function load({ request, params }) {
   	body: Object.assign(structuredClone(e), { accountId: e.id }),
   	headers: request.headers,
   });
-  const repos = await _abstract.generate(e.providerId).repos(accessToken);
+  const repos = await depot.generate(e.providerId).repos(accessToken);
 
   const order = ['Private', 'Public'];
   
@@ -36,7 +36,7 @@ export async function load({ request, params }) {
 		selected: (await _db.getItems()).filter(e => e.accountId === account.id).map(util.hydrate).map(e => e.data),
 		groups: list.sort(util.sort.conform(order, e => e.key)).map(({ key, values }) => ({
 	  	account: e,
-	  	label: `${ _abstract._map[e.providerId].name } (${ key })`,
+	  	label: `${ depot._map[e.providerId].name } (${ key })`,
 	  	options: values.map(e => Object.assign(structuredClone(e), {
 	  		name: isExternal(e) ? e.scopedName : e.name,
 	  	})).sort(util.sort.asc(e => e.name)).sort(util.sort.asc(e => isExternal(e))),

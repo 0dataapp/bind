@@ -9,7 +9,7 @@ import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
 import oauth from '$lib/oauth-implicit/main.js';
 import storage from '$lib/storage/disk/main.js';
-import _abstract from '$lib/depot.js';
+import depot from '$lib/depot.js';
 
 export const auth = betterAuth({
   secret: building ? 'BUILD_SECRET_ONLY' : env.BETTER_AUTH_SECRET,
@@ -95,7 +95,7 @@ export const auth = betterAuth({
           }[ctx.body.providerId];
 
           if (callback)
-            await _abstract.generate(ctx.body.providerId).invalidate({
+            await depot.generate(ctx.body.providerId).invalidate({
               clientId: process.env.GITHUB_CLIENT_ID, 
               clientSecret: process.env.GITHUB_CLIENT_SECRET,
               accessToken,
