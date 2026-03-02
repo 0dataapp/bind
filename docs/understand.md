@@ -44,5 +44,5 @@ It's version control for your data that's highly interoperable: use it with a pl
 
 ## Powered by remoteStorage
 
-Your data is made available to apps via the [remoteStorage protocol](https://remotestorage.io/protocol.html), which combines existing standards to facilitate personal data stores and syncronization. It's an open-source grassroots initiative that cultivates data agency via bringing your own data to apps.
+Your data is made available to apps via the [remoteStorage protocol](https://remotestorage.io/protocol.html), which combines existing standards to facilitate personal data stores and syncronization. It's an open-source grassroots initiative for data agency via bringing your own data to apps.
 
