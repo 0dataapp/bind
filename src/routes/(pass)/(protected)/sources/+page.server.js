@@ -1,7 +1,7 @@
 import { auth } from '$lib/better-auth/config';
 import db from '$lib/database/main.js';
 import util from '$lib/util.js';
-import _data from '$lib/depot.js';
+import depot from '$lib/depot.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ request }) {
@@ -16,8 +16,8 @@ export async function load({ request }) {
 	}))
   return {
   	title: 'Data sources',
-		available: _data.providers.filter(e => !accounts.map(e => e.providerId).includes(e.slug) && e.slug !== 'credential'),
-		linked: accounts.map(account => Object.assign(_data.providers.filter(e => account.providerId === e.slug).shift(), {
+		available: depot.asList.filter(e => !accounts.map(e => e.providerId).includes(e.slug) && e.slug !== 'credential'),
+		linked: accounts.map(account => Object.assign(depot.asList.filter(e => account.providerId === e.slug).shift(), {
 			account,
 		})),
 	};

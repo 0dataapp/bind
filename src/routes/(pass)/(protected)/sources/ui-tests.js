@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { load } from './+page.js';
 import stub from '$lib/stub.js';
-import data from '$lib/depot.js';
+import depot from '$lib/depot.js';
 
 test.describe('sources', () => {
 
@@ -35,7 +35,7 @@ test.describe('sources', () => {
       
     });
 
-    data.providers.forEach(e => {
+    depot.asList.forEach(e => {
 
       sessionTest(e.slug, ({ page }) => expect(page.locator(`.${ e.slug }`)).toHaveText(e.name));
 

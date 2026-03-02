@@ -12,7 +12,7 @@ const mod = {
 	},
 
 	_providers,
-	providers: Object.entries(_providers).map(([slug, name]) => ({ slug, name })),
+	asList: Object.entries(_providers).map(([slug, name]) => ({ slug, name })),
 
 	endpoint: provider => ({
 
