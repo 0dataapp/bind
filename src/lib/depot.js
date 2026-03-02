@@ -1,4 +1,4 @@
-import github from './github.js';
+import github from './depot/github.js';
 
 const mod = {
 

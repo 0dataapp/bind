@@ -4,7 +4,7 @@ import util from '$lib/util.js';
 
 import { auth } from '$lib/better-auth/config';
 import { redirect } from '@sveltejs/kit';
-import _abstract from '$lib/provider/_abstract.js';
+import _abstract from '$lib/depot.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ request, params }) {
