@@ -1,7 +1,7 @@
 import { auth } from '$lib/better-auth/config';
 import db from '$lib/database/main.js';
 import util from '$lib/util.js';
-import _data from '$lib/data.js';
+import _data from '$lib/depot.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ request }) {

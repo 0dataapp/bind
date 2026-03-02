@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { load } from './+page.js';
 import stub from '$lib/stub.js';
-import data from '$lib/data.js';
+import data from '$lib/depot.js';
 
 test.describe('sources', () => {
 

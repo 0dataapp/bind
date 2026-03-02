@@ -1,10 +1,18 @@
 import github from './depot/github.js';
 
+const _providers = {
+	credential: 'local disk',
+	github: 'GitHub',
+};
+
 const mod = {
 
 	_map: {
 		github,
 	},
+
+	_providers,
+	providers: Object.entries(_providers).map(([slug, name]) => ({ slug, name })),
 
 	generate: provider => ({
 

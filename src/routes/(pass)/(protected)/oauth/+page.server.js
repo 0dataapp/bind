@@ -1,6 +1,6 @@
 import { auth } from '$lib/better-auth/config';
 import db from '$lib/database/main.js';
-import data from '$lib/data.js';
+import data from '$lib/depot.js';
 import util from '$lib/util.js';
 
 const mod = {
