@@ -4,7 +4,7 @@ const { data } = $props();
 
 const account = `${ data.authenticated.user.username }@${ data.origin }`;
 
-import CopyButton from '$lib/CopyButton.svelte';
+import CopyButton from '$lib/component/CopyButton.svelte';
 </script>
 
 <p>You can use the following storage address with remoteStorage-compatible apps:</p>

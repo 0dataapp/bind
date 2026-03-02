@@ -7,7 +7,7 @@ const state = {
 /** @type {import('./$types').PageProps} */
 let { data, form } = $props();
 
-import Flash from '$lib/Flash.svelte';
+import Flash from '$lib/component/Flash.svelte';
 </script>
 
 <form method="POST">

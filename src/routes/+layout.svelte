@@ -1,7 +1,7 @@
 <script>
 import 'normalize.css';
 import '@picocss/pico';
-import '$lib/zero-data.css';
+import '$lib/component/zero-data.css';
 import './style.css';
 
 import { page } from '$app/state';

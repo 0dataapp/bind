@@ -21,7 +21,7 @@ const propsProps = {
 
 }
 
-import AccountForm from '$lib/AccountForm.svelte';
+import AccountForm from '$lib/component/AccountForm.svelte';
 </script>
 
 <AccountForm { ...propsProps } />

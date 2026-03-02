@@ -31,7 +31,7 @@ const mod = {
 
 };
 
-import Flash from '$lib/Flash.svelte';
+import Flash from '$lib/component/Flash.svelte';
 </script>
 
 <form onsubmit={ mod.onsubmit }>
