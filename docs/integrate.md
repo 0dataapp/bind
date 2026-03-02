@@ -50,7 +50,7 @@ If you prefer separate files per object, just write to a different path for ech 
 
 ```javascript
 let edited = { name: 'buy vegetables', completed: true };
-await client.storeFile('application/json', '1.json', JSON.stringify(edited));
+await client.storeFile('application/json', 't1.json', JSON.stringify(edited));
 ```
 
 You can skip JSON boilerplate by defining a type via JSON Schema. Ignore validation by passing an empty object:
@@ -59,10 +59,10 @@ You can skip JSON boilerplate by defining a type via JSON Schema. Ignore validat
 client.declareType('todo-task', {});
 
 // store object
-await client.storeObject('todo-task', '1.json', edited);
+await client.storeObject('todo-task', 't1', edited);
 
 // retrieve object
-await client.getObject('1.json');
+await client.getObject('t1');
 ```
 
 To get all items as a list:
