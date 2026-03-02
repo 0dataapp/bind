@@ -18,6 +18,7 @@ export default withMermaid({
         items: [
           { text: 'Quickstart', link: '/quickstart' },
           { text: 'How it works', link: '/understand' },
+          { text: 'Make apps', link: '/integrate' },
           { text: 'Self-host', link: '/host' },
           { text: 'Contribute', link: '/contribute' },
         ]
