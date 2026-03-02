@@ -3,7 +3,7 @@ import { username } from 'better-auth/plugins';
 import { createAuthMiddleware } from 'better-auth/api';
 
 import { genericAdapter } from './generic.js';
-import usernames from '$lib/username/main.js';
+import usernames from './username.js';
 import database from '$lib/database/main.js';
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';

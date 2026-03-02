@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import mod from './main.js';
+import mod from '../username.js';
 
 describe('generate', () => {
 
