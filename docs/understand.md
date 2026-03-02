@@ -19,7 +19,8 @@ flowchart LR
 ```
 
 You're one step removed, going <em>'through'</em> apps to access your stuff and it's not easy to get it out. When the app isn't available for some reason, you just have to hope it comes back.
-Bind flips this around by letting you start with data you already have, and keep it in your hands when apps do their thing.
+
+Bind flips this around by letting you use data you already have, and keeping it in your hands when apps do their thing.
 
 ```mermaid
 flowchart LR
