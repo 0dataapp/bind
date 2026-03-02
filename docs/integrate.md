@@ -74,10 +74,24 @@ await client.getAll('');
 
 ## Host
 
-Hosting Bind is optional, but you might like to offer accounts for anyone who doesn't already have one. It's simple to host and can run anywhere that supports Node.js and persistant storage.
+Hosting Bind is *optional*, but you might like to offer accounts for anyone who doesn't already have one. It's simple to run and works anywhere that supports Node.js and persistant storage.
 
-They can still connect their own sources so that you take no custody over their data, while still allowing people from other servers to bring their accounts to your web app.
+Users can connect their own sources so that you take no custody over their data while still allowing people from other servers to bring their accounts to your web app.
 
+```mermaid
+flowchart LR
+	user1 --- data1[data external]@{ shape: das }
+  user2[non-hosted user]@{ shape: circle } --- data2[data external]@{ shape: das }
+  user2 --- app
+  subgraph Optional hosting
+    app@{ shape: rounded } --- server1["Bind"]@{ shape: diamond }
+    user1[hosted user]@{ shape: circle }
+    user1 --- app
+  end
+  server2 --- app
+  data2 --- server2["other server"]@{ shape: diamond }
+	data1 --- server1
+```
 
 ## Other integrations
 
