@@ -29,7 +29,7 @@ const mod = {
 	})).map(async e => {
 
 		Object.assign(e = structuredClone(e), {
-			name: depot.asMap[e.providerId],
+			name: depot.options.asMap[e.providerId],
 		});
 
 		if (e.providerId === 'github')

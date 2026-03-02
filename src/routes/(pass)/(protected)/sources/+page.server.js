@@ -16,8 +16,8 @@ export async function load({ request }) {
 	}))
   return {
   	title: 'Data sources',
-		available: depot.asList.filter(e => !accounts.map(e => e.providerId).includes(e.slug) && e.slug !== 'credential'),
-		linked: accounts.map(account => Object.assign(depot.asList.filter(e => account.providerId === e.slug).shift(), {
+		available: depot.options.asList.filter(e => !accounts.map(e => e.providerId).includes(e.slug) && e.slug !== 'credential'),
+		linked: accounts.map(account => Object.assign(depot.options.asList.filter(e => account.providerId === e.slug).shift(), {
 			account,
 		})),
 	};

@@ -35,7 +35,7 @@ test.describe('sources', () => {
       
     });
 
-    depot.asList.forEach(e => {
+    depot.options.asList.forEach(e => {
 
       sessionTest(e.slug, ({ page }) => expect(page.locator(`.${ e.slug }`)).toHaveText(e.name));
 

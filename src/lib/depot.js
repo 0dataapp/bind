@@ -11,8 +11,12 @@ const mod = {
 		github,
 	},
 
-	asMap,
-	asList: Object.entries(asMap).map(([slug, name]) => ({ slug, name })),
+	options: {
+
+		asMap,
+		asList: Object.entries(asMap).map(([slug, name]) => ({ slug, name })),
+
+	},
 
 	endpoint: provider => ({
 
