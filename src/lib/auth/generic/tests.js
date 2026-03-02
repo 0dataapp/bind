@@ -7,8 +7,7 @@ import path from 'path';
 // https://github.com/LightInn/pocketbase-better-auth/blob/main/src/index.ts
 
 import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const _DATA_DIRECTORY = path.join(__dirname, '../../../__testing');
 const folder = path.join(_DATA_DIRECTORY, database._subdirectory());
 
