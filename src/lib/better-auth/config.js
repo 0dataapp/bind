@@ -95,7 +95,7 @@ export const auth = betterAuth({
           }[ctx.body.providerId];
 
           if (callback)
-            await depot.generate(ctx.body.providerId).invalidate({
+            await depot.endpoint(ctx.body.providerId).invalidate({
               clientId: process.env.GITHUB_CLIENT_ID, 
               clientSecret: process.env.GITHUB_CLIENT_SECRET,
               accessToken,

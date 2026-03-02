@@ -14,7 +14,7 @@ const mod = {
 	_providers,
 	providers: Object.entries(_providers).map(([slug, name]) => ({ slug, name })),
 
-	generate: provider => ({
+	endpoint: provider => ({
 
 		async repos (token) {
 			const _provider = mod._map[provider].repos;
