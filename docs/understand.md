@@ -35,3 +35,9 @@ flowchart LR
 ```
 
 You don't need permission to get your stuff because you already have it. If the app goes away, you can just take 100% of your data to another one.
+
+## Sync with Git
+
+Git let's you see changes, roll back, have it sync to all apps, while still using files.
+
+It's version control for your data that's highly interoperable: use it with a platform (like GitHub, Codeberg, Tangled, Gitea…), your computer, via the terminal, self-hosted on your own machine, run pipelines or scripts on your data—the possibilities are endless.
