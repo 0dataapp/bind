@@ -52,6 +52,40 @@ const mod = {
 			},
 
 			__delete: async id => (await _this._db()).update(({ items }) => items.splice(items.findIndex(e => e.id === id), 1)),
+
+			hydrating: {
+
+				_hydrate: e => {
+					e = structuredClone(e);
+
+					[
+						'createdAt',
+						'updatedAt',
+					].forEach(key => {
+						if (typeof e[key] !== 'undefined')
+							e[key] = new Date(e[key]);
+					});
+
+					if (typeof e.data === 'string')
+						e.data = JSON.parse(e.data);
+
+					return e;
+				},
+
+				_dehydrate: e => Object.assign(structuredClone(e), { data: JSON.stringify(e.data) }),
+				
+				create: async e => {
+					await _this.__create(_this.hydrating._dehydrate(e));
+					return e;
+				},
+
+				getItems: async () => (await _this.__getItems()).map(_this.hydrating._hydrate),
+
+				update: async (id, e) => {
+					await _this.__update(id, _this.hydrating._dehydrate(e));
+					return e;
+				},
+
 			},
 
 		});

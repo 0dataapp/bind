@@ -115,4 +115,71 @@ describe('collection', () => {
 
 	});
 
+	describe('hydrating', () => {
+
+		describe('create', () => {
+
+			test('output', async () => {
+				const data = { [Math.random().toString()]: Math.random().toString() };
+				expect(await _collection().hydrating.create({ data })).toEqual({ data });
+			});
+
+			test('persist', async () => {
+				const collection = Math.random().toString();
+				const data = { [Math.random().toString()]: Math.random().toString() };
+				const e = { data };
+				await _collection(collection).hydrating.create(e);
+				expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [{
+					data: JSON.stringify(data),
+				}] });
+			});
+
+		});
+
+		describe('getItems', () => {
+
+			test('output', async () => {
+				const db = _collection();
+
+				const data = { [Math.random().toString()]: Math.random().toString() };
+				const e = { data };
+				await db.hydrating.create(e);
+				
+				expect(await db.hydrating.getItems()).toEqual([e]);
+			});
+
+		});
+
+		describe('update', () => {
+
+			test('output', async () => {
+				const db = _collection();
+
+				const id = Math.random().toString();
+				await db.hydrating.create({ id });
+
+				const key = Math.random().toString();
+				const data = { [Math.random().toString()]: Math.random().toString() };
+				const item = { id, key, data };
+				expect(await db.hydrating.update(id, item)).toEqual(item);
+			});
+
+			test('persist', async () => {
+				const collection = Math.random().toString();
+				const db = _collection(collection);
+
+				const id = Math.random().toString();
+				await db.hydrating.create({ id });
+
+				const key = Math.random().toString();
+				const data = { [Math.random().toString()]: Math.random().toString() };
+				await db.hydrating.update(id, { id, key, data });
+
+				expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [{ id, key, data: JSON.stringify(data) }] });
+			});
+
+		});
+
+	});
+
 });
