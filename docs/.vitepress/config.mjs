@@ -53,4 +53,6 @@ export default withMermaid({
     },
   },
 
+  cleanUrls: true,
+
 });
