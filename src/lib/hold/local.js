@@ -25,64 +25,68 @@ const mod = {
     }
   },
 
-  dataPath: (handle, url) => mod._resolvePath(handle, url),
-
-	_metaPath: target => `${ target }${ metaSuffix }`,
+  _metaPath: target => `${ target }${ metaSuffix }`,
 	_isIgnored: e => e.endsWith(metaSuffix) || [
 		'.DS_Store',
 	].includes(path.basename(e)),
 
-	meta (handle, _url) {
-		const target = mod.dataPath(handle, _url);
-		return fs.existsSync(target) ? JSON.parse(fs.readFileSync(mod._metaPath(target), 'utf8')) : {};
-	},
-
 	_etag: () => new Date().toJSON(),
 
-	put (handle, _url, data, ancestors, meta) {
-		const target = mod.dataPath(handle, _url);
+	middleware: {
 
-		fs.mkdirSync(path.dirname(target), { recursive: true });
-		ancestors.forEach(e => fs.writeFileSync(mod._metaPath(`${ e }/`), JSON.stringify({
-			ETag: mod._etag(),
-		})));
-		
-		fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
-		fs.writeFileSync(mod._metaPath(target), JSON.stringify(Object.assign(meta, {
-			ETag: mod._etag(),
-			'Content-Length': Buffer.isBuffer(data) ? data.length : fs.statSync(target).size,
-		})));
-	},
+		dataPath: (handle, url) => mod._resolvePath(handle, url),
 
-	delete (target, ancestors) {
-		fs.unlinkSync(target);
-		fs.unlinkSync(mod._metaPath(target))
+		meta (handle, _url) {
+			const target = mod.dataPath(handle, _url);
+			return fs.existsSync(target) ? JSON.parse(fs.readFileSync(mod._metaPath(target), 'utf8')) : {};
+		},
 
-		ancestors.filter(e => !fs.readdirSync(e).filter(e => !mod._isIgnored(e)).length).forEach(e => {
-			fs.unlinkSync(mod._metaPath(`${e}/`));
-			fs.rmdirSync(e);
-		});
+		put (handle, _url, data, ancestors, meta) {
+			const target = mod.dataPath(handle, _url);
 
-		ancestors.filter(e => fs.existsSync(e) && fs.readdirSync(e).filter(e => !mod._isIgnored(e)).length).forEach(e => fs.writeFileSync(mod._metaPath(`${ e }/`), JSON.stringify({
-			ETag: mod._etag(),
-		})));
-	},
+			fs.mkdirSync(path.dirname(target), { recursive: true });
+			ancestors.forEach(e => fs.writeFileSync(mod._metaPath(`${ e }/`), JSON.stringify({
+				ETag: mod._etag(),
+			})));
+			
+			fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
+			fs.writeFileSync(mod._metaPath(target), JSON.stringify(Object.assign(meta, {
+				ETag: mod._etag(),
+				'Content-Length': Buffer.isBuffer(data) ? data.length : fs.statSync(target).size,
+			})));
+		},
 
-	folderItems (handle, _url) {
-		const target = mod.dataPath(handle, _url);
+		delete (target, ancestors) {
+			fs.unlinkSync(target);
+			fs.unlinkSync(mod._metaPath(target))
 
-		return fs.readdirSync(target).filter(e => !mod._isIgnored(e)).reduce((coll, item) => {
-			let _path = path.join(target, item);
-
-			if (fs.statSync(_path).isDirectory()) {
-				item = `${ item }/`;
-				_path = `${ _path }/`;
-			}
-
-			return Object.assign(coll, {
-				[item]: JSON.parse(fs.readFileSync(mod._metaPath(_path), 'utf8')),
+			ancestors.filter(e => !fs.readdirSync(e).filter(e => !mod._isIgnored(e)).length).forEach(e => {
+				fs.unlinkSync(mod._metaPath(`${e}/`));
+				fs.rmdirSync(e);
 			});
-		}, {});
+
+			ancestors.filter(e => fs.existsSync(e) && fs.readdirSync(e).filter(e => !mod._isIgnored(e)).length).forEach(e => fs.writeFileSync(mod._metaPath(`${ e }/`), JSON.stringify({
+				ETag: mod._etag(),
+			})));
+		},
+
+		folderItems (handle, _url) {
+			const target = mod.dataPath(handle, _url);
+
+			return fs.readdirSync(target).filter(e => !mod._isIgnored(e)).reduce((coll, item) => {
+				let _path = path.join(target, item);
+
+				if (fs.statSync(_path).isDirectory()) {
+					item = `${ item }/`;
+					_path = `${ _path }/`;
+				}
+
+				return Object.assign(coll, {
+					[item]: JSON.parse(fs.readFileSync(mod._metaPath(_path), 'utf8')),
+				});
+			}, {});
+		},
+
 	},
 
 	erase: handle => fs.rmSync(mod.dataPath(handle, '/'), { recursive: true, force: true }),

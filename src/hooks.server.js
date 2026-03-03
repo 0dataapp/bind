@@ -30,7 +30,7 @@ export const handle = sequence(
   bind.sveltekit(bind.cors()),
 	bind.sveltekit(bind.storage({
 	  getScope: oauth.getScope,
-	  storage: env.STORAGE_ADAPTER === 'git_https' ? git_https : local,
+	  storage: (env.STORAGE_ADAPTER === 'git_https' ? git_https : local).middleware,
 	}), `/${ prefix }`),
   bind.sveltekit(bind.webfinger({
     storagePath: handle => {

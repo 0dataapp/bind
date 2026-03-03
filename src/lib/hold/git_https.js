@@ -51,8 +51,7 @@ const mod = {
     }
   },
 
-  dataPath: (handle, url) => path.join(mod._storage, url),
-	_gitPath: _url => `.${ _url }`,
+  _gitPath: _url => `.${ _url }`,
 	_isIgnored: e => [
 		'.DS_Store',
 	].includes(path.basename(e)),
@@ -86,77 +85,7 @@ const mod = {
 		return mime.getType(_path) || 'text/plain';
 	},
 
-	async meta (handle, _url) {
-		const target = mod.dataPath(handle, _url);
-
-		if (!fs.existsSync(target))
-			return {};
-
-		const isFolder = fs.statSync(target).isDirectory();
-
-		const meta = {
-			ETag: await mod._etag(_url, isFolder),
-		};
-
-		if (isFolder)
-			return meta;
-
-		const stat = fs.statSync(target);
-		return Object.assign(meta, {
-			'Content-Length': stat.size,
-			'Content-Type': await mod._guessMimeType(fs.readFileSync(target), target),
-			'Last-Modified': stat.mtime.toUTCString(),
-		});
-	},
-
 	_etag: async (_url, isFolder) => (await mod.git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod._gitPath(isFolder ? _url.replace(/\/$/, '') : _url)))).trim().split('\n').pop(),
-
-	async put (handle, _url, data, ancestors, meta) {
-		const target = mod.dataPath(handle, _url);
-
-		fs.mkdirSync(path.dirname(target), { recursive: true });
-
-		fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
-		
-		await mod.gitCommit();
-
-		Object.assign(meta, await mod.meta(handle, _url));
-	},
-
-	async delete (target, ancestors) {
-		fs.unlinkSync(target);
-
-		ancestors.filter(e => !fs.readdirSync(e).filter(e => !mod._isIgnored(e)).length).forEach(e => fs.rmdirSync(e));
-		
-		return mod.gitCommit();
-	},
-
-	async folderItems (handle, _url) {
-		const target = mod.dataPath(handle, _url);
-
-		const tree = (await mod.git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod._gitPath(_url))).trim();
-
-		return !tree.length ? {} : tree.split('\n').map(e => {
-			const [type, hash, size, path] = e.split(/\s+/);
-			return {
-				name: type === 'tree' ? `${ path }/` : path,
-				type,
-				hash,
-				size: size === '-' ? null : parseInt(size),
-			};
-		}).reduce((coll, item) => {
-			const _path = path.join(_url, item.name);
-			coll[item.name.match(new RegExp(`^${ _url.slice(1) }(.*)`)).pop()] = Object.assign(item.type === 'tree' ? {} : {
-				'Content-Length': item.size,
-				'Content-Type': mime.getType(_path) || 'application/json',
-				'Last-Modified': fs.statSync(mod.dataPath(handle, _url)).mtime.toUTCString(),
-			}, {
-				ETag: item.hash,
-			});
-
-			return coll;
-		}, {});
-	},
 
 	gitPull: () => mod.git.pull('origin'),
 	gitPush: debounce(() => mod.git.push('origin'), debounceSeconds * 1000),
@@ -199,6 +128,82 @@ const mod = {
 
 	async prepare (params) {
 		q.push(() => mod.syncSource(params));
+	},
+
+	middleware: {
+
+		dataPath: (handle, url) => path.join(mod._storage, url),
+		
+		async meta (handle, _url) {
+			const target = mod.dataPath(handle, _url);
+
+			if (!fs.existsSync(target))
+				return {};
+
+			const isFolder = fs.statSync(target).isDirectory();
+
+			const meta = {
+				ETag: await mod._etag(_url, isFolder),
+			};
+
+			if (isFolder)
+				return meta;
+
+			const stat = fs.statSync(target);
+			return Object.assign(meta, {
+				'Content-Length': stat.size,
+				'Content-Type': await mod._guessMimeType(fs.readFileSync(target), target),
+				'Last-Modified': stat.mtime.toUTCString(),
+			});
+		},
+
+		async put (handle, _url, data, ancestors, meta) {
+			const target = mod.dataPath(handle, _url);
+
+			fs.mkdirSync(path.dirname(target), { recursive: true });
+
+			fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
+			
+			await mod.gitCommit();
+
+			Object.assign(meta, await mod.meta(handle, _url));
+		},
+
+		async delete (target, ancestors) {
+			fs.unlinkSync(target);
+
+			ancestors.filter(e => !fs.readdirSync(e).filter(e => !mod._isIgnored(e)).length).forEach(e => fs.rmdirSync(e));
+			
+			return mod.gitCommit();
+		},
+
+		async folderItems (handle, _url) {
+			const target = mod.dataPath(handle, _url);
+
+			const tree = (await mod.git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod._gitPath(_url))).trim();
+
+			return !tree.length ? {} : tree.split('\n').map(e => {
+				const [type, hash, size, path] = e.split(/\s+/);
+				return {
+					name: type === 'tree' ? `${ path }/` : path,
+					type,
+					hash,
+					size: size === '-' ? null : parseInt(size),
+				};
+			}).reduce((coll, item) => {
+				const _path = path.join(_url, item.name);
+				coll[item.name.match(new RegExp(`^${ _url.slice(1) }(.*)`)).pop()] = Object.assign(item.type === 'tree' ? {} : {
+					'Content-Length': item.size,
+					'Content-Type': mime.getType(_path) || 'application/json',
+					'Last-Modified': fs.statSync(mod.dataPath(handle, _url)).mtime.toUTCString(),
+				}, {
+					ETag: item.hash,
+				});
+
+				return coll;
+			}, {});
+		},
+
 	},
 
 	erase: source => fs.rmSync(mod._clonePath(source), { recursive: true, force: true }),
