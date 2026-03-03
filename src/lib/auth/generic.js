@@ -58,7 +58,7 @@ const _adapterMethods = ({
     }),
 
     _getItems (collection) {
-      return this._attempt(() => this._db(collection).getItems(), {
+      return this._attempt(() => this._db(collection).__getItems(), {
         operation: '_getItems',
         collection,
       })
@@ -68,7 +68,7 @@ const _adapterMethods = ({
       this._log('create', { model, data });
 
       const collection = getModelName(model);
-      return this._attempt(() => this._db(collection).create(data), {
+      return this._attempt(() => this._db(collection).__create(data), {
         operation: 'create',
         collection,
       });
@@ -100,7 +100,7 @@ const _adapterMethods = ({
       if (!result)
         return null;
 
-      return this._attempt(() => this._db(collection).update(result.id, this._applyUpdate(result, update)), {
+      return this._attempt(() => this._db(collection).__update(result.id, this._applyUpdate(result, update)), {
         operation: 'update',
         collection,
       });
@@ -110,7 +110,7 @@ const _adapterMethods = ({
       this._log('updateMany', { model, where, update });
 
       const collection = getModelName(model);
-      return _filterItems(this._getItems(collection), where).map(record => this._attempt(() => this._db(collection).update(record.id, this._applyUpdate(record, update)), {
+      return _filterItems(this._getItems(collection), where).map(record => this._attempt(() => this._db(collection).__update(record.id, this._applyUpdate(record, update)), {
         operation: 'updateMany',
         collection,
       })).length;
@@ -125,7 +125,7 @@ const _adapterMethods = ({
       if (!result)
         return;
 
-      this._attempt(() => this._db(collection).delete(result.id), {
+      this._attempt(() => this._db(collection).__delete(result.id), {
         operation: 'delete',
         collection,
       });
@@ -137,7 +137,7 @@ const _adapterMethods = ({
       this._log('deleteMany', { model, where });
 
       const collection = getModelName(model);
-      return _filterItems(this._getItems(collection), where).map(record => this._attempt(() => this._db(collection).delete(record.id), {
+      return _filterItems(this._getItems(collection), where).map(record => this._attempt(() => this._db(collection).__delete(record.id), {
         operation: 'deleteMany',
         collection,
       })).length;

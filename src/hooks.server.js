@@ -34,7 +34,7 @@ export const handle = sequence(
 	}), `/${ prefix }`),
   bind.sveltekit(bind.webfinger({
     storagePath: handle => {
-    	const user = _db.getItems().filter(e => e.username === handle).shift();
+    	const user = _db.__getItems().filter(e => e.username === handle).shift();
     	return `/${ prefix }/${ user ? user.id : '' }`;
     },
     authPath: '/oauth',

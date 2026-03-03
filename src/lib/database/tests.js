@@ -26,13 +26,13 @@ describe('collection', () => {
 		expect(_collection()).toBeTypeOf('object');
 	});
 
-	describe('create', () => {
+	describe('__create', () => {
 
 		test('output', () => {
 			const item = {
 				id: Math.random().toString(),
 			};
-			expect(_collection().create(item)).toBe(item);
+			expect(_collection().__create(item)).toBe(item);
 		});
 
 		test('persist', () => {
@@ -40,13 +40,13 @@ describe('collection', () => {
 			const item = {
 				id: Math.random().toString(),
 			};
-			_collection(collection).create(item);
+			_collection(collection).__create(item);
 			expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [item] });
 		});
 
 	});
 
-	describe('getItems', () => {
+	describe('__getItems', () => {
 
 		test('output', () => {
 			const db = _collection();
@@ -54,24 +54,24 @@ describe('collection', () => {
 			const item = {
 				id: Math.random().toString(),
 			};
-			db.create(item);
+			db.__create(item);
 			
-			expect(db.getItems()).toEqual([item]);
+			expect(db.__getItems()).toEqual([item]);
 		});
 
 	});
 
-	describe('update', () => {
+	describe('__update', () => {
 
 		test('output', () => {
 			const db = _collection();
 
 			const id = Math.random().toString();
-			db.create({ id });
+			db.__create({ id });
 
 			const key = Math.random().toString();
 			const item = { id, key };
-			expect(db.update(id, item)).toBe(item);
+			expect(db.__update(id, item)).toBe(item);
 		});
 
 		test('persist', () => {
@@ -79,26 +79,26 @@ describe('collection', () => {
 			const db = _collection(collection);
 
 			const id = Math.random().toString();
-			db.create({ id });
+			db.__create({ id });
 
 			const key = Math.random().toString();
 			const item = { id, key };
-			db.update(id, item);
+			db.__update(id, item);
 
 			expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [item] });
 		});
 
 	});
 
-	describe('delete', () => {
+	describe('__delete', () => {
 
 		test('output', () => {
 			const db = _collection();
 
 			const id = Math.random().toString();
-			db.create({ id });
+			db.__create({ id });
 
-			expect(db.delete(id)).toBe(undefined);
+			expect(db.__delete(id)).toBe(undefined);
 		});
 
 		test('persist', () => {
@@ -106,9 +106,9 @@ describe('collection', () => {
 			const db = _collection(collection);
 
 			const id = Math.random().toString();
-			db.create({ id });
+			db.__create({ id });
 
-			db.delete(id);
+			db.__delete(id);
 			
 			expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [] });
 		});

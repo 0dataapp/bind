@@ -10,7 +10,7 @@ export async function load({ request }) {
 	})).filter(e => e.providerId !== 'credential').map(async e => {
 
 		if (e.providerId === 'github')
-			e._sources = (await db.collection('account_source').getItems()).filter(source => source.accountId === e.id).map(util.hydrate);
+			e._sources = (await db.collection('account_source').__getItems()).filter(source => source.accountId === e.id).map(util.hydrate);
 		
 		return e;
 	}))

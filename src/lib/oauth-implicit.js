@@ -21,13 +21,13 @@ const mod = {
 		return token;
 	},
 
-	getScope: (userId, token) => _db.getItems().filter(e => e.userId === userId && e.token === token).map(util.hydrate).shift()?.data?.scope,
+	getScope: (userId, token) => _db.__getItems().filter(e => e.userId === userId && e.token === token).map(util.hydrate).shift()?.data?.scope,
 
-	authorizations: userId => _db.getItems().filter(e => e.userId === userId).map(util.hydrate),
+	authorizations: userId => _db.__getItems().filter(e => e.userId === userId).map(util.hydrate),
 
-	revokeClient: (userId, client) => Promise.all(mod.authorizations(userId).filter(e => e.data.client_id === client).map(e => _db.delete(e.id))),
+	revokeClient: (userId, client) => Promise.all(mod.authorizations(userId).filter(e => e.data.client_id === client).map(e => _db.__delete(e.id))),
 	
-	revokeAll: userId => Promise.all(mod.authorizations(userId).map(e => _db.delete(e.id))),
+	revokeAll: userId => Promise.all(mod.authorizations(userId).map(e => _db.__delete(e.id))),
 
 };
 

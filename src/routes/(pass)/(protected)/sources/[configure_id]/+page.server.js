@@ -38,7 +38,7 @@ export async function load({ request, params }) {
 		title: `Configure ${ name }`,
 		name,
 		account,
-		selected: (await _db.getItems()).filter(e => e.accountId === account.id).map(util.hydrate).map(e => e.data),
+		selected: (await _db.__getItems()).filter(e => e.accountId === account.id).map(util.hydrate).map(e => e.data),
 		groups: list.sort(util.sort.conform(order, e => e.key)).map(({ key, values }) => ({
 	  	account: e,
 	  	label: `${ depot._map[e.providerId].name } (${ key })`,
@@ -61,11 +61,11 @@ export const actions = {
 			return redirect(307, '/sources')
 
 		const sources = JSON.parse((await request.formData()).get('sources')).slice(0, maxItems);
-		const items = (await _db.getItems()).filter(e => e.accountId === account.id);
+		const items = (await _db.__getItems()).filter(e => e.accountId === account.id);
 
-		await Promise.all(items.filter(e => !sources.map(e => e.id).includes(e.foreignId)).map(e => _db.delete(e.id)));
+		await Promise.all(items.filter(e => !sources.map(e => e.id).includes(e.foreignId)).map(e => _db.__delete(e.id)));
 
-		await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => _db.create(util.dehydrate({
+		await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => _db.__create(util.dehydrate({
 			id: db.generateId(),
 			foreignId: data.id,
 			accountId: account.id,

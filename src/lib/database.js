@@ -37,21 +37,21 @@ const mod = {
 				return db;
 			},
 
-			create: obj => {
+			__create: obj => {
 				_this._db().update(({ items }) => items.push(obj));
 
 				return obj;
 			},
 
-			getItems: () => _this._db().data.items,
+			__getItems: () => _this._db().data.items,
 
-			update: (id, obj) => {
+			__update: (id, obj) => {
 				_this._db().update(({ items }) => Object.assign(items.filter(e => e.id === id).shift(), obj));
 
 				return obj;
 			},
 
-			delete: id => {
+			__delete: id => {
 				_this._db().update(({ items }) => items.splice(items.findIndex(e => e.id === id), 1));
 			},
 
