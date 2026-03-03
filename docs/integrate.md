@@ -17,7 +17,7 @@ Just read and write data with the remoteStorage.js library and your web apps get
 - personal data stores
 - interoperable bridges
 
-## Sample code
+### Sample code
 
 You might be familiar with `localStorage` for storing and retrieving objects:
 
@@ -74,7 +74,7 @@ await client.getAll('');
 
 Read more about multiple scopes in the [remoteStorage.js documentation](https://remotestorage.io/rs.js/docs/data-modules/).
 
-## Host
+### Host
 
 Hosting Bind is *optional*, but you might like to offer accounts for anyone who doesn't already have one. It's simple to run and works anywhere that supports Node.js and persistant storage.
 
