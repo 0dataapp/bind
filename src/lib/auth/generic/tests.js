@@ -8,7 +8,7 @@ import path from 'path';
 
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const _DATA_DIRECTORY = path.join(__dirname, '../../../__testing');
+const _DATA_DIRECTORY = path.join(__dirname, '../../../../__testing');
 const folder = path.join(_DATA_DIRECTORY, database._subdirectory());
 
 const uItem = params => Object.assign({
