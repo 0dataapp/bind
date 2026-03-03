@@ -27,7 +27,7 @@ const mod = {
 				html_url: `https://github.com/${ full_name }`,
 				is_template: false,
 				private: false,
-				size: 0,
+				size: parseInt(Math.random().toString().slice(-5)),
 				visibility: 'public',
 				web_commit_signoff_required: false,
 

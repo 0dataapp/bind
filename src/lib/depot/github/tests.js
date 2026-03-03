@@ -43,6 +43,7 @@ describe('repos', () => {
 				cloneURL: json.clone_url,
 				webURL: json.html_url,
 				ownerId: json.owner.id.toString(),
+				size: json.size,
 				payload: mod.repos._tidy(json),
 			}]);
 		});

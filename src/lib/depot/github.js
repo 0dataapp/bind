@@ -46,6 +46,7 @@ const mod = {
 			cloneURL: e.clone_url,
 			webURL: e.html_url,
 			ownerId: e.owner.id.toString(),
+			size: e.size,
 			payload: mod.repos._tidy(e),
 		})),
 
