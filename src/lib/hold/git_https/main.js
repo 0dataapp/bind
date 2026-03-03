@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 import { env } from '$env/dynamic/private';
-const folder = path.join(env.DATA_DIRECTORY || __dirname, '__storage/git_https');
+const folder = path.join(env.DATA_DIRECTORY || __dirname, '__hold/git_https');
 import util from '$lib/util';
 
 import { simpleGit, CleanOptions } from 'simple-git';

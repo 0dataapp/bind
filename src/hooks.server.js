@@ -5,8 +5,8 @@ import { env } from '$env/dynamic/private';
 
 import bind from 'bind-middleware';
 
-import disk from '$lib/storage/disk/main.js';
-import git_https from '$lib/storage/git_https/main.js';
+import disk from '$lib/hold/disk/main.js';
+import git_https from '$lib/hold/git_https/main.js';
 
 if (env.STORAGE_ADAPTER === 'git_https')
   git_https.setupEverything();

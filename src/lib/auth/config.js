@@ -8,7 +8,7 @@ import database from '$lib/database/main.js';
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
 import oauth from '$lib/oauth-implicit/main.js';
-import storage from '$lib/storage/disk/main.js';
+import storage from '$lib/hold/disk/main.js';
 import depot from '$lib/depot.js';
 
 export const auth = betterAuth({
