@@ -24,13 +24,19 @@ import Svelecte from 'svelecte';
 
 <form method="POST">
 
-<p>Authorized apps can read/write data to selected sources. Only recent repositories under { data.maxSize } are shown.</p>
+<p>Authorized apps can read/write data to selected sources.</p>
+
+<ul>
+<li>Showing recent repositories under { data.maxSize }.</li>
+<li>Select up to { data.maxItems } items.</li>
+</ul>
 
 <div class="Svelecte-container">
 	<Svelecte
 	  bind:value
 	  multiple
 	  valueAsObject
+	  max={ data.maxItems }
 	  options={ data.groups }
 	  onChange={ mod.onChange }
 	/>

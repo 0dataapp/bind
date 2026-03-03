@@ -6,6 +6,8 @@ import { auth } from '$lib/auth/config';
 import { redirect } from '@sveltejs/kit';
 import depot from '$lib/depot.js';
 
+const maxItems = 10;
+
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ request, params }) {
   const account = (await auth.api.listUserAccounts({ headers: request.headers })).filter(e => e.providerId === params.configure_id).shift();
@@ -42,6 +44,7 @@ export async function load({ request, params }) {
 	  	})).sort(util.sort.asc(e => e.name)).sort(util.sort.asc(e => isExternal(e))),
 	  })).flat(),
 	  maxSize: depot.maxSize(),
+	  maxItems,
 	};
 };
 	
@@ -54,12 +57,12 @@ export const actions = {
 		if (!account)
 			return redirect(307, '/sources')
 
-		const sources = JSON.parse((await request.formData()).get('sources'));
+		const sources = JSON.parse((await request.formData()).get('sources')).slice(0, maxItems);
 		const items = (await _db.getItems()).filter(e => e.accountId === account.id);
 
 		await Promise.all(items.filter(e => !sources.map(e => e.id).includes(e.foreignId)).map(e => _db.delete(e.id)));
 
-		await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(async data => await _db.create(util.dehydrate({
+		await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => _db.create(util.dehydrate({
 			id: db.generateId(),
 			foreignId: data.id,
 			accountId: account.id,
