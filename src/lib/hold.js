@@ -17,13 +17,10 @@ const mod = {
 		throw new Error('unknown depot');
 	},
 
-	interface: depotId => ({
-
-		prepare: params => (mod._wrappers[mod.wrapperId(depotId)].prepare || (() => {}))(params),
-		
-		erase: source => mod._wrappers[mod.wrapperId(depotId)].erase(source),
-
-	}),
+	interface: wrapperId => Object.fromEntries([
+		'prepare',
+		'erase',
+	].map(method => [method, mod._wrappers[wrapperId][method]])),
 
 };
 

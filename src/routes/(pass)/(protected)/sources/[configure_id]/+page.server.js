@@ -61,12 +61,14 @@ export const actions = {
 		if (!account)
 			return redirect(307, '/sources')
 
+		const interface = hold.interface(hold.wrapperId(params.configure_id));
+
 		const sources = JSON.parse((await request.formData()).get('sources')).slice(0, maxItems);
 		const items = (await _db.hydrating.getItems()).filter(e => e.accountId === account.id);
 
 		const removed = items.filter(e => !sources.map(e => e.id).includes(e.foreignId));
 		await Promise.all(removed.map(e => _db.__delete(e.id)));
-		removed.forEach(e => hold.interface(params.configure_id).erase(e.data));
+		removed.forEach(e => interface.erase(e.data));
 
 		const created = await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => _db.hydrating.create({
 			id: db.generateId(),
@@ -81,7 +83,7 @@ export const actions = {
 			headers: request.headers,
 		});
 		
-		created.map(e => e.data).forEach(source => hold.interface(params.configure_id).prepare({
+		created.map(e => e.data).forEach(source => interface.prepare({
 			source,
 			token,
 		}));
