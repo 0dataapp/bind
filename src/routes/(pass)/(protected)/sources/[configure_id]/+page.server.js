@@ -5,6 +5,7 @@ import util from '$lib/util.js';
 import { auth } from '$lib/auth/config';
 import { redirect } from '@sveltejs/kit';
 import depot from '$lib/depot.js';
+import hold from '$lib/hold.js';
 
 const maxItems = 10;
 
@@ -65,13 +66,23 @@ export const actions = {
 
 		await Promise.all(items.filter(e => !sources.map(e => e.id).includes(e.foreignId)).map(e => _db.__delete(e.id)));
 
-		await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => _db.hydrating.create({
+		const created = await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => _db.hydrating.create({
 			id: db.generateId(),
 			foreignId: data.id,
 			accountId: account.id,
 			createdAt: new Date(),
 			data,
 		})));
+
+		const { accessToken: token } = await auth.api.getAccessToken({
+			body: Object.assign(structuredClone(account), { accountId: account.id }),
+			headers: request.headers,
+		});
+		
+		created.forEach(source => hold.interface(params.configure_id).prepare({
+			source,
+			token,
+		}));
 
 		return redirect(303, '/sources');
 	},

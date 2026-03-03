@@ -16,6 +16,12 @@ import mime from 'mime';
 const debounceSeconds = 1.5;
 const pollSeconds = 5;
 
+import Queue from 'queue';
+const q = new Queue({
+	autostart: true,
+	concurrency: 5,
+});
+
 function debounce(func, wait, immediate) {
   var timeout;
   return function() {
@@ -179,6 +185,20 @@ const mod = {
 
 		mod.git.addConfig('user.name', env.GIT_CONFIG_NAME || 'me');
 		mod.git.addConfig('user.email', env.GIT_CONFIG_EMAIL || 'me@example.com');
+	},
+
+	_clonePath: source => path.join(folder, util.hash(source.cloneURL)),
+	_cloneURL: source => path.join(folder, util.hash(source.cloneURL)),
+
+	async syncSource ({ source, token }) {
+		const target = mod._clonePath(source);
+
+		if (!fs.existsSync(target))
+			await simpleGit().clone(source.cloneURLTemplate.replace('{token}', token), target);
+	},
+
+	async prepare (params) {
+		q.push(() => mod.syncSource(params));
 	},
 
 };
