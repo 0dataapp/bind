@@ -24,7 +24,7 @@ import Svelecte from 'svelecte';
 
 <form method="POST">
 
-<p>Authorized apps can read/write data to selected sources.</p>
+<p>Authorized apps can read/write data to selected sources. Only recent repositories under { data.maxSize } are shown.</p>
 
 <div class="Svelecte-container">
 	<Svelecte

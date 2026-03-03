@@ -41,6 +41,7 @@ export async function load({ request, params }) {
 	  		name: isExternal(e) ? e.scopedName : e.name,
 	  	})).sort(util.sort.asc(e => e.name)).sort(util.sort.asc(e => isExternal(e))),
 	  })).flat(),
+	  maxSize: depot.maxSize(),
 	};
 };
 	

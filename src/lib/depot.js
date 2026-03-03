@@ -11,6 +11,9 @@ const mod = {
 		github,
 	},
 
+	_maxBytes: 100000,
+	maxSize: () => `${ mod._maxBytes / 1000 }MB`,
+
 	options: {
 
 		asMap,
@@ -30,7 +33,7 @@ const mod = {
 
 			const res = await fetch(config.url, config);
 
-			return _provider.data(await res.json());
+			return _provider.data(await res.json()).filter(e => e.size < mod._maxBytes);
 		},
 
 		invalidate (params) {
