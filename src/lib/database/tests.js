@@ -1,4 +1,4 @@
-import { describe, test, expect, throws, afterAll } from 'vitest';
+import { describe, test, expect, afterAll } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import mod from '../database.js';
