@@ -20,7 +20,7 @@ const mod = {
 	interface: wrapperId => Object.fromEntries([
 		'prepare',
 		'erase',
-	].map(method => [method, mod._wrappers[wrapperId][method]])),
+	].map(method => [method, mod._wrappers[wrapperId].hold[method]])),
 
 };
 

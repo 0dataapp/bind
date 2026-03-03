@@ -206,7 +206,11 @@ const mod = {
 
 	},
 
-	erase: source => fs.rmSync(mod._clonePath(source), { recursive: true, force: true }),
+	hold: {
+
+		erase: source => fs.rmSync(mod._clonePath(source), { recursive: true, force: true }),
+		
+	},
 
 };
 

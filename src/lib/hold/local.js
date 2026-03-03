@@ -89,7 +89,11 @@ const mod = {
 
 	},
 
-	erase: handle => fs.rmSync(mod.dataPath(handle, '/'), { recursive: true, force: true }),
+	hold: {
+		
+		erase: handle => fs.rmSync(mod.dataPath(handle, '/'), { recursive: true, force: true }),
+
+	},
 	
 };
 

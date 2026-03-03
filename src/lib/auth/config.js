@@ -34,7 +34,7 @@ export const auth = betterAuth({
       enabled: true,
       beforeDelete: async (user, request) => {
         await oauth.revokeAll(user.id);
-        await storage.erase(user.id);
+        await storage.hold.erase(user.id);
       },
     },
   },

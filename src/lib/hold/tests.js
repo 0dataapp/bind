@@ -30,7 +30,7 @@ describe('interface', () => {
 			].forEach(method => {
 
 				test(method, () => {
-					expect(mod.interface(wrapperId)[method]).toBe(wrapper[method]);
+					expect(mod.interface(wrapperId)[method]).toBe(wrapper.hold[method]);
 				});
 
 			});
