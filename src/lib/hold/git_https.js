@@ -194,7 +194,28 @@ const mod = {
 
 	},
 
+	sync: {
+
+		pull () {
+			fs.readdirSync(folder).map(e => path.join(folder, e)).filter(e => fs.statSync(e).isDirectory()).forEach(e => {
+				q.push(() => {
+					const repo = simpleGit(e, {
+						maxConcurrentProcesses: 10,
+						trimmed: true,
+					}).clean(CleanOptions.FORCE);
+
+					repo.pull('origin');
+				});
+			});
+		},
+
+	},
+
 	hold: {
+
+		startup () {
+			setInterval(mod.sync.pull, pollSeconds * 1000);
+		},
 
 		erase: id => fs.rmSync(mod._clonePath(id), { recursive: true, force: true }),
 

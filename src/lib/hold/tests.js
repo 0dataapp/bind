@@ -25,11 +25,15 @@ describe('interface', () => {
 		describe(wrapperId, () => {
 
 			[
+				'startup',
 				'prepare',
 				'erase',
 			].forEach(method => {
 
 				test(method, () => {
+					if (!['startup', 'prepare'].includes(method))
+						expect(mod.interface(wrapperId)[method]).not.toBeUndefined();
+
 					expect(mod.interface(wrapperId)[method]).toBe(wrapper.hold[method]);
 				});
 

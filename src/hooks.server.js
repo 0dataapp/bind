@@ -5,6 +5,9 @@ import { env } from '$env/dynamic/private';
 
 import bind from 'bind-middleware';
 
+import hold from '$lib/hold.js';
+Object.keys(hold._wrappers).forEach(wrapperId => hold.interface(wrapperId).startup());
+
 import local from '$lib/hold/local.js';
 import git_https from '$lib/hold/git_https.js';
 
