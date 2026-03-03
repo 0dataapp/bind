@@ -252,17 +252,17 @@ describe('genericAdapter', () => {
 	
 	describe('create', () => {
 
-		test('output', () => {
+		test('output', async () => {
 			const item = uItem();
-			expect(_adapter().create(item)).toBe(item);
+			expect(await _adapter().create(item)).toBe(item);
 		});
 
-		test('persist', () => {
+		test('persist', async () => {
 			const collection = Math.random().toString();
 			const item = {
 				id: Math.random().toString(),
 			};
-			_adapter({ collection }).create(item);
+			await _adapter({ collection }).create(item);
 			expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [item] });
 		});
 
@@ -270,20 +270,20 @@ describe('genericAdapter', () => {
 	
 	describe('findOne', () => {
 
-		test('no match', () => {
+		test('no match', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
 			const field = Math.random().toString();
 			const value = Math.random().toString();
-			adapter.create(uItem({
+			await adapter.create(uItem({
 				[field]: Math.random().toString(),
 			}));
 
-			expect(adapter.findOne([{ field, operator: 'eq', value }])).toEqual(null);
+			expect(await adapter.findOne([{ field, operator: 'eq', value }])).toEqual(null);
 		});
 
-		test('output', () => {
+		test('output', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -294,31 +294,31 @@ describe('genericAdapter', () => {
 			});
 			[uItem({
 				[field]: value + value,
-			}), item].forEach(adapter.create);
+			}), item].forEach(await adapter.create);
 
-			expect(adapter.findOne([{ field, operator: 'eq', value }])).toEqual(item);
+			expect(await adapter.findOne([{ field, operator: 'eq', value }])).toEqual(item);
 		});
 
 	});
 	
 	describe('findMany', () => {
 
-		test('no match', () => {
+		test('no match', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
 			const field = Math.random().toString();
 			const value = Math.random().toString();
-			adapter.create(uItem({
+			await adapter.create(uItem({
 				[field]: Math.random().toString(),
 			}));
 
-			expect(adapter.findMany({
+			expect(await adapter.findMany({
 				where: [{ field, operator: 'eq', value }],
 			})).toEqual([]);
 		});
 
-		test('output', () => {
+		test('output', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -327,16 +327,16 @@ describe('genericAdapter', () => {
 			const item = uItem({
 				[field]: value,
 			});
-			[uItem({
+			await Promise.all([uItem({
 				[field]: value + value,
-			}), item].forEach(adapter.create);
+			}), item].map(adapter.create));
 
-			expect(adapter.findMany({
+			expect(await adapter.findMany({
 				where: [{ field, operator: 'eq', value }],
 			})).toEqual([item]);
 		});
 
-		test('limit', () => {
+		test('limit', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -346,17 +346,21 @@ describe('genericAdapter', () => {
 
 			const slice = Math.min(Math.max(Date.now() % 10, 1), 3);
 			
-			const items = Array.from({ length }, e => adapter.create(uItem({
+			const items = Array.from({ length }, () => uItem({
 				[field]: value,
-			})));
+			}));
 
-			expect(adapter.findMany({
+			for (var i = 0; i < items.length; i++) {
+				await adapter.create(items[i]);
+			}
+
+			expect(await adapter.findMany({
 				where: [{ field, operator: 'eq', value }],
 				limit: length - slice,
 			},)).toEqual(items.slice(0, -slice));
 		});
 
-		test('sortField', () => {
+		test('sortField', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -366,19 +370,19 @@ describe('genericAdapter', () => {
 
 			const slice = Math.min(Math.max(Date.now() % 10, 1), 3);
 			
-			const items = Array.from({ length }, (e, i) => adapter.create(uItem({
+			const items = await Promise.all(Array.from({ length }, (e, i) => adapter.create(uItem({
 				[field]: value,
 				sortField: length - i,
-			})));
+			}))));
 
-			expect(adapter.findMany({
+			expect(await adapter.findMany({
 				where: [{ field, operator: 'eq', value }],
 				sortBy: {
 					field: 'sortField',
 				},
 			},)).toEqual(items.slice().reverse());
 
-			expect(adapter.findMany({
+			expect(await adapter.findMany({
 				where: [{ field, operator: 'eq', value }],
 				sortBy: {
 					field: 'sortField',
@@ -391,20 +395,20 @@ describe('genericAdapter', () => {
 	
 	describe('update', () => {
 
-		test('no match', () => {
+		test('no match', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
 			const field = Math.random().toString();
 			const value = Math.random().toString();
-			adapter.create(uItem({
+			await adapter.create(uItem({
 				[field]: Math.random().toString(),
 			}));
 
-			expect(adapter.update([{ field, operator: 'eq', value }])).toEqual(null);
+			expect(await adapter.update([{ field, operator: 'eq', value }])).toEqual(null);
 		});
 
-		test('output', () => {
+		test('output', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -413,17 +417,17 @@ describe('genericAdapter', () => {
 			const item = uItem({
 				[field]: value,
 			});
-			adapter.create(item);
+			await adapter.create(item);
 
 			const update = Math.random().toString();
-			expect(adapter.update([{ field, operator: 'eq', value }], {
+			expect(await adapter.update([{ field, operator: 'eq', value }], {
 				[field]: update,
 			})).toEqual(Object.assign(Object.assign({}, item), {
 				[field]: update,
 			}));
 		});
 
-		test('update first only', () => {
+		test('update first only', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -432,22 +436,22 @@ describe('genericAdapter', () => {
 			const item1 = uItem({
 				[field]: value,
 			});
-			adapter.create(item1);
+			await adapter.create(item1);
 			const item2 = uItem({
 				[field]: value,
 			});
-			adapter.create(item2);
+			await adapter.create(item2);
 
-			expect(adapter.findMany({
+			expect(await adapter.findMany({
 				where: [{ field, operator: 'eq', value }],
 			})).toEqual([item1, item2]);
 
 			const update = Math.random().toString();
-			adapter.update([{ field, operator: 'eq', value }], {
+			await adapter.update([{ field, operator: 'eq', value }], {
 				[field]: update,
 			})
 
-			expect(adapter.findMany({
+			expect(await adapter.findMany({
 				where: [{ field, operator: 'eq', value }],
 			})).toEqual([item2]);
 		});
@@ -456,20 +460,20 @@ describe('genericAdapter', () => {
 	
 	describe('updateMany', () => {
 
-		test('no match', () => {
+		test('no match', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
 			const field = Math.random().toString();
 			const value = Math.random().toString();
-			adapter.create(uItem({
+			await adapter.create(uItem({
 				[field]: Math.random().toString(),
 			}));
 
-			expect(adapter.updateMany([{ field, operator: 'eq', value }])).toEqual(0);
+			expect(await adapter.updateMany([{ field, operator: 'eq', value }])).toEqual(0);
 		});
 
-		test('output', () => {
+		test('output', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -477,16 +481,16 @@ describe('genericAdapter', () => {
 			const field = Math.random().toString();
 			const value = Math.random().toString();
 			
-			Array.from({ length }, e => adapter.create(uItem({
+			await Promise.all(Array.from({ length }, () => adapter.create(uItem({
 				[field]: value,
-			})));
+			}))));
 
 			const update = Math.random().toString();
-			expect(adapter.updateMany([{ field, operator: 'eq', value }], {
+			expect(await adapter.updateMany([{ field, operator: 'eq', value }], {
 				[field]: update,
 			})).toEqual(length);
 
-			expect(adapter.findMany({
+			expect(await adapter.findMany({
 				where: [{ field, operator: 'eq', value }],
 			})).toEqual([]);
 		});
@@ -495,7 +499,7 @@ describe('genericAdapter', () => {
 	
 	describe('delete', () => {
 
-		test('no match', () => {
+		test('no match', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -504,14 +508,14 @@ describe('genericAdapter', () => {
 			const item = uItem({
 				[field]: Math.random().toString(),
 			});
-			adapter.create(item);
+			await adapter.create(item);
 
-			expect(adapter.findMany([{ field, operator: 'ne', value }])).toEqual([item]);
-			expect(adapter.delete([{ field, operator: 'eq', value }])).toEqual(undefined);
-			expect(adapter.findMany([{ field, operator: 'ne', value }])).toEqual([item]);
+			expect(await adapter.findMany([{ field, operator: 'ne', value }])).toEqual([item]);
+			expect(await adapter.delete([{ field, operator: 'eq', value }])).toEqual(undefined);
+			expect(await adapter.findMany([{ field, operator: 'ne', value }])).toEqual([item]);
 		});
 
-		test('delete first only', () => {
+		test('delete first only', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -520,17 +524,17 @@ describe('genericAdapter', () => {
 			const item1 = uItem({
 				[field]: value,
 			});
-			adapter.create(item1);
+			await adapter.create(item1);
 			const item2 = uItem({
 				[field]: value,
 			});
-			adapter.create(item2);
+			await adapter.create(item2);
 
-			expect(adapter.findMany({
+			expect(await adapter.findMany({
 				where: [{ field, operator: 'eq', value }],
 			})).toEqual([item1, item2]);
-			expect(adapter.delete([{ field, operator: 'eq', value }])).toEqual(undefined);
-			expect(adapter.findMany({
+			expect(await adapter.delete([{ field, operator: 'eq', value }])).toEqual(undefined);
+			expect(await adapter.findMany({
 				where: [{ field, operator: 'eq', value }],
 			})).toEqual([item2]);
 		});
@@ -539,7 +543,7 @@ describe('genericAdapter', () => {
 	
 	describe('deleteMany', () => {
 
-		test('no match', () => {
+		test('no match', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -548,14 +552,14 @@ describe('genericAdapter', () => {
 			const item = uItem({
 				[field]: Math.random().toString(),
 			});
-			adapter.create(item);
+			await adapter.create(item);
 
-			expect(adapter.findMany([{ field, operator: 'ne', value }])).toEqual([item]);
-			expect(adapter.deleteMany([{ field, operator: 'eq', value }])).toEqual(0);
-			expect(adapter.findMany([{ field, operator: 'ne', value }])).toEqual([item]);
+			expect(await adapter.findMany([{ field, operator: 'ne', value }])).toEqual([item]);
+			expect(await adapter.deleteMany([{ field, operator: 'eq', value }])).toEqual(0);
+			expect(await adapter.findMany([{ field, operator: 'ne', value }])).toEqual([item]);
 		});
 
-		test('match', () => {
+		test('match', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -564,17 +568,17 @@ describe('genericAdapter', () => {
 			const item1 = uItem({
 				[field]: value,
 			});
-			adapter.create(item1);
+			await adapter.create(item1);
 			const item2 = uItem({
 				[field]: value,
 			});
-			adapter.create(item2);
+			await adapter.create(item2);
 
-			expect(adapter.findMany({
+			expect(await adapter.findMany({
 				where: [{ field, operator: 'eq', value }],
 			})).toEqual([item1, item2]);
-			expect(adapter.deleteMany([{ field, operator: 'eq', value }])).toEqual(2);
-			expect(adapter.findMany({
+			expect(await adapter.deleteMany([{ field, operator: 'eq', value }])).toEqual(2);
+			expect(await adapter.findMany({
 				where: [{ field, operator: 'eq', value }],
 			})).toEqual([]);
 		});
@@ -583,7 +587,7 @@ describe('genericAdapter', () => {
 
 	describe('count', () => {
 
-		test('output', () => {
+		test('output', async () => {
 			const collection = Math.random().toString();
 			const adapter = _adapter({ collection });
 
@@ -591,11 +595,11 @@ describe('genericAdapter', () => {
 			const field = Math.random().toString();
 			const value = Math.random().toString();
 			
-			Array.from({ length }, e => adapter.create(uItem({
+			await Promise.all(Array.from({ length }, () => adapter.create(uItem({
 				[field]: value,
-			})));
+			}))));
 
-			expect(adapter.count([{ field, operator: 'eq', value }])).toEqual(length);
+			expect(await adapter.count([{ field, operator: 'eq', value }])).toEqual(length);
 		});
 
 	});

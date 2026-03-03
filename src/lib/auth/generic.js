@@ -61,7 +61,7 @@ const _adapterMethods = ({
       return this._attempt(() => this._db(collection).__getItems(), {
         operation: '_getItems',
         collection,
-      })
+      });
     },
 
     create ({ data, model }) {
@@ -74,16 +74,16 @@ const _adapterMethods = ({
       });
     },
 
-    findOne ({ model, where }) {
+    async findOne ({ model, where }) {
       this._log('findOne', { model, where });
 
-      return _filterItems(this._getItems(getModelName(model)), where).shift() || null;
+      return _filterItems(await this._getItems(getModelName(model)), where).shift() || null;
     },
 
-    findMany ({ model, where, limit, offset, sortBy }) {
+    async findMany ({ model, where, limit, offset, sortBy }) {
       this._log('findMany', { model, where, limit, offset, sortBy });
 
-      const result = _filterItems(this._getItems(getModelName(model)), where);
+      const result = _filterItems(await this._getItems(getModelName(model)), where);
 
       return (!sortBy ? result : result.sort(this[sortBy.direction === 'desc' ? '_sortDescending' : '_sortAscending'](e => e[sortBy.field]))).slice(0, limit);
     },
@@ -91,11 +91,11 @@ const _adapterMethods = ({
     _sortAscending: callback => (a, b) => ((a, b) => (a < b) ? -1 : ((a > b) ? 1 : 0))(callback(a), callback(b)),
     _sortDescending: callback => (a, b) => ((a, b) => (a > b) ? -1 : ((a < b) ? 1 : 0))(callback(a), callback(b)),
 
-    update ({ model, where, update }) {
+    async update ({ model, where, update }) {
       this._log('update', { model, where, update });
 
       const collection = getModelName(model);
-      const result = _filterItems(this._getItems(collection), where).shift();
+      const result = _filterItems(await this._getItems(collection), where).shift();
 
       if (!result)
         return null;
@@ -106,21 +106,21 @@ const _adapterMethods = ({
       });
     },
 
-    updateMany ({ model, where, update }) {
+    async updateMany ({ model, where, update }) {
       this._log('updateMany', { model, where, update });
 
       const collection = getModelName(model);
-      return _filterItems(this._getItems(collection), where).map(record => this._attempt(() => this._db(collection).__update(record.id, this._applyUpdate(record, update)), {
+      return _filterItems(await this._getItems(collection), where).map(record => this._attempt(() => this._db(collection).__update(record.id, this._applyUpdate(record, update)), {
         operation: 'updateMany',
         collection,
       })).length;
     },
 
-    delete ({ model, where }) {
+    async delete ({ model, where }) {
       this._log('delete', { model, where });
 
       const collection = getModelName(model);
-      const result = _filterItems(this._getItems(collection), where).shift();
+      const result = _filterItems(await this._getItems(collection), where).shift();
 
       if (!result)
         return;
@@ -133,20 +133,20 @@ const _adapterMethods = ({
       return;
     },
 
-    deleteMany ({ model, where }) {
+    async deleteMany ({ model, where }) {
       this._log('deleteMany', { model, where });
 
       const collection = getModelName(model);
-      return _filterItems(this._getItems(collection), where).map(record => this._attempt(() => this._db(collection).__delete(record.id), {
+      return _filterItems(await this._getItems(collection), where).map(record => this._attempt(() => this._db(collection).__delete(record.id), {
         operation: 'deleteMany',
         collection,
       })).length;
     },
 
-    count ({ model, where }) {
+    async count ({ model, where }) {
       this._log('count', { model, where });
 
-      return _filterItems(this._getItems(getModelName(model)), where).length;
+      return _filterItems(await this._getItems(getModelName(model)), where).length;
     },
 
   };

@@ -18,29 +18,29 @@ describe('collection', () => {
 		folder: _DATA_DIRECTORY,
 	});
 
-	test('not string', () => {
+	test('not string', async () => {
 		expect(() => mod.collection()).toThrowError('missing collection name');
 	});
 	
-	test('type', () => {
+	test('type', async () => {
 		expect(_collection()).toBeTypeOf('object');
 	});
 
 	describe('__create', () => {
 
-		test('output', () => {
+		test('output', async () => {
 			const item = {
 				id: Math.random().toString(),
 			};
-			expect(_collection().__create(item)).toBe(item);
+			expect(await _collection().__create(item)).toBe(item);
 		});
 
-		test('persist', () => {
+		test('persist', async () => {
 			const collection = Math.random().toString();
 			const item = {
 				id: Math.random().toString(),
 			};
-			_collection(collection).__create(item);
+			await _collection(collection).__create(item);
 			expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [item] });
 		});
 
@@ -48,42 +48,42 @@ describe('collection', () => {
 
 	describe('__getItems', () => {
 
-		test('output', () => {
+		test('output', async () => {
 			const db = _collection();
 
 			const item = {
 				id: Math.random().toString(),
 			};
-			db.__create(item);
+			await db.__create(item);
 			
-			expect(db.__getItems()).toEqual([item]);
+			expect(await db.__getItems()).toEqual([item]);
 		});
 
 	});
 
 	describe('__update', () => {
 
-		test('output', () => {
+		test('output', async () => {
 			const db = _collection();
 
 			const id = Math.random().toString();
-			db.__create({ id });
+			await db.__create({ id });
 
 			const key = Math.random().toString();
 			const item = { id, key };
-			expect(db.__update(id, item)).toBe(item);
+			expect(await db.__update(id, item)).toBe(item);
 		});
 
-		test('persist', () => {
+		test('persist', async () => {
 			const collection = Math.random().toString();
 			const db = _collection(collection);
 
 			const id = Math.random().toString();
-			db.__create({ id });
+			await db.__create({ id });
 
 			const key = Math.random().toString();
 			const item = { id, key };
-			db.__update(id, item);
+			await db.__update(id, item);
 
 			expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [item] });
 		});
@@ -92,23 +92,23 @@ describe('collection', () => {
 
 	describe('__delete', () => {
 
-		test('output', () => {
+		test('output', async () => {
 			const db = _collection();
 
 			const id = Math.random().toString();
-			db.__create({ id });
+			await db.__create({ id });
 
-			expect(db.__delete(id)).toBe(undefined);
+			expect(await db.__delete(id)).toBe(undefined);
 		});
 
-		test('persist', () => {
+		test('persist', async () => {
 			const collection = Math.random().toString();
 			const db = _collection(collection);
 
 			const id = Math.random().toString();
-			db.__create({ id });
+			await db.__create({ id });
 
-			db.__delete(id);
+			await db.__delete(id);
 			
 			expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [] });
 		});

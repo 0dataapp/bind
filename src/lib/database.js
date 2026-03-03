@@ -4,8 +4,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-import { LowSync } from 'lowdb';
-import { JSONFileSync } from 'lowdb/node';
+import { Low } from 'lowdb';
+import { JSONFile } from 'lowdb/node';
 
 import { env } from '$env/dynamic/private';
 
@@ -26,33 +26,32 @@ const mod = {
 		const _this = {};
 		return Object.assign(_this, {
 
-			_db: () => {
+			_db: async () => {
 				if (db)
 					return db;
 
-				db = new LowSync(new JSONFileSync(path.join(folder, `${ collection }.json`)), { items: [] })
+				db = new Low(new JSONFile(path.join(folder, `${ collection }.json`)), { items: [] })
 
-				db.read();
+				await db.read();
 
 				return db;
 			},
 
-			__create: obj => {
-				_this._db().update(({ items }) => items.push(obj));
+			__create: async obj => {
+				await (await _this._db()).update(({ items }) => items.push(obj));
 
 				return obj;
 			},
 
-			__getItems: () => _this._db().data.items,
+			__getItems: async () => (await _this._db()).data.items,
 
-			__update: (id, obj) => {
-				_this._db().update(({ items }) => Object.assign(items.filter(e => e.id === id).shift(), obj));
+			__update: async (id, obj) => {
+				await (await _this._db()).update(({ items }) => Object.assign(items.filter(e => e.id === id).shift(), obj));
 
 				return obj;
 			},
 
-			__delete: id => {
-				_this._db().update(({ items }) => items.splice(items.findIndex(e => e.id === id), 1));
+			__delete: async id => (await _this._db()).update(({ items }) => items.splice(items.findIndex(e => e.id === id), 1)),
 			},
 
 		});
