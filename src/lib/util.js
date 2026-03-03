@@ -23,13 +23,6 @@ const mod = {
 	},
 
 	hash: e => crypto.createHash('sha256').update(e).digest('hex').substring(0, 8),
-	
-	hydrate: e => {
-	  return typeof e.data !== 'string' ? e : Object.assign(structuredClone(e), {
-	    createdAt: new Date(e.createdAt),
-	    data: JSON.parse(e.data),
-	  });
-	},
 
 };
 

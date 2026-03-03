@@ -38,7 +38,7 @@ export async function load({ request, params }) {
 		title: `Configure ${ name }`,
 		name,
 		account,
-		selected: (await _db.__getItems()).filter(e => e.accountId === account.id).map(util.hydrate).map(e => e.data),
+		selected: (await _db.hydrating.getItems()).filter(e => e.accountId === account.id).map(e => e.data),
 		groups: list.sort(util.sort.conform(order, e => e.key)).map(({ key, values }) => ({
 	  	account: e,
 	  	label: `${ depot._map[e.providerId].name } (${ key })`,
