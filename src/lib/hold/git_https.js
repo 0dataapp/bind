@@ -116,19 +116,7 @@ const mod = {
 		mod.git.addConfig('user.email', env.GIT_CONFIG_EMAIL || 'me@example.com');
 	},
 
-	_clonePath: source => path.join(folder, util.hash(source.cloneURL)),
-	_cloneURL: source => path.join(folder, util.hash(source.cloneURL)),
-
-	async syncSource ({ source, token }) {
-		const target = mod._clonePath(source);
-
-		if (!fs.existsSync(target))
-			await simpleGit().clone(source.cloneURLTemplate.replace('{token}', token), target);
-	},
-
-	async prepare (params) {
-		q.push(() => mod.syncSource(params));
-	},
+	_clonePath: id => path.join(folder, util.hash(id)),
 
 	middleware: {
 
@@ -208,7 +196,18 @@ const mod = {
 
 	hold: {
 
-		erase: source => fs.rmSync(mod._clonePath(source), { recursive: true, force: true }),
+		erase: id => fs.rmSync(mod._clonePath(id), { recursive: true, force: true }),
+
+		async _prepare (id, url) {
+			const target = mod._clonePath(id);
+
+			if (!fs.existsSync(target))
+				await simpleGit().clone(url, target);
+		},
+
+		prepare (id, url) {
+			q.push(() => mod.hold._prepare(...arguments));
+		},
 		
 	},
 

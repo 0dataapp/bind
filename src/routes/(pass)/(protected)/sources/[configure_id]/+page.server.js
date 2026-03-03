@@ -59,16 +59,16 @@ export const actions = {
 		const account = (await auth.api.listUserAccounts({ headers: request.headers })).filter(e => e.providerId === params.configure_id).shift();
 
 		if (!account)
-			return redirect(307, '/sources')
+			return redirect(307, '/sources');
 
-		const interface = hold.interface(hold.wrapperId(params.configure_id));
+		const wrapper = hold.interface(hold.wrapperId(params.configure_id));
 
 		const sources = JSON.parse((await request.formData()).get('sources')).slice(0, maxItems);
 		const items = (await _db.hydrating.getItems()).filter(e => e.accountId === account.id);
 
 		const removed = items.filter(e => !sources.map(e => e.id).includes(e.foreignId));
 		await Promise.all(removed.map(e => _db.__delete(e.id)));
-		removed.forEach(e => interface.erase(e.data));
+		removed.forEach(e => wrapper.erase(e.data.cloneURL));
 
 		const created = await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => _db.hydrating.create({
 			id: db.generateId(),
@@ -78,15 +78,12 @@ export const actions = {
 			data,
 		})));
 
-		const { accessToken: token } = await auth.api.getAccessToken({
+		const { accessToken } = await auth.api.getAccessToken({
 			body: Object.assign(structuredClone(account), { accountId: account.id }),
 			headers: request.headers,
 		});
 		
-		created.map(e => e.data).forEach(source => interface.prepare({
-			source,
-			token,
-		}));
+		created.map(e => e.data).forEach(source => wrapper.prepare(source.cloneURL, source.cloneURLTemplate.replace('{token}', accessToken)));
 
 		return redirect(303, '/sources');
 	},
