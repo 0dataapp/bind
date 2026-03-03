@@ -5,7 +5,7 @@
 App development is much simpler with
 
 - no backend infrastructure
-- no hosting other people's data
+- no hosting of other people's data
 - no per-user costs
 - no account systems
 

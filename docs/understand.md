@@ -34,11 +34,11 @@ flowchart LR
   Bind@{ shape: diamond } --- app
 ```
 
-You don't need permission to get your stuff because you already have it. If the app goes away, you can just take 100% of your data to another one.
+You don't need permission to get your stuff because you already have it. If the app goes away, you can just use 100% of your data with another one.
 
 ## Sync with Git
 
-Git lets you see changes, roll them back, sync to all apps, while still using files.
+Git lets you see changes, roll them back, sync to all your apps, while still using files.
 
 It's version control for your data that's highly interoperable: use it with a platform (like GitHub, Codeberg, Tangled, Gitea…), your computer, via the terminal, self-hosted on your own machine, run pipelines or scripts on your data—the possibilities are endless.
 
