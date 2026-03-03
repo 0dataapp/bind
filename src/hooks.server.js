@@ -5,7 +5,7 @@ import { env } from '$env/dynamic/private';
 
 import bind from 'bind-middleware';
 
-import disk from '$lib/hold/local.js';
+import local from '$lib/hold/local.js';
 import git_https from '$lib/hold/git_https.js';
 
 if (env.STORAGE_ADAPTER === 'git_https')
@@ -30,7 +30,7 @@ export const handle = sequence(
   bind.sveltekit(bind.cors()),
 	bind.sveltekit(bind.storage({
 	  getScope: oauth.getScope,
-	  storage: env.STORAGE_ADAPTER === 'git_https' ? git_https : disk,
+	  storage: env.STORAGE_ADAPTER === 'git_https' ? git_https : local,
 	}), `/${ prefix }`),
   bind.sveltekit(bind.webfinger({
     storagePath: handle => {
