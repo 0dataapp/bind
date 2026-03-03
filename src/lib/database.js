@@ -9,7 +9,7 @@ import { JSONFileSync } from 'lowdb/node';
 
 import { env } from '$env/dynamic/private';
 
-import { ulid } from "ulid";
+import { ulid } from 'ulid';
 
 const mod = {
 
