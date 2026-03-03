@@ -8,6 +8,7 @@ const mod = {
 	repos: {
 
 		config: token => ({
+			// https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user
 			url: `${ mod._prefix }/user/repos?${ new URLSearchParams({
 				sort: 'updated',
 				direction: 'desc',
