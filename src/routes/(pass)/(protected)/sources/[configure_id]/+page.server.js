@@ -62,9 +62,11 @@ export const actions = {
 			return redirect(307, '/sources')
 
 		const sources = JSON.parse((await request.formData()).get('sources')).slice(0, maxItems);
-		const items = (await _db.__getItems()).filter(e => e.accountId === account.id);
+		const items = (await _db.hydrating.getItems()).filter(e => e.accountId === account.id);
 
-		await Promise.all(items.filter(e => !sources.map(e => e.id).includes(e.foreignId)).map(e => _db.__delete(e.id)));
+		const removed = items.filter(e => !sources.map(e => e.id).includes(e.foreignId));
+		await Promise.all(removed.map(e => _db.__delete(e.id)));
+		removed.forEach(e => hold.interface(params.configure_id).erase(e.data));
 
 		const created = await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => _db.hydrating.create({
 			id: db.generateId(),

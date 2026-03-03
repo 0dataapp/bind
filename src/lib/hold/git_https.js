@@ -201,6 +201,8 @@ const mod = {
 		q.push(() => mod.syncSource(params));
 	},
 
+	erase: source => fs.rmSync(mod._clonePath(source), { recursive: true, force: true }),
+
 };
 
 export default mod;
