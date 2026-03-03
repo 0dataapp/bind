@@ -20,18 +20,23 @@ const _db = db.collection('user');
 
 const prefix = 'storage';
 export const handle = sequence(
+
   ({ event, resolve }) => svelteKitHandler({ event, resolve, auth, building }),
+  
   async ({ event, resolve }) => {
     event.locals.authenticated = await auth.api.getSession({
       headers: event.request.headers,
     });
     return resolve(event);
   },
+  
   bind.sveltekit(bind.cors()),
-	bind.sveltekit(bind.storage({
+	
+  bind.sveltekit(bind.storage({
 	  getScope: oauth.getScope,
 	  storage: (env.STORAGE_ADAPTER === 'git_https' ? git_https : local).middleware,
 	}), `/${ prefix }`),
+  
   bind.sveltekit(bind.webfinger({
     storagePath: handle => {
     	const user = _db.__getItems().filter(e => e.username === handle).shift();
@@ -39,4 +44,5 @@ export const handle = sequence(
     },
     authPath: '/oauth',
   })),
+  
 );
