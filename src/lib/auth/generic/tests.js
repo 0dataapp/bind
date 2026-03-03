@@ -1,6 +1,6 @@
 import { describe, test, expect, afterAll } from 'vitest';
 import { _jsonQParams, _filterItems, _adapterMethods } from '../generic.js';
-import database from '$lib/database/main.js';
+import database from '$lib/database.js';
 import fs from 'fs';
 import path from 'path';
 

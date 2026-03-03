@@ -11,11 +11,11 @@ import git_https from '$lib/hold/git_https.js';
 if (env.STORAGE_ADAPTER === 'git_https')
   git_https.setupEverything();
 
-import oauth from '$lib/oauth-implicit/main.js';
+import oauth from '$lib/oauth-implicit.js';
 
 import { sequence } from '@sveltejs/kit/hooks';
 
-import db from '$lib/database/main.js';
+import db from '$lib/database.js';
 const _db = db.collection('user');
 
 const prefix = 'storage';

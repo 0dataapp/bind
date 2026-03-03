@@ -1,6 +1,6 @@
 import { createAdapterFactory } from 'better-auth/adapters';
 import jsonQ from 'js-jsonq';
-import db from '$lib/database/main.js';
+import db from '$lib/database.js';
 
 const _jsonQParams = where => {
   if (!where || where.length === 0)

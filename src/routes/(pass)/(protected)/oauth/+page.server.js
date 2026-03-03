@@ -1,5 +1,5 @@
 import { auth } from '$lib/auth/config';
-import db from '$lib/database/main.js';
+import db from '$lib/database.js';
 import depot from '$lib/depot.js';
 import util from '$lib/util.js';
 
@@ -59,7 +59,7 @@ export async function load({ url, request }) {
 	};
 }
 
-import oauth from '$lib/oauth-implicit/main.js';
+import oauth from '$lib/oauth-implicit.js';
 import { redirect } from '@sveltejs/kit';
 
 /** @satisfies {import('./$types').Actions} */

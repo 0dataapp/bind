@@ -4,11 +4,11 @@ import { createAuthMiddleware } from 'better-auth/api';
 
 import { genericAdapter } from './generic.js';
 import usernames from './username.js';
-import database from '$lib/database/main.js';
+import database from '$lib/database.js';
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
-import oauth from '$lib/oauth-implicit/main.js';
-import storage from '$lib/hold/local/main.js';
+import oauth from '$lib/oauth-implicit.js';
+import storage from '$lib/hold/local.js';
 import depot from '$lib/depot.js';
 
 export const auth = betterAuth({

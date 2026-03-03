@@ -1,7 +1,7 @@
 import { describe, test, expect, throws, afterAll } from 'vitest';
 import fs from 'fs';
 import path from 'path';
-import mod from './main.js';
+import mod from '../database.js';
 
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

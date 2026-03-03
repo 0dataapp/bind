@@ -1,4 +1,4 @@
-import db from '$lib/database/main.js';
+import db from '$lib/database.js';
 const _db = db.collection('account_source');
 import util from '$lib/util.js';
 
