@@ -11,11 +11,11 @@ App development is much simpler with
 
 Just read and write data with the remoteStorage.js library and your web apps get:
 
-- Automatic syncronization
-- Offline-first data
-- Authentication
-- Personal data stores
-- Interoperable bridges
+- automatic syncronization
+- offline-first data
+- authentication
+- personal data stores
+- interoperable bridges
 
 ## Sample code
 
@@ -46,14 +46,14 @@ let todos = JSON.parse(data);
 
 Now the app data will be syncronized when a personal data store is connected.
 
-If you prefer separate files per object, just write to a different path for ech one (they're just files):
+If you prefer separate files per object, just write to a different path for each one (they're just files):
 
 ```javascript
 let edited = { name: 'buy vegetables', completed: true };
 await client.storeFile('application/json', 't1.json', JSON.stringify(edited));
 ```
 
-You can skip JSON boilerplate by defining a type via JSON Schema. Ignore validation by passing an empty object:
+Skip JSON boilerplate by defining a type via JSON Schema, ignore validation by passing an empty object:
 
 ```javascript
 client.declareType('todo-task', {});
@@ -71,6 +71,8 @@ To get all items as a list:
 await client.getAll('');
 // [{ name: 'buy vegetables', completed: true }, { name: 'read mail' }]
 ```
+
+Read more about multiple scopes in the [remoteStorage.js documentation](https://remotestorage.io/rs.js/docs/data-modules/).
 
 ## Host
 
@@ -95,4 +97,4 @@ flowchart LR
 
 ## Other integrations
 
-remoteStorage gives your Git repository a simple REST API that requires no special platform registration. Just use your Bind OAuth token to make GET or PUT requests from any browser or server and changes will sync to all apps that use the data.
+remoteStorage gives your Git repository a simple REST API that requires no special platform integration. Just use your Bind OAuth token to make GET or PUT requests from any browser or server and changes will sync to all apps that use the data.
