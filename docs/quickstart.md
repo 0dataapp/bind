@@ -15,7 +15,7 @@ const data = _data[0].frontmatter.data;
 
 <ul>
   <li v-for="e of data">
-    <a :href="`#${ e.url }`">{{ e.name }}</a>: 
+    <a :href="`${ e.url }`">{{ e.name }}</a>: 
     <span>{{ e.description }}</span>
   </li>
 </ul>
