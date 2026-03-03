@@ -19,7 +19,9 @@ const mod = {
 
 	interface: depotId => ({
 
-		prepare: () => (mod._wrappers[mod.wrapperId(depotId)].prepare || (() => {}))(),
+		prepare: params => (mod._wrappers[mod.wrapperId(depotId)].prepare || (() => {}))(params),
+		
+		erase: source => mod._wrappers[mod.wrapperId(depotId)].erase(source),
 
 	}),
 
