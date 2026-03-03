@@ -81,7 +81,7 @@ export const actions = {
 			headers: request.headers,
 		});
 		
-		created.forEach(source => hold.interface(params.configure_id).prepare({
+		created.map(e => e.data).forEach(source => hold.interface(params.configure_id).prepare({
 			source,
 			token,
 		}));
