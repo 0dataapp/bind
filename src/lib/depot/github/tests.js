@@ -41,10 +41,10 @@ describe('repos', () => {
 				updatedAt: new Date(json.updated_at),
 				defaultBranch: json.default_branch,
 				cloneURL: json.clone_url,
-				cloneURLTemplate: Object.assign(new URL(json.clone_url), {
+				cloneURLTemplate: decodeURI(Object.assign(new URL(json.clone_url), {
 					username: '{token}',
 					password: 'x-oauth-basic',
-				}).toString(),
+				}).toString()),
 				webURL: json.html_url,
 				ownerId: json.owner.id.toString(),
 				size: json.size,

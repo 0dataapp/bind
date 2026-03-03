@@ -44,10 +44,10 @@ const mod = {
 			updatedAt: new Date(e.updated_at),
 			defaultBranch: e.default_branch,
 			cloneURL: e.clone_url,
-			cloneURLTemplate: Object.assign(new URL(e.clone_url), {
+			cloneURLTemplate: decodeURI(Object.assign(new URL(e.clone_url), {
 				username: '{token}',
 				password: 'x-oauth-basic',
-			}).toString(),
+			}).toString()),
 			webURL: e.html_url,
 			ownerId: e.owner.id.toString(),
 			size: e.size,
