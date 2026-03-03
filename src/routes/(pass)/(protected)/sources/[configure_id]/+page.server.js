@@ -13,9 +13,12 @@ export async function load({ request, params }) {
   const account = (await auth.api.listUserAccounts({ headers: request.headers })).filter(e => e.providerId === params.configure_id).shift();
 
   if (!account)
-  	return redirect(307, '/sources')
+  	return redirect(307, '/sources');
 
-  const { name } = depot._map[params.configure_id];
+  const { name } = depot._map[params.configure_id] || {};
+
+  if (!name)
+  	return redirect(307, '/sources');
 
   const e = account;
 
