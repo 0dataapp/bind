@@ -99,4 +99,4 @@ Offering storage locally on your server is also an option.
 
 ## Other integrations
 
-remoteStorage gives your Git repository a simple REST API that requires no special platform integration. Just use your Bind OAuth token to make GET or PUT requests from any browser or server and changes will sync to all apps that use the data.
+remoteStorage gives your Git repository a simple REST API that requires no special platform integration. Just use your Bind OAuth token to make `GET` or `PUT` requests from any browser or server and changes will sync to all apps that use the data.
