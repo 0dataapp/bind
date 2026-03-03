@@ -10,13 +10,13 @@ const mod = {
 	createToken (userId, data) {
 		const token = mod._generateToken();
 
-		_db.create(util.dehydrate({
+		_db.hydrating.create({
 			id: db.generateId(),
 			userId,
 			token,
 			createdAt: new Date(),
 			data,
-		}));
+		});
 
 		return token;
 	},

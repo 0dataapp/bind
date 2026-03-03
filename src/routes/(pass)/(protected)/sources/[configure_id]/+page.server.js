@@ -65,13 +65,13 @@ export const actions = {
 
 		await Promise.all(items.filter(e => !sources.map(e => e.id).includes(e.foreignId)).map(e => _db.__delete(e.id)));
 
-		await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => _db.__create(util.dehydrate({
+		await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => _db.hydrating.create({
 			id: db.generateId(),
 			foreignId: data.id,
 			accountId: account.id,
 			createdAt: new Date(),
 			data,
-		}))));
+		})));
 
 		return redirect(303, '/sources');
 	},
