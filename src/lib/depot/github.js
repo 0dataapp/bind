@@ -64,7 +64,7 @@ const mod = {
 		  const credentials = btoa(`${ clientId }:${ clientSecret }`);
 
 		  return {
-		  	url: `https://api.github.com/applications/${ clientId }/token`,
+		  	url: `${ mod._prefix }/applications/${ clientId }/token`,
 		  	method: 'DELETE',
 		  	headers: {
 	        'Authorization': `Basic ${ credentials }`,
