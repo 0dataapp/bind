@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth';
 import { username } from 'better-auth/plugins';
 import { createAuthMiddleware } from 'better-auth/api';
+import { genericOAuth } from 'better-auth/plugins';
 
 import { genericAdapter } from './generic.js';
 import usernames from './username.js';
@@ -58,6 +59,23 @@ export const auth = betterAuth({
     username({
       displayUsernameNormalization: () => '',
     }),
+    genericOAuth({
+      config: [
+        {
+          providerId: 'gitea_selfhosted',
+          clientId: process.env.GITEA_CLIENT_ID,
+          clientSecret: process.env.GITEA_CLIENT_SECRET,
+          discoveryUrl: process.env.GITEA_DISCOVERY_URL,
+          scopes: [
+            'read:user',
+            'read:repository',
+            'write:repository',
+          ],
+          // ... other config options
+        },
+      ],
+      // Add more providers as needed
+    })
   ],
 
   hooks: {

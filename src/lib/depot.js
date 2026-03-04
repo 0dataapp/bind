@@ -1,9 +1,11 @@
 import local_custody from './depot/local_custody.js';
 import github from './depot/github.js';
+import gitea_selfhosted from './depot/gitea_selfhosted.js';
 
 const asMap = {
 	local_custody,
 	github,
+	gitea_selfhosted,
 };
 
 import db from '$lib/database.js';
