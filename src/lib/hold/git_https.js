@@ -104,7 +104,6 @@ const mod = {
 			},
 
 		};
-
 	},
 
 	middleware: cloneURL => ({
