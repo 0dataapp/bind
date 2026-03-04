@@ -4,4 +4,4 @@ export function load({ data }) {
 		title: 'Dashboard',
 		origin: (data || {}).origin,
 	};
-}
+};

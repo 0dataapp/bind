@@ -48,7 +48,7 @@ const _adapterMethods = ({
         this._log('error', meta, error);
 
         throw error;
-      }
+      };
     },
 
     _applyUpdate: (record, update) => Object.assign(Object.assign({}, record), update),

@@ -20,4 +20,4 @@ export async function load({ request }) {
 			account,
 		})),
 	};
-}
+};

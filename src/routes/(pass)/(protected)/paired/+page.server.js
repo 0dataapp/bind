@@ -6,4 +6,4 @@ export async function load({ locals }) {
 		title: 'Connected apps',
 		connections: await oauth.authorizations(locals.authenticated.user.id),
 	};
-}
+};

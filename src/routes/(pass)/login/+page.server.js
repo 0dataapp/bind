@@ -7,4 +7,4 @@ export function load({ locals }) {
 	return locals.authenticated ? redirect(307, '/dash') : Object.assign(data, {
 		DISABLE_SIGNUPS: env.DISABLE_SIGNUPS,
 	});
-}
+};

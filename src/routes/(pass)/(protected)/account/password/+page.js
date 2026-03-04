@@ -3,4 +3,4 @@ export function load() {
 	return {
 		title: 'Change password',
 	};
-}
+};
