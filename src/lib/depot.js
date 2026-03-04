@@ -1,8 +1,9 @@
+import local_custody from './depot/local_custody.js';
 import github from './depot/github.js';
 
 const asMap = {
-	local_custody: 'this server',
-	github: 'GitHub',
+	local_custody,
+	github,
 };
 
 import db from '$lib/database.js';
@@ -10,24 +11,20 @@ const _db = db.collection('account_subsource');
 
 const mod = {
 
-	_map: {
-		github,
-	},
-
 	_maxBytes: 100000,
 	maxSize: () => `${ mod._maxBytes / 1000 }MB`,
 
 	options: {
 
 		asMap,
-		asList: Object.entries(asMap).map(([slug, name]) => ({ slug, name })),
+		asList: Object.entries(asMap).map(([slug, e]) => ({ slug, name: e.name })),
 
 	},
 
 	endpoint: provider => ({
 
 		async repos (token) {
-			const _provider = mod._map[provider].repos;
+			const _provider = asMap[provider].repos;
 			const config = _provider.config(token);
 
 			config.headers = Object.assign(config.headers || {}, {
@@ -40,7 +37,7 @@ const mod = {
 		},
 
 		invalidate (params) {
-		  const config = mod._map[provider].invalidate.config(params);
+		  const config = asMap[provider].invalidate.config(params);
 		  
 		  config.headers = Object.assign(config.headers || {}, {
 		  	'Content-Type': 'application/json',

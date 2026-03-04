@@ -16,7 +16,7 @@ export async function load({ request, params }) {
   if (!account)
   	return redirect(307, '/sources');
 
-  const { name } = depot._map[params.configure_id] || {};
+  const { name } = depot.options.asMap[params.configure_id] || {};
 
   if (!name)
   	return redirect(307, '/sources');
@@ -42,7 +42,7 @@ export async function load({ request, params }) {
 		selected: (await _db.hydrating.getItems()).filter(e => e.accountId === account.id).map(e => e.data),
 		groups: list.sort(util.sort.conform(order, e => e.key)).map(({ key, values }) => ({
 	  	account: e,
-	  	label: `${ depot._map[e.providerId].name } (${ key })`,
+	  	label: `${ depot.options.asMap[e.providerId].name } (${ key })`,
 	  	options: values.map(e => Object.assign(structuredClone(e), {
 	  		name: isExternal(e) ? e.scopedName : e.name,
 	  	})).sort(util.sort.asc(e => e.name)).sort(util.sort.asc(e => isExternal(e))),
