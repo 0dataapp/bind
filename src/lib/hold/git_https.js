@@ -34,41 +34,17 @@ const debounce = cb => {
 
 const mod = {
 
-	_gitPath: _url => `.${ _url }`,
-	_isIgnored: e => [
-		'.DS_Store',
-	].includes(path.basename(e)),
-	
-	_fakeJSON (e) {
-		if (!['{', '['].includes(e.trim()[0]))
-			return false;
+	util: {
 
-		try {
-			return JSON.parse(e);
-		} catch (e) {
-			return false
-		}
+		_gitPath: _url => `.${ _url }`,
+
+		_isIgnored: e => [
+			'.DS_Store',
+		].includes(path.basename(e)),
+
+		_clonePath: id => path.join(folder, util.hash(id)),
+
 	},
-
-	_fakeHTML: e => e.startsWith('<!DOCTYPE html>'),
-
-	async _guessMimeType (data, _path) {
-		const type = await fileTypeFromBuffer(data);
-		if (type)
-			return type.mime;
-
-		const string = data.toString();
-
-		if (mod._fakeJSON(string))
-			return 'application/json';
-		
-		if (mod._fakeHTML(string))
-			return 'text/html';
-		
-		return mime.getType(_path) || 'text/plain';
-	},
-
-	_clonePath: id => path.join(folder, util.hash(id)),
 
 	git (path) {
 		const repo = simpleGit(path, {
@@ -96,11 +72,39 @@ const mod = {
 
 	middleware: cloneURL => ({
 
-		dataPath: (handle, url) => path.join(mod._clonePath(cloneURL), url),
+		dataPath: (handle, url) => path.join(mod.util._clonePath(cloneURL), url),
 		
-		_etag: async (_url, isFolder) => (await mod.git(mod._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod._gitPath(isFolder ? _url.replace(/\/$/, '') : _url)))).trim().split('\n').pop(),
-
 		async meta (handle, _url) {
+			const _etag = async (_url, isFolder) => (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? _url.replace(/\/$/, '') : _url)))).trim().split('\n').pop();
+
+			async function guessType (data, _path) {
+				function guessJSON (e) {
+					if (!['{', '['].includes(e.trim()[0]))
+						return false;
+
+					try {
+						return JSON.parse(e);
+					} catch (e) {
+						return false
+					}
+				};
+				const guessHTML = e => e.startsWith('<!DOCTYPE html>');
+
+				const type = await fileTypeFromBuffer(data);
+				if (type)
+					return type.mime;
+
+				const string = data.toString();
+
+				if (guessJSON(string))
+					return 'application/json';
+				
+				if (guessHTML(string))
+					return 'text/html';
+				
+				return mime.getType(_path) || 'text/plain';
+			};
+			
 			const target = this.dataPath(handle, _url);
 
 			if (!fs.existsSync(target))
@@ -118,7 +122,7 @@ const mod = {
 			const stat = fs.statSync(target);
 			return Object.assign(meta, {
 				'Content-Length': stat.size,
-				'Content-Type': await mod._guessMimeType(fs.readFileSync(target), target),
+				'Content-Type': await guessType(fs.readFileSync(target), target),
 				'Last-Modified': stat.mtime.toUTCString(),
 			});
 		},
@@ -130,7 +134,7 @@ const mod = {
 
 			fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
 
-			await mod.git(mod._clonePath(cloneURL)).commit();
+			await mod.git(mod.util._clonePath(cloneURL)).commit();
 
 			Object.assign(meta, await this.meta(handle, _url));
 		},
@@ -138,16 +142,16 @@ const mod = {
 		async delete (target, ancestors) {
 			fs.unlinkSync(target);
 
-			ancestors.filter(e => !fs.readdirSync(e).filter(e => !mod._isIgnored(e)).length).forEach(e => fs.rmdirSync(e));
+			ancestors.filter(e => !fs.readdirSync(e).filter(e => !mod.util._isIgnored(e)).length).forEach(e => fs.rmdirSync(e));
 			
-			await mod.git(mod._clonePath(cloneURL)).commit();
+			await mod.git(mod.util._clonePath(cloneURL)).commit();
 		},
 
 		async folderItems (handle, _url) {
 			const target = this.dataPath(handle, _url);
 			const _this = this;
 
-			const tree = (await mod.git(mod._clonePath(cloneURL)).repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod._gitPath(_url))).trim();
+			const tree = (await mod.git(mod.util._clonePath(cloneURL)).repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod.util._gitPath(_url))).trim();
 
 			return !tree.length ? {} : tree.split('\n').map(e => {
 				const [type, hash, size, path] = e.split(/\s+/);
@@ -193,10 +197,10 @@ const mod = {
 			setInterval(mod.sync.pull, pollSeconds * 1000);
 		},
 
-		erase: id => fs.rmSync(mod._clonePath(id), { recursive: true, force: true }),
+		erase: id => fs.rmSync(mod.util._clonePath(id), { recursive: true, force: true }),
 
 		async _prepare (id, url) {
-			const target = mod._clonePath(id);
+			const target = mod.util._clonePath(id);
 
 			if (!fs.existsSync(target))
 				await simpleGit().clone(url, target);
