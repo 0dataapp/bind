@@ -18,7 +18,7 @@ const groupings = util.group.asArray(data.connections, e => e.data.client_id);
 	{@const name = logic.groupName(item.key) }
 	{@const id = item.values.at(0).data.client_id }
 	<li>
-		<a href={ `/paired/${ util.hex.encode(id) }` }>{ name }</a>
+		<a href={ `/connected/${ util.hex.encode(id) }` }>{ name }</a>
 		{#if item.key !== name }
 		<span> ({ id })</span>
 		{/if}

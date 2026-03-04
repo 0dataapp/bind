@@ -4,9 +4,9 @@ import stub from '$lib/stub.js';
 
 const _load = load({});
 
-test.describe('paired', () => {
+test.describe('connected', () => {
 
-  test.beforeEach(({ page }) => page.goto('/paired'));
+  test.beforeEach(({ page }) => page.goto('/connected'));
 
   test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
 
@@ -25,7 +25,7 @@ test.describe('paired', () => {
 
       await expect(page).toHaveURL(/\/dash/);
 
-      await page.goto('/paired');
+      await page.goto('/connected');
     });
 
     sessionTest.describe('title', () => {

@@ -38,7 +38,7 @@ test.describe('dash', () => {
 
     sessionTest('sources', ({ page }) => expect(page.locator('a[href="/sources"]')).toHaveText('Data sources'));
 
-    sessionTest('paired', ({ page }) => expect(page.locator('a[href="/paired"]')).toHaveText('Connected apps'));
+    sessionTest('connected', ({ page }) => expect(page.locator('a[href="/connected"]')).toHaveText('Connected apps'));
 
     sessionTest('account', ({ page }) => expect(page.locator('a[href="/account"]')).toHaveText('Account'));
 

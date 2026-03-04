@@ -21,5 +21,5 @@ import CopyButton from '$lib/component/CopyButton.svelte';
 </p>
 
 <p>
-  <a href="/paired">Connected apps</a>
+  <a href="/connected">Connected apps</a>
 </p>

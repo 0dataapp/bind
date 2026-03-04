@@ -9,7 +9,7 @@ export async function load({ params, locals }) {
 	const connections = await oauth.authorizations(locals.authenticated.user.username);
 
 	if (!connections.length)
-		return redirect(307, '/paired');
+		return redirect(307, '/connected');
 
 	return {
 		title: `Connection for ${ client_id }`,
@@ -27,7 +27,7 @@ export const actions = {
 			headers: request.headers,
 		})).user.username, util.hex.decode(params.client_hex));
 
-		return redirect(303, '/paired');
+		return redirect(303, '/connected');
 	},
 
 };
