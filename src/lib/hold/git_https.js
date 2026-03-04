@@ -13,7 +13,6 @@ import { simpleGit, CleanOptions } from 'simple-git';
 import { fileTypeFromBuffer } from 'file-type';
 import mime from 'mime';
 
-const debounceSeconds = 1.5;
 const pollSeconds = 5;
 
 import Queue from 'queue';
@@ -22,17 +21,15 @@ const q = new Queue({
 	concurrency: 5,
 });
 
-function debounce(func, wait, immediate) {
-  var timeout;
-  return function() {
-  	var context = this, args = arguments;
-  	clearTimeout(timeout);
-  	if (immediate && !timeout) func.apply(context, args);
-  	timeout = setTimeout(function() {
-  		timeout = null;
-  		if (!immediate) func.apply(context, args);
-  	}, wait);
-  };
+const debounceSeconds = 1.5;
+let timeout;
+const debounce = cb => {
+	const context = this;
+	clearTimeout(timeout);
+	timeout = setTimeout(function() {
+		timeout = null;
+		cb.apply(context);
+	}, debounceSeconds * 1000);
 };
 
 const mod = {
@@ -83,45 +80,41 @@ const mod = {
 		return mime.getType(_path) || 'text/plain';
 	},
 
-	_etag: async (_url, isFolder) => (await mod.git.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod._gitPath(isFolder ? _url.replace(/\/$/, '') : _url)))).trim().split('\n').pop(),
-
-	gitPull: () => mod.git.pull('origin'),
-	gitPush: debounce(() => mod.git.push('origin'), debounceSeconds * 1000),
-	async gitCommit () {
-		await mod.git.add('./*').commit('sync');
-		
-		mod.gitPush();
-		
-		return
-	},
-
-	async setupEverything () {
-		mod._storage = path.join(folder, util.hash(env.GIT_REMOTE));
-
-		if (!fs.existsSync(mod._storage))
-			await simpleGit().clone(env.GIT_REMOTE, mod._storage);
-
-		mod.git = simpleGit(mod._storage, {
-			maxConcurrentProcesses: 10,
-			trimmed: true,
-		}).clean(CleanOptions.FORCE);
-
-		mod.gitPull();
-
-		setInterval(mod.gitPull, pollSeconds * 1000);
-
-		mod.git.addConfig('user.name', env.GIT_CONFIG_NAME || 'me');
-		mod.git.addConfig('user.email', env.GIT_CONFIG_EMAIL || 'me@example.com');
-	},
-
 	_clonePath: id => path.join(folder, util.hash(id)),
 
-	middleware: {
+	git (path) {
+		const repo = simpleGit(path, {
+			maxConcurrentProcesses: 10,
+			trimmed: true,
+		});
 
-		dataPath: (handle, url) => path.join(mod._storage, url),
+		return {
+
+			repo,
+
+			async commit () {
+				repo.addConfig('user.name', env.GIT_CONFIG_NAME || 'me');
+				repo.addConfig('user.email', env.GIT_CONFIG_EMAIL || 'me@example.com');
+
+				await repo.add('./*').commit('sync');
+				
+				debounce(() => repo.push('origin'));
+				debounce(() => repo.push('origin'));
+				debounce(() => repo.push('origin'));
+			},
+
+		};
+
+	},
+
+	middleware: cloneURL => ({
+
+		dataPath: (handle, url) => path.join(mod._clonePath(cloneURL), url),
 		
+		_etag: async (_url, isFolder) => (await mod.git(mod._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod._gitPath(isFolder ? _url.replace(/\/$/, '') : _url)))).trim().split('\n').pop(),
+
 		async meta (handle, _url) {
-			const target = mod.dataPath(handle, _url);
+			const target = this.dataPath(handle, _url);
 
 			if (!fs.existsSync(target))
 				return {};
@@ -129,7 +122,7 @@ const mod = {
 			const isFolder = fs.statSync(target).isDirectory();
 
 			const meta = {
-				ETag: await mod._etag(_url, isFolder),
+				ETag: await this._etag(_url, isFolder),
 			};
 
 			if (isFolder)
@@ -144,15 +137,15 @@ const mod = {
 		},
 
 		async put (handle, _url, data, ancestors, meta) {
-			const target = mod.dataPath(handle, _url);
+			const target = this.dataPath(handle, _url);
 
 			fs.mkdirSync(path.dirname(target), { recursive: true });
 
 			fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
-			
-			await mod.gitCommit();
 
-			Object.assign(meta, await mod.meta(handle, _url));
+			await mod.git(mod._clonePath(cloneURL)).commit();
+
+			Object.assign(meta, await this.meta(handle, _url));
 		},
 
 		async delete (target, ancestors) {
@@ -160,13 +153,14 @@ const mod = {
 
 			ancestors.filter(e => !fs.readdirSync(e).filter(e => !mod._isIgnored(e)).length).forEach(e => fs.rmdirSync(e));
 			
-			return mod.gitCommit();
+			await mod.git(mod._clonePath(cloneURL)).commit();
 		},
 
 		async folderItems (handle, _url) {
-			const target = mod.dataPath(handle, _url);
+			const target = this.dataPath(handle, _url);
+			const _this = this;
 
-			const tree = (await mod.git.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod._gitPath(_url))).trim();
+			const tree = (await mod.git(mod._clonePath(cloneURL)).repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod._gitPath(_url))).trim();
 
 			return !tree.length ? {} : tree.split('\n').map(e => {
 				const [type, hash, size, path] = e.split(/\s+/);
@@ -181,7 +175,7 @@ const mod = {
 				coll[item.name.match(new RegExp(`^${ _url.slice(1) }(.*)`)).pop()] = Object.assign(item.type === 'tree' ? {} : {
 					'Content-Length': item.size,
 					'Content-Type': mime.getType(_path) || 'application/json',
-					'Last-Modified': fs.statSync(mod.dataPath(handle, _url)).mtime.toUTCString(),
+					'Last-Modified': fs.statSync(_this.dataPath(handle, _url)).mtime.toUTCString(),
 				}, {
 					ETag: item.hash,
 				});
@@ -190,17 +184,14 @@ const mod = {
 			}, {});
 		},
 
-	},
+	}),
 
 	sync: {
 
 		pull () {
 			fs.readdirSync(folder).map(e => path.join(folder, e)).filter(e => fs.statSync(e).isDirectory()).forEach(e => {
 				q.push(() => {
-					const repo = simpleGit(e, {
-						maxConcurrentProcesses: 10,
-						trimmed: true,
-					}).clean(CleanOptions.FORCE);
+					const repo = mod.git(e).repo;
 
 					repo.pull('origin');
 				});

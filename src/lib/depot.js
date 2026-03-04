@@ -5,6 +5,9 @@ const asMap = {
 	github: 'GitHub',
 };
 
+import db from '$lib/database.js';
+const _db = db.collection('account_source');
+
 const mod = {
 
 	_map: {
@@ -47,6 +50,17 @@ const mod = {
 		},
 
 	}),
+
+	source: async id => (await _db.hydrating.getItems()).filter(e => e.id === id).shift(),
+
+	depotURL: async id => {
+		const source = await mod.source(id);
+
+		if (!source)
+			return;
+
+		return source.data.cloneURL;
+	},
 
 };
 

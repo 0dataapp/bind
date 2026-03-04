@@ -5,12 +5,12 @@ const mod = {
 
 	_generateToken: () => Array.from(crypto.getRandomValues(new Uint8Array(32)), byte => byte.toString(16).padStart(2, '0')).join(''),
 
-	createToken (userId, data) {
+	createToken (username, data) {
 		const token = mod._generateToken();
 
 		_db.hydrating.create({
 			id: db.generateId(),
-			userId,
+			username,
 			token,
 			createdAt: new Date(),
 			data,
@@ -19,13 +19,15 @@ const mod = {
 		return token;
 	},
 
-	getScope: async (userId, token) => (await _db.hydrating.getItems()).filter(e => e.userId === userId && e.token === token).shift()?.data?.scope,
+	authorizations: async username => (await _db.hydrating.getItems()).filter(e => e.username === username),
 
-	authorizations: async userId => (await _db.hydrating.getItems()).filter(e => e.userId === userId),
+	authorization: async (username, token) => (await mod.authorizations(username)).filter(e => e.token === token).shift(),
 
-	revokeClient: async (userId, client) => Promise.all((await mod.authorizations(userId)).filter(e => e.data.client_id === client).map(e => _db.__delete(e.id))),
+	getScope: async (username, token) => (await mod.authorization(username, token))?.data?.scope,
+
+	revokeClient: async (username, client) => Promise.all((await mod.authorizations(username)).filter(e => e.data.client_id === client).map(e => _db.__delete(e.id))),
 	
-	revokeAll: async userId => Promise.all((await mod.authorizations(userId)).map(e => _db.__delete(e.id))),
+	revokeAll: async username => Promise.all((await mod.authorizations(username)).map(e => _db.__delete(e.id))),
 
 };
 

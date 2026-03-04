@@ -37,12 +37,12 @@ const mod = {
 		dataPath: (handle, url) => mod._resolvePath(handle, url),
 
 		meta (handle, _url) {
-			const target = mod.dataPath(handle, _url);
+			const target = mod.middleware.dataPath(handle, _url);
 			return fs.existsSync(target) ? JSON.parse(fs.readFileSync(mod._metaPath(target), 'utf8')) : {};
 		},
 
 		put (handle, _url, data, ancestors, meta) {
-			const target = mod.dataPath(handle, _url);
+			const target = mod.middleware.dataPath(handle, _url);
 
 			fs.mkdirSync(path.dirname(target), { recursive: true });
 			ancestors.forEach(e => fs.writeFileSync(mod._metaPath(`${ e }/`), JSON.stringify({
@@ -71,7 +71,7 @@ const mod = {
 		},
 
 		folderItems (handle, _url) {
-			const target = mod.dataPath(handle, _url);
+			const target = mod.middleware.dataPath(handle, _url);
 
 			return fs.readdirSync(target).filter(e => !mod._isIgnored(e)).reduce((coll, item) => {
 				let _path = path.join(target, item);
@@ -93,7 +93,7 @@ const mod = {
 
 		startup () {},
 		
-		erase: handle => fs.rmSync(mod.dataPath(handle, '/'), { recursive: true, force: true }),
+		erase: handle => fs.rmSync(mod.middleware.dataPath(handle, '/'), { recursive: true, force: true }),
 
 	},
 	

@@ -11,8 +11,7 @@ Object.keys(hold._wrappers).forEach(wrapperId => hold.interface(wrapperId).start
 import local from '$lib/hold/local.js';
 import git_https from '$lib/hold/git_https.js';
 
-if (env.STORAGE_ADAPTER === 'git_https')
-  git_https.setupEverything();
+import depot from '$lib/depot.js';
 
 import oauth from '$lib/oauth-implicit.js';
 
@@ -21,7 +20,7 @@ import { sequence } from '@sveltejs/kit/hooks';
 import db from '$lib/database.js';
 const _db = db.collection('user');
 
-const prefix = 'storage';
+const prefix = '/storage';
 export const handle = sequence(
 
   ({ event, resolve }) => svelteKitHandler({ event, resolve, auth, building }),
@@ -35,16 +34,34 @@ export const handle = sequence(
   
   bind.sveltekit(bind.cors()),
 	
-  bind.sveltekit(bind.storage({
-	  getScope: oauth.getScope,
-	  storage: (env.STORAGE_ADAPTER === 'git_https' ? git_https : local).middleware,
-	}), `/${ prefix }`),
+  async params => {
+    const { pathname } = new URL(params.event.request.url);
+    if (!pathname.startsWith(prefix))
+      return params.resolve(params.event);
+
+    let hold = local.middleware;
+
+    const token = bind._parseToken(params.event.request.headers.get('authorization'))
+    if (token) {
+      const [handle, publicFolder, _url] = bind._parsePathname(pathname.slice(prefix.length));
+      
+      if (!publicFolder) {
+        const authorization = await oauth.authorization(handle, token);
+
+        if (authorization && authorization.data.depotId !== 'local_custody') {
+          hold = git_https.middleware(await depot.depotURL(authorization.data.depotId));
+        }
+      }
+    }
+    
+    return bind.sveltekit(bind.storage({
+      getScope: oauth.getScope,
+      hold,
+    }), prefix)(params)
+  },
   
   bind.sveltekit(bind.webfinger({
-    storagePath: async handle => {
-    	const user = (await _db.__getItems()).filter(e => e.username === handle).shift();
-    	return `/${ prefix }/${ user ? user.id : '' }`;
-    },
+    storagePath: handle => `${ prefix }/${ handle }`,
     authPath: '/oauth',
   })),
   

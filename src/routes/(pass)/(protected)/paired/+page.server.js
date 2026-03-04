@@ -4,6 +4,6 @@ import oauth from '$lib/oauth-implicit.js';
 export async function load({ locals }) {
 	return {
 		title: 'Connected apps',
-		connections: await oauth.authorizations(locals.authenticated.user.id),
+		connections: await oauth.authorizations(locals.authenticated.user.username),
 	};
 };

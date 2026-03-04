@@ -6,7 +6,7 @@ import { redirect } from '@sveltejs/kit';
 export async function load({ params, locals }) {
 	const client_id = util.hex.decode(params.client_hex);
 
-	const connections = await oauth.authorizations(locals.authenticated.user.id);
+	const connections = await oauth.authorizations(locals.authenticated.user.username);
 
 	if (!connections.length)
 		return redirect(307, '/paired');
@@ -25,7 +25,7 @@ export const actions = {
 	default: async ({ request, params }) => {
 		await oauth.revokeClient((await auth.api.getSession({
 			headers: request.headers,
-		})).user.id, util.hex.decode(params.client_hex));
+		})).user.username, util.hex.decode(params.client_hex));
 
 		return redirect(303, '/paired');
 	},
