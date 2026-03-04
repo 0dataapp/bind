@@ -1,7 +1,9 @@
 const mod = {
 
-	id: 'local_custody',
-	name: 'this server',
+	meta: {
+		id: 'local_custody',
+		name: 'this server',
+	},
 
 };
 

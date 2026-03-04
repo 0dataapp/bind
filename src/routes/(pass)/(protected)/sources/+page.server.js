@@ -12,11 +12,12 @@ export async function load({ request }) {
 			e._subsources = (await db.collection('account_subsource').hydrating.getItems()).filter(source => source.accountId === e.id);
 		
 		return e;
-	}))
+	}));
+	const options = Object.values(depot.options.asMap).map(e => e.meta);
   return {
   	title: 'Data sources',
-		available: depot.options.asList.filter(e => !accounts.map(e => e.providerId).includes(e.slug) && e.slug !== 'local_custody'),
-		linked: accounts.map(account => Object.assign(depot.options.asList.filter(e => account.providerId === e.slug).shift(), {
+		available: options.filter(e => e.id !== 'local_custody' && !accounts.map(e => e.providerId).includes(e.id)),
+		linked: accounts.map(account => Object.assign(options.filter(e => account.providerId === e.id).shift(), {
 			account,
 		})),
 	};

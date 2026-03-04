@@ -1,7 +1,9 @@
 const mod = {
 
-	id: 'github',
-	name: 'GitHub',
+	meta: {
+		id: 'github',
+		name: 'GitHub',
+	},
 
 	_prefix: 'https://api.github.com',
 

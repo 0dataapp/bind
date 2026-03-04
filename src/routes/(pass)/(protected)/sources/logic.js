@@ -1,12 +1,13 @@
 const mod = {
 
 	params: e => Object.assign({
-		provider: e,
+		provider: e.id,
 	}, {
 		github: {
 			scopes: ['repo'],
 		},
-	}[e]),
+		gitea_selfhosted: {},
+	}[e.id]),
 
 };
 

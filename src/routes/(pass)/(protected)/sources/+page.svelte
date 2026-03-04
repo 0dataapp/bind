@@ -1,9 +1,9 @@
 <script>
 import logic from './logic.js';
 import { linkSocial } from '$lib/auth/client.js';
-const link = slug => linkSocial(Object.assign({
-	callbackURL: `/sources/${ slug }`,
-}, logic.params(slug)));
+const link = e => linkSocial(Object.assign({
+	callbackURL: `/sources/${ e.id }`,
+}, logic.params(e)));
 
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
@@ -16,7 +16,7 @@ const { data } = $props();
 <ul>
 {#each data.linked as e }
 	<li>
-		<a href={ `/sources/${ e.slug }` }>{ e.name }</a>
+		<a href={ `/sources/${ e.id }` }>{ e.name }</a>
 		{#if e.account._subsources && !e.account._subsources.length }
 			<strong> (no sources selected)</strong>
 		{:else if e.account._subsources && e.account._subsources.length }
@@ -37,7 +37,7 @@ const { data } = $props();
 <h4>Link account</h4>
 
 {#each data.available as e }
-	<button class={ e.slug } onclick={ () => link(e.slug) }>{ e.name }</button>
+	<button class={ e.id } onclick={ () => link(e) }>{ e.name }</button>
 {/each}
 
 {/if}
