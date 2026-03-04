@@ -3,7 +3,7 @@ import { svelteKitHandler } from 'better-auth/svelte-kit';
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
 
-import bind from 'bind-middleware';
+import glue from 'bind-middleware';
 
 import hold from '$lib/hold.js';
 Object.keys(hold._wrappers).forEach(wrapperId => hold.interface(wrapperId).startup());
@@ -32,7 +32,7 @@ export const handle = sequence(
     return resolve(event);
   },
   
-  bind.sveltekit(bind.cors()),
+  glue.sveltekit(glue.cors()),
 	
   async params => {
     const { pathname } = new URL(params.event.request.url);
@@ -41,9 +41,9 @@ export const handle = sequence(
 
     let hold = local_custody.middleware;
 
-    const token = bind._parseToken(params.event.request.headers.get('authorization'))
+    const token = glue._parseToken(params.event.request.headers.get('authorization'))
     if (token) {
-      const [handle, publicFolder, _url] = bind._parsePathname(pathname.slice(prefix.length));
+      const [handle, publicFolder, _url] = glue._parsePathname(pathname.slice(prefix.length));
       
       if (!publicFolder) {
         const authorization = await oauth.authorization(handle, token);
@@ -54,13 +54,13 @@ export const handle = sequence(
       }
     }
     
-    return bind.sveltekit(bind.storage({
+    return glue.sveltekit(glue.storage({
       getScope: oauth.getScope,
       hold,
     }), prefix)(params)
   },
   
-  bind.sveltekit(bind.webfinger({
+  glue.sveltekit(glue.webfinger({
     storagePath: handle => `${ prefix }/${ handle }`,
     authPath: '/oauth',
   })),
