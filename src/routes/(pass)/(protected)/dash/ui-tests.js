@@ -40,11 +40,7 @@ test.describe('dash', () => {
 
     sessionTest('paired', ({ page }) => expect(page.locator('a[href="/paired"]')).toHaveText('Connected apps'));
 
-    sessionTest('username', ({ page }) => expect(page.locator('a[href="/username"]')).toHaveText('Change username'));
-
-    sessionTest('password', ({ page }) => expect(page.locator('a[href="/password"]')).toHaveText('Change password'));
-
-    sessionTest('delete', ({ page }) => expect(page.locator('a[href="/delete"]')).toHaveText('Delete account'));
+    sessionTest('account', ({ page }) => expect(page.locator('a[href="/account"]')).toHaveText('Account'));
 
     sessionTest.describe('logout', () => {
 

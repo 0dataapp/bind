@@ -8,7 +8,11 @@ export function load({ route }) {
 			: []
 		).concat(
 			route.id.match('(protected)')
-			? { path: '/logout', title: 'Sign out' }
+			? [].concat(
+				route.id === '/(pass)/(protected)/dash'
+					? { path: '/account', title: 'Account' }
+					: []
+					).concat({ path: '/logout', title: 'Sign out' })
 			: []
 			),
 	};
