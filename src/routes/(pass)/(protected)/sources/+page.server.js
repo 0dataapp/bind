@@ -8,7 +8,10 @@ export async function load({ request }) {
 		headers: request.headers,
 	})).filter(e => e.providerId !== 'credential').map(async e => {
 
-		if (e.providerId === 'github')
+		if ([
+			'github',
+			'gitea_selfhosted',
+		].includes(e.providerId))
 			e._subsources = (await db.collection('account_subsource').hydrating.getItems()).filter(source => source.accountId === e.id);
 		
 		return e;

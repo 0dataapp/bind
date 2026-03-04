@@ -11,6 +11,7 @@ const mod = {
 	wrapperId: e => {
 		if ([
 			'github',
+			'gitea_selfhosted',
 		].includes(e))
 			return 'git_https';
 

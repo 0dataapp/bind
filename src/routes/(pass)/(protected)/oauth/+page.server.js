@@ -30,16 +30,19 @@ const mod = {
 			headers: request.headers,
 		})).filter(e => e.providerId !== 'credential').map(e => {
 			Object.assign(e = structuredClone(e), {
-				name: depot.options.asMap[e.providerId].name,
+				name: depot.options.asMap[e.providerId].meta.name,
 			});
 
-			if (e.providerId === 'github')
+			if ([
+				'github',
+				'gitea_selfhosted',
+			].includes(e.providerId))
 				e._subsources = sources.filter(source => source.accountId === e.id);
 			
 			return e;
 		}).concat({
 			id: 'local_custody',
-			name: depot.options.asMap.local_custody.name,
+			name: depot.options.asMap.local_custody.meta.name,
 		}).map(e => Object.assign(e, e._subsources ? {
 			_subsources: e._subsources.map(source => Object.assign(source, {
 				optionId: source.id,

@@ -65,7 +65,7 @@ export const actions = {
 
 		const wrapper = hold.interface(hold.wrapperId(params.configure_id));
 
-		const sources = JSON.parse((await request.formData()).get('sources')).slice(0, maxItems);
+		const sources = JSON.parse((await request.formData()).get('sources') || '[]').slice(0, maxItems);
 		const items = (await _db.hydrating.getItems()).filter(e => e.accountId === account.id);
 
 		const removed = items.filter(e => !sources.map(e => e.id).includes(e.foreignId));
