@@ -23,17 +23,17 @@ const { data } = $props();
 <p>using data source</p>
 
 <form method="POST">
-  <select name="store" required>
+  <select name="_depot" required>
     <option disabled selected></option>
-    {#each data.stores as e }
+    {#each data.depots as e }
       {#if e._sources }
         <optgroup label={ e.name }>
           {#each e._sources as item }
-            <option value={ `${ e.id }:${ item.id }` }>{ item.data.scopedName }</option>
+            <option value={ item.optionId }>{ item.data.scopedName }</option>
           {/each}
         </optgroup>
         {:else}
-        <option value={ e.id }>{ e.name }</option>
+        <option value={ e.optionId }>{ e.name }</option>
       {/if}
     {/each}
   </select>

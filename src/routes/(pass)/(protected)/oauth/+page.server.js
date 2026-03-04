@@ -23,7 +23,7 @@ const mod = {
 	  return false;
 	},
 
-	stores: async request => {
+	depots: async request => {
 		const sources = await db.collection('account_source').hydrating.getItems();
 
 		return (await auth.api.listUserAccounts({
@@ -40,7 +40,13 @@ const mod = {
 		}).concat({
 			id: 'local_custody',
 			name: depot.options.asMap.local_custody,
-		});
+		}).map(e => Object.assign(e, e._sources ? {
+			_sources: e._sources.map(source => Object.assign(source, {
+				optionId: `${ e.id }:${ source.id }`,
+			})),
+		} : {
+			optionId: e.id,
+		}));
 	},
 
 };
@@ -60,9 +66,9 @@ export async function load({ url, request }) {
 		redirect_uri: params.redirect_uri,
 		client_id: params.client_id,
 		scopes: logic.parseScopes(params.scope),
-		stores: await mod.stores(request),
+		depots: await mod.depots(request),
 	};
-}
+};
 
 import oauth from '$lib/oauth-implicit.js';
 import { redirect } from '@sveltejs/kit';
@@ -73,15 +79,9 @@ export const actions = {
 	default: async ({ request, url }) => {
 		const formData = await request.formData();
 
-		const store = (await mod.stores(request)).map(e => e._sources ? e._sources.map(source => ({
-			storeId: `${ e.id }:${ source.id }`,
-			account: e,
-		})) : ({
-			storeId: e.id,
-			account: e,
-		})).flat().filter(e => e.storeId === formData.get('store')).shift();
-		
-		if (!store)
+		const _depot = (await mod.depots(request)).map(e => e._sources ? e._sources : e).flat().filter(e => e.optionId === formData.get('_depot')).shift();
+
+		if (!_depot)
 			return {};
 
 		const token = await oauth.createToken((await auth.api.getSession({
@@ -89,7 +89,7 @@ export const actions = {
 		})).user.id, {
 			scope: url.searchParams.get('scope'),
 			client_id: url.searchParams.get('client_id'),
-			storeId: store.storeId,
+			depotId: _depot.optionId,
 			userAgent: request.headers.get('user-agent'),
 		});
 
