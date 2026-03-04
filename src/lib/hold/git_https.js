@@ -113,7 +113,7 @@ const mod = {
 			const isFolder = fs.statSync(target).isDirectory();
 
 			const meta = {
-				ETag: await this._etag(_url, isFolder),
+				ETag: await _etag(_url, isFolder),
 			};
 
 			if (isFolder)
