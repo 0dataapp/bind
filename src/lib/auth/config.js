@@ -8,7 +8,7 @@ import database from '$lib/database.js';
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
 import oauth from '$lib/oauth-implicit.js';
-import storage from '$lib/hold/local.js';
+import local_custody from '$lib/hold/local_custody.js';
 import depot from '$lib/depot.js';
 
 export const auth = betterAuth({
@@ -34,7 +34,7 @@ export const auth = betterAuth({
       enabled: true,
       beforeDelete: async (user, request) => {
         await oauth.revokeAll(user.username);
-        await storage.hold.erase(user.id);
+        await local_custody.hold.erase(user.id);
       },
     },
   },
