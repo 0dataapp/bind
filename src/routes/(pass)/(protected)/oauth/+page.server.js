@@ -42,7 +42,7 @@ const mod = {
 			name: depot.options.asMap.local_custody,
 		}).map(e => Object.assign(e, e._sources ? {
 			_sources: e._sources.map(source => Object.assign(source, {
-				optionId: `${ e.id }:${ source.id }`,
+				optionId: source.id,
 			})),
 		} : {
 			optionId: e.id,
@@ -86,7 +86,7 @@ export const actions = {
 
 		const token = await oauth.createToken((await auth.api.getSession({
 			headers: request.headers,
-		})).user.id, {
+		})).user.username, {
 			scope: url.searchParams.get('scope'),
 			client_id: url.searchParams.get('client_id'),
 			depotId: _depot.optionId,
