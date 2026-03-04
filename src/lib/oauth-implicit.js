@@ -23,9 +23,9 @@ const mod = {
 
 	authorizations: async userId => (await _db.hydrating.getItems()).filter(e => e.userId === userId),
 
-	revokeClient: (userId, client) => Promise.all(mod.authorizations(userId).filter(e => e.data.client_id === client).map(e => _db.__delete(e.id))),
+	revokeClient: async (userId, client) => Promise.all((await mod.authorizations(userId)).filter(e => e.data.client_id === client).map(e => _db.__delete(e.id))),
 	
-	revokeAll: userId => Promise.all(mod.authorizations(userId).map(e => _db.__delete(e.id))),
+	revokeAll: async userId => Promise.all((await mod.authorizations(userId)).map(e => _db.__delete(e.id))),
 
 };
 
