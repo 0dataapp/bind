@@ -34,19 +34,7 @@ const debounce = cb => {
 
 const mod = {
 
-	_readJson (path) {
-    try {
-      const content = fs.readFileSync(path);
-      return content ? JSON.parse(content) : null;
-    } catch (e) {
-      if (e.code !== 'ENOENT')
-      	console.error('reading JSON failed:', e);
-
-      return null;
-    }
-  },
-
-  _gitPath: _url => `.${ _url }`,
+	_gitPath: _url => `.${ _url }`,
 	_isIgnored: e => [
 		'.DS_Store',
 	].includes(path.basename(e)),
