@@ -40,10 +40,10 @@ export const auth = betterAuth({
   },
 
   socialProviders: {
-    github: { 
-      clientId: process.env.GITHUB_CLIENT_ID, 
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    }, 
+    },
   },
   account: {
     accountLinking: {
@@ -96,7 +96,7 @@ export const auth = betterAuth({
 
           if (callback)
             await depot.endpoint(ctx.body.providerId).invalidate({
-              clientId: process.env.GITHUB_CLIENT_ID, 
+              clientId: process.env.GITHUB_CLIENT_ID,
               clientSecret: process.env.GITHUB_CLIENT_SECRET,
               accessToken,
             });
