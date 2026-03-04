@@ -23,19 +23,25 @@ const mod = {
 	  return false;
 	},
 
-	stores: async request => Promise.all((await auth.api.listUserAccounts({
-		headers: request.headers,
-	})).map(async e => {
+	stores: async request => {
+		const sources = await db.collection('account_source').hydrating.getItems();
 
-		Object.assign(e = structuredClone(e), {
-			name: depot.options.asMap[e.providerId],
+		return (await auth.api.listUserAccounts({
+			headers: request.headers,
+		})).filter(e => e.providerId !== 'credential').map(e => {
+			Object.assign(e = structuredClone(e), {
+				name: depot.options.asMap[e.providerId],
+			});
+
+			if (e.providerId === 'github')
+				e._sources = sources.filter(source => source.accountId === e.id);
+			
+			return e;
+		}).concat({
+			id: 'local_custody',
+			name: depot.options.asMap.local_custody,
 		});
-
-		if (e.providerId === 'github')
-			e._sources = (await db.collection('account_source').hydrating.getItems()).filter(source => source.accountId === e.id);
-		
-		return e;
-	})),
+	},
 
 };
 

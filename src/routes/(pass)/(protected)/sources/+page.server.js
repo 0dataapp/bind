@@ -15,7 +15,7 @@ export async function load({ request }) {
 	}))
   return {
   	title: 'Data sources',
-		available: depot.options.asList.filter(e => !accounts.map(e => e.providerId).includes(e.slug) && e.slug !== 'credential'),
+		available: depot.options.asList.filter(e => !accounts.map(e => e.providerId).includes(e.slug) && e.slug !== 'local_custody'),
 		linked: accounts.map(account => Object.assign(depot.options.asList.filter(e => account.providerId === e.slug).shift(), {
 			account,
 		})),
