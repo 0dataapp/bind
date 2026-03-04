@@ -39,6 +39,9 @@ const mod = {
 		},
 
 		invalidate (params) {
+			if (!asMap[provider].invalidate)
+				return;
+			
 		  const config = asMap[provider].invalidate.config(params);
 		  
 		  config.headers = Object.assign(config.headers || {}, {
