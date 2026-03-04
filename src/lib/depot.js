@@ -1,7 +1,7 @@
 import github from './depot/github.js';
 
 const asMap = {
-	credential: 'local disk',
+	credential: 'this server',
 	github: 'GitHub',
 };
 
