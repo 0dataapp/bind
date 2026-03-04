@@ -37,8 +37,6 @@ function debounce(func, wait, immediate) {
 
 const mod = {
 
-	_resolvePath: (handle, url) => path.join(mod._storage, handle, url),
-
 	_readJson (path) {
     try {
       const content = fs.readFileSync(path);
