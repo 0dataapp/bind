@@ -7,7 +7,7 @@ const account = `${ data.authenticated.user.username }@${ data.origin }`;
 import CopyButton from '$lib/component/CopyButton.svelte';
 </script>
 
-<p>You can use the following storage address with remoteStorage-compatible apps:</p>
+<p>You can use the following <code>storage address</code> with remoteStorage-compatible apps:</p>
 
 <form>
   <fieldset role="group">
