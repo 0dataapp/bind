@@ -26,9 +26,9 @@ const { data } = $props();
   <select name="_depot" required>
     <option disabled selected></option>
     {#each data.depots as e }
-      {#if e._sources }
+      {#if e._subsources }
         <optgroup label={ e.name }>
-          {#each e._sources as item }
+          {#each e._subsources as item }
             <option value={ item.optionId }>{ item.data.scopedName }</option>
           {/each}
         </optgroup>

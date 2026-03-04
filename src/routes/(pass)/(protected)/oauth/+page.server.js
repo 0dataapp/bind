@@ -24,7 +24,7 @@ const mod = {
 	},
 
 	depots: async request => {
-		const sources = await db.collection('account_source').hydrating.getItems();
+		const sources = await db.collection('account_subsource').hydrating.getItems();
 
 		return (await auth.api.listUserAccounts({
 			headers: request.headers,
@@ -34,14 +34,14 @@ const mod = {
 			});
 
 			if (e.providerId === 'github')
-				e._sources = sources.filter(source => source.accountId === e.id);
+				e._subsources = sources.filter(source => source.accountId === e.id);
 			
 			return e;
 		}).concat({
 			id: 'local_custody',
 			name: depot.options.asMap.local_custody,
-		}).map(e => Object.assign(e, e._sources ? {
-			_sources: e._sources.map(source => Object.assign(source, {
+		}).map(e => Object.assign(e, e._subsources ? {
+			_subsources: e._subsources.map(source => Object.assign(source, {
 				optionId: source.id,
 			})),
 		} : {
@@ -79,7 +79,7 @@ export const actions = {
 	default: async ({ request, url }) => {
 		const formData = await request.formData();
 
-		const _depot = (await mod.depots(request)).map(e => e._sources ? e._sources : e).flat().filter(e => e.optionId === formData.get('_depot')).shift();
+		const _depot = (await mod.depots(request)).map(e => e._subsources ? e._subsources : e).flat().filter(e => e.optionId === formData.get('_depot')).shift();
 
 		if (!_depot)
 			return {};
