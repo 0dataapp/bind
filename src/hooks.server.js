@@ -3,7 +3,7 @@ import { svelteKitHandler } from 'better-auth/svelte-kit';
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
 
-import glue from 'bind-middleware';
+import glue from 'bind-glue';
 
 import hold from '$lib/hold.js';
 Object.keys(hold._wrappers).forEach(wrapperId => hold.interface(wrapperId).startup());
@@ -41,9 +41,9 @@ export const handle = sequence(
 
     let hold = local_custody.middleware;
 
-    const token = glue._parseToken(params.event.request.headers.get('authorization'))
+    const token = glue.util.parseToken(params.event.request.headers.get('authorization'))
     if (token) {
-      const [handle, publicFolder, _url] = glue._parsePathname(pathname.slice(prefix.length));
+      const [handle, publicFolder, _url] = glue.util.parsePathname(pathname.slice(prefix.length));
       
       if (!publicFolder) {
         const authorization = await oauth.authorization(handle, token);
