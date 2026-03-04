@@ -5,15 +5,15 @@ import stub from './stub.js';
 describe('repos', () => {
 
 	test('config', () => {
-		const token = Math.random().toString();
-		expect(mod.repos.config(token)).toEqual({
+		const accessToken = Math.random().toString();
+		expect(mod.repos.config({ accessToken })).toEqual({
 			url: `${ mod._prefix }/user/repos?${ new URLSearchParams({
 				sort: 'updated',
 				direction: 'desc',
 				per_page: 100,
 			}) }`,
 			headers: {
-				'Authorization': 'token ' + token,
+				'Authorization': 'token ' + accessToken,
 			},
 		});
 	});

@@ -25,9 +25,9 @@ const mod = {
 
 	endpoint: provider => ({
 
-		async repos (token) {
+		async repos (params) {
 			const _provider = asMap[provider].repos;
-			const config = _provider.config(token);
+			const config = _provider.config(params);
 
 			config.headers = Object.assign(config.headers || {}, {
 				'Content-Type': 'application/json',

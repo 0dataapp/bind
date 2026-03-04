@@ -9,7 +9,7 @@ const mod = {
 
 	repos: {
 
-		config: token => ({
+		config: ({ accessToken }) => ({
 			// https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user
 			url: `${ mod._prefix }/user/repos?${ new URLSearchParams({
 				sort: 'updated',
@@ -17,7 +17,7 @@ const mod = {
 				per_page: 100,
 			}) }`,
 			headers: {
-				'Authorization': 'token ' + token,
+				'Authorization': 'token ' + accessToken,
 			},
 		}),
 

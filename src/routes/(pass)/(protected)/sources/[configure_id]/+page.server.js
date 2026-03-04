@@ -27,7 +27,9 @@ export async function load({ request, params }) {
   	body: Object.assign(structuredClone(e), { accountId: e.id }),
   	headers: request.headers,
   });
-  const repos = await depot.endpoint(e.providerId).repos(accessToken);
+  const repos = await depot.endpoint(e.providerId).repos({
+  	accessToken,
+  });
 
   const order = ['Private', 'Public'];
   
