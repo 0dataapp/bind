@@ -27,7 +27,7 @@ const mod = {
 		},
 
 		_etag: () => new Date().toJSON(),
-		put (handle, _url, data, ancestors, meta) {
+		put ({ handle, _url, data, ancestors, meta }) {
 			const target = mod.middleware.dataPath(handle, _url);
 
 			fs.mkdirSync(path.dirname(target), { recursive: true });
