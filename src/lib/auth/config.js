@@ -27,7 +27,7 @@ export const auth = betterAuth({
         type: ['user', 'admin'],
         required: false,
         defaultValue: 'user',
-        input: false, // disallow setting trust
+        input: false, // disable modification
       },
     },
     deleteUser: {
