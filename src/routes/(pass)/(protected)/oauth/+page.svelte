@@ -24,6 +24,7 @@ const { data } = $props();
 
 <form method="POST">
   <select name="store" required>
+    <option disabled selected></option>
     {#each data.stores as e }
       {#if e._sources }
         <optgroup label={ e.name }>
