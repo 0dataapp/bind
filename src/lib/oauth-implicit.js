@@ -19,9 +19,9 @@ const mod = {
 		return token;
 	},
 
-	getScope: (userId, token) => _db.hydrating.getItems().filter(e => e.userId === userId && e.token === token).shift()?.data?.scope,
+	getScope: async (userId, token) => (await _db.hydrating.getItems()).filter(e => e.userId === userId && e.token === token).shift()?.data?.scope,
 
-	authorizations: userId => _db.hydrating.getItems().filter(e => e.userId === userId),
+	authorizations: async userId => (await _db.hydrating.getItems()).filter(e => e.userId === userId),
 
 	revokeClient: (userId, client) => Promise.all(mod.authorizations(userId).filter(e => e.data.client_id === client).map(e => _db.__delete(e.id))),
 	
