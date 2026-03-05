@@ -35,7 +35,7 @@ test.describe('sources', () => {
       
     });
 
-    Object.values(depot.options.asMap).forEach(e => {
+    Object.values(depot.options).forEach(e => {
 
       sessionTest(e.meta.id, ({ page }) => expect(page.locator(`.${ e.meta.id }`)).toHaveText(e.meta.name));
 

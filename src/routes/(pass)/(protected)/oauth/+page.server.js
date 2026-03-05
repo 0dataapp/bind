@@ -29,7 +29,7 @@ const mod = {
 		return (await auth.api.listUserAccounts({
 			headers: request.headers,
 		})).filter(e => e.providerId !== 'credential').map(e => {
-			const meta = depot.options.asMap[e.providerId].meta;
+			const meta = depot.options[e.providerId].meta;
 
 			Object.assign(e = structuredClone(e), {
 				name: meta.name,
@@ -41,7 +41,7 @@ const mod = {
 			return e;
 		}).concat({
 			id: 'local_custody',
-			name: depot.options.asMap.local_custody.meta.name,
+			name: depot.options.local_custody.meta.name,
 		}).map(e => Object.assign(e, e._subsources ? {
 			_subsources: e._subsources.map(source => Object.assign(source, {
 				optionId: source.id,

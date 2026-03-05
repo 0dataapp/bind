@@ -16,7 +16,7 @@ export async function load({ request, params }) {
   if (!account)
   	return redirect(307, '/sources');
 
-  const { name } = (depot.options.asMap[params.configure_id] || {}).meta || {};
+  const { name } = (depot.options[params.configure_id] || {}).meta || {};
 
   if (!name)
   	return redirect(307, '/sources');

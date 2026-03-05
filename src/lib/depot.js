@@ -2,12 +2,6 @@ import local_custody from './depot/local_custody.js';
 import github from './depot/github.js';
 import gitea_selfhosted from './depot/gitea_selfhosted.js';
 
-const asMap = {
-	local_custody,
-	github,
-	gitea_selfhosted,
-};
-
 import db from '$lib/database.js';
 const _db = db.collection('account_subsource');
 
@@ -17,15 +11,15 @@ const mod = {
 	maxSize: () => `${ mod._maxBytes / 1000 }MB`,
 
 	options: {
-
-		asMap,
-
+		local_custody,
+		github,
+		gitea_selfhosted,
 	},
 
 	endpoint: provider => ({
 
 		async repos (params) {
-			const _provider = asMap[provider].repos;
+			const _provider = mod.options[provider].repos;
 			const config = _provider.config(params);
 
 			config.headers = Object.assign(config.headers || {}, {
@@ -38,10 +32,10 @@ const mod = {
 		},
 
 		invalidate (params) {
-			if (!asMap[provider].invalidate)
+			if (!mod.options[provider].invalidate)
 				return;
 			
-		  const config = asMap[provider].invalidate.config(params);
+		  const config = mod.options[provider].invalidate.config(params);
 		  
 		  config.headers = Object.assign(config.headers || {}, {
 		  	'Content-Type': 'application/json',
