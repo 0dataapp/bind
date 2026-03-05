@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import mod from '../hold.js';
-import local_custody from './local_custody.js';
+import local_disk from './local_disk.js';
 import git_https from './git_https.js';
 
 describe('wrapperId', () => {
@@ -18,7 +18,7 @@ describe('wrapperId', () => {
 describe('interface', () => {
 
 	Object.entries({
-		local_custody,
+		local_disk,
 		git_https,
 	}).forEach(([wrapperId, wrapper]) => {
 

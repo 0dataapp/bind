@@ -1,10 +1,10 @@
-import local_custody from './hold/local_custody.js';
+import local_disk from './hold/local_disk.js';
 import git_https from './hold/git_https.js';
 
 const mod = {
 
 	_wrappers: {
-		local_custody,
+		local_disk,
 		git_https,
 	},
 

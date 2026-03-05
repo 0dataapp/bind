@@ -8,7 +8,7 @@ import glue from 'bind-glue';
 import hold from '$lib/hold.js';
 Object.keys(hold._wrappers).forEach(wrapperId => hold.interface(wrapperId).startup());
 
-import local_custody from '$lib/hold/local_custody.js';
+import local_disk from '$lib/hold/local_disk.js';
 import git_https from '$lib/hold/git_https.js';
 
 import depot from '$lib/depot.js';
@@ -39,7 +39,7 @@ export const handle = sequence(
     if (!pathname.startsWith(prefix))
       return params.resolve(params.event);
 
-    let hold = local_custody.middleware;
+    let hold = local_disk.middleware;
 
     const token = glue.util.parseToken(params.event.request.headers.get('authorization'))
     if (token) {
@@ -48,7 +48,7 @@ export const handle = sequence(
       if (!publicFolder) {
         const authorization = await oauth.authorization(handle, token);
 
-        if (authorization && authorization.data.depotId !== 'local_custody') {
+        if (authorization && authorization.data.depotId !== 'local_disk') {
           hold = git_https.middleware(await depot.depotURL(authorization.data.depotId));
         }
       }
