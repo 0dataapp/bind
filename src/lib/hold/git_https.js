@@ -180,6 +180,9 @@ const mod = {
 	sync: {
 
 		pull () {
+			if (!fs.existsSync(folder))
+				return;
+			
 			fs.readdirSync(folder).map(e => path.join(folder, e)).filter(e => fs.statSync(e).isDirectory()).forEach(e => {
 				q.push(() => {
 					const repo = mod.git(e).repo;
