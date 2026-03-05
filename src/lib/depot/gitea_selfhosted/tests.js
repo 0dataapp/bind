@@ -7,7 +7,7 @@ describe('repos', () => {
 	test('config', () => {
 		const accessToken = Math.random().toString();
 		expect(mod.repos.config({ accessToken })).toEqual({
-			url: `${ mod._prefix }/user/repos`,
+			url: mod.apiURL('/user/repos'),
 			headers: {
 				'Authorization': 'token ' + accessToken,
 			},

@@ -5,17 +5,17 @@ const mod = {
 		name: 'GitHub',
 	},
 
-	_prefix: 'https://api.github.com',
+	apiURL: e => 'https://api.github.com' + e,
 
 	repos: {
 
 		config: ({ accessToken }) => ({
 			// https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user
-			url: `${ mod._prefix }/user/repos?${ new URLSearchParams({
+			url: mod.apiURL(`/user/repos?${ new URLSearchParams({
 				sort: 'updated',
 				direction: 'desc',
 				per_page: 100,
-			}) }`,
+			}) }`),
 			headers: {
 				'Authorization': 'token ' + accessToken,
 			},
@@ -64,7 +64,7 @@ const mod = {
 		  const credentials = btoa(`${ clientId }:${ clientSecret }`);
 
 		  return {
-		  	url: `${ mod._prefix }/applications/${ clientId }/token`,
+		  	url: mod.apiURL(`/applications/${ clientId }/token`),
 		  	method: 'DELETE',
 		  	headers: {
 	        'Authorization': `Basic ${ credentials }`,

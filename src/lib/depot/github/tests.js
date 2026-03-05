@@ -7,11 +7,11 @@ describe('repos', () => {
 	test('config', () => {
 		const accessToken = Math.random().toString();
 		expect(mod.repos.config({ accessToken })).toEqual({
-			url: `${ mod._prefix }/user/repos?${ new URLSearchParams({
+			url: mod.apiURL(`/user/repos?${ new URLSearchParams({
 				sort: 'updated',
 				direction: 'desc',
 				per_page: 100,
-			}) }`,
+			}) }`),
 			headers: {
 				'Authorization': 'token ' + accessToken,
 			},

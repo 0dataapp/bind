@@ -5,13 +5,13 @@ const mod = {
 		name: 'Gitea (self-hosted)',
 	},
 
-	_prefix: process.env.GITEA_URL + '/api/v1',
+	apiURL: e => process.env.GITEA_URL + '/api/v1' + e,
 
 	repos: {
 
 		config: ({ accessToken }) => ({
 			// https://docs.gitea.com/api/1.25/#tag/user/operation/userCurrentListRepos
-			url: `${ mod._prefix }/user/repos`,
+			url: mod.apiURL('/user/repos'),
 			headers: {
 				'Authorization': 'token ' + accessToken,
 			},
