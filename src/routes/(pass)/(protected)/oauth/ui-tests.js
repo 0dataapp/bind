@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { load } from './+page.js';
+import { load } from './+page.server.js';
 import stub from '$lib/stub.js';
 
 const _load = params => load({
