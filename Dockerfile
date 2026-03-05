@@ -11,7 +11,14 @@ RUN npm install --omit=dev
 
 ADD . .
 
+ARG _DATA_DIRECTORY="/app/__persistent"
+
+RUN mkdir -m 0700 $_DATA_DIRECTORY
+RUN chown $USER:$USER $_DATA_DIRECTORY
+
 RUN npm run build
+
+ENV DATA_DIRECTORY="$_DATA_DIRECTORY"
 
 ENV PORT 3000
 EXPOSE 3000
