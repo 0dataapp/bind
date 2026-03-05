@@ -11,14 +11,10 @@ const maxItems = 10;
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ request, params }) {
+  const { name } = (depot.options[params.configure_id] || {}).meta || {};
   const account = (await auth.api.listUserAccounts({ headers: request.headers })).filter(e => e.providerId === params.configure_id).shift();
 
-  if (!account)
-  	return redirect(307, '/sources');
-
-  const { name } = (depot.options[params.configure_id] || {}).meta || {};
-
-  if (!name)
+  if (!account || !name)
   	return redirect(307, '/sources');
 
   const { accessToken } = await auth.api.getAccessToken({
