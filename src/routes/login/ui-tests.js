@@ -21,7 +21,7 @@ test.describe('signin', () => {
       await page.locator('#password').fill(Math.random().toString());
       await page.locator('input[type="submit"]').click();
 
-      expect(page.locator('error')).toHaveText('Invalid email or password');
+      expect(page.locator('flash.error')).toHaveText('Invalid email or password');
     });
 
     test('success', async ({ page }) => {

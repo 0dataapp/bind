@@ -7,6 +7,8 @@ const state = {
 
 export let didSubmit;
 export let acceptHandle = false;
+
+import Flash from '$lib/component/Flash.svelte';
 </script>
 
 <form id="account-form" onsubmit={ event => {
@@ -20,7 +22,7 @@ export let acceptHandle = false;
 } }>
 
 {#if state.error }
-	<p><error>{ state.error }</error></p>
+	<Flash type="error" message={ state.error } />
 {/if}
 
 <label for={ acceptHandle ? 'emailOrHandle' : 'email' }>{ acceptHandle ? 'Email or Handle' : 'Email' }</label>
