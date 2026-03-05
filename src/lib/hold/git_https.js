@@ -16,9 +16,13 @@ import mime from 'mime';
 const pollSeconds = 5;
 
 import Queue from 'queue';
-const q = new Queue({
+const q = Object.assign(new Queue({
 	autostart: true,
 	concurrency: 5,
+}), {
+	// https://github.com/jessetane/queue
+	// "jobs can accept a callback or return a promise"
+	_pushAuto: job => Promise.resolve(job()),
 });
 
 const debounceSeconds = 1.5;
@@ -184,7 +188,7 @@ const mod = {
 				return;
 			
 			fs.readdirSync(folder).map(e => path.join(folder, e)).filter(e => fs.statSync(e).isDirectory()).forEach(e => {
-				q.push(() => {
+				q._pushAuto(() => {
 					const repo = mod.git(e).repo;
 
 					repo.pull('origin');
@@ -210,7 +214,7 @@ const mod = {
 		},
 
 		prepare (id, url) {
-			q.push(() => mod.hold._prepare(...arguments));
+			q._pushAuto(() => mod.hold._prepare(...arguments));
 		},
 		
 	},
