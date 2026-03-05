@@ -1,9 +1,9 @@
 <script>
-import logic from './logic.js';
 import { linkSocial } from '$lib/auth/client.js';
-const link = e => linkSocial(Object.assign({
+const link = e => linkSocial({
+	provider: e.id,
 	callbackURL: `/sources/${ e.id }`,
-}, logic.params(e)));
+});
 
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
