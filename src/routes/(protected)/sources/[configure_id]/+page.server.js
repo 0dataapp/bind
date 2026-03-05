@@ -21,13 +21,11 @@ export async function load({ request, params }) {
   if (!name)
   	return redirect(307, '/sources');
 
-  const e = account;
-
   const { accessToken } = await auth.api.getAccessToken({
-  	body: Object.assign(structuredClone(e), { accountId: e.id }),
+  	body: { providerId: account.providerId, accountId: account.id },
   	headers: request.headers,
   });
-  const repos = await depot.endpoint(e.providerId).repos({
+  const repos = await depot.endpoint(account.providerId).repos({
   	accessToken,
   });
 
@@ -43,7 +41,7 @@ export async function load({ request, params }) {
 		account,
 		selected: (await _db.hydrating.getItems()).filter(e => e.accountId === account.id).map(e => e.data),
 		groups: list.sort(util.sort.conform(order, e => e.key)).map(({ key, values }) => ({
-	  	account: e,
+	  	account,
 	  	label: key,
 	  	options: values.map(e => Object.assign(structuredClone(e), {
 	  		name: isExternal(e) ? e.scopedName : e.name,
