@@ -39,7 +39,7 @@ export async function load({ url, request }) {
 		redirect_uri: params.redirect_uri,
 		client_id: params.client_id,
 		scopes: logic.parseScopes(params.scope),
-		depots: await depot.options2(request),
+		depots: (await depot.options2(request)).filter(e => !e._subsources || e._subsources.length),
 	};
 };
 
