@@ -48,7 +48,7 @@ export const handle = sequence(
       if (!publicFolder) {
         const authorization = await oauth.authorization(handle, token);
 
-        if (authorization && authorization.data.depotId !== 'local_disk') {
+        if (authorization && authorization.data.depotId !== 'local_custody') {
           hold = git_https.middleware(await depot.depotURL(authorization.data.depotId));
         }
       }
