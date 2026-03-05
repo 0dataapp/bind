@@ -1,5 +1,5 @@
 import db from '$lib/database.js';
-const _db = db.collection('oauth_implicit_grant');
+const _db = db.collection('oauth_connections');
 
 const mod = {
 
