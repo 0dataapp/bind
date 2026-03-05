@@ -3,7 +3,6 @@ import github from './depot/github.js';
 import gitea_selfhosted from './depot/gitea_selfhosted.js';
 
 import db from '$lib/database.js';
-const _db = db.collection('account_subsource');
 import { auth } from '$lib/auth/config';
 
 const mod = {
@@ -18,7 +17,7 @@ const mod = {
 	},
 
 	options2: async request => {
-		const subsources = await _db.hydrating.getItems();
+		const subsources = await db.collection('account_subsource').hydrating.getItems();
 		const accounts = await auth.api.listUserAccounts({ headers: request.headers });
 		return Object.values(mod.options).filter(e => !(e.credentials || []).filter(e => !process.env[e]).length).map(e => {
 			Object.assign(e = structuredClone(e.meta), {
@@ -63,7 +62,7 @@ const mod = {
 
 	}),
 
-	source: async id => (await _db.hydrating.getItems()).filter(e => e.id === id).shift(),
+	source: async id => (await db.collection('account_subsource').hydrating.getItems()).filter(e => e.id === id).shift(),
 
 	depotURL: async id => {
 		const source = await mod.source(id);

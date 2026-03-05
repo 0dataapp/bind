@@ -17,9 +17,6 @@ import oauth from '$lib/oauth-implicit.js';
 
 import { sequence } from '@sveltejs/kit/hooks';
 
-import db from '$lib/database.js';
-const _db = db.collection('user');
-
 const prefix = '/storage';
 export const handle = sequence(
 

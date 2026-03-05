@@ -1,5 +1,4 @@
 import db from '$lib/database.js';
-const _db = db.collection('account_subsource');
 import util from '$lib/util.js';
 
 import { auth } from '$lib/auth/config';
@@ -36,7 +35,7 @@ export async function load({ request, params }) {
 		title: `Configure ${ name }`,
 		name,
 		account,
-		selected: (await _db.hydrating.getItems()).filter(e => e.accountId === account.id).map(e => e.data),
+		selected: (await db.collection('account_subsource').hydrating.getItems()).filter(e => e.accountId === account.id).map(e => e.data),
 		groups: list.sort(util.sort.conform(order, e => e.key)).map(({ key, values }) => ({
 	  	account,
 	  	label: key,
@@ -61,13 +60,13 @@ export const actions = {
 		const wrapper = hold.interface(hold.wrapperId(params.configure_id));
 
 		const sources = JSON.parse((await request.formData()).get('sources') || '[]').slice(0, maxItems);
-		const items = (await _db.hydrating.getItems()).filter(e => e.accountId === account.id);
+		const items = (await db.collection('account_subsource').hydrating.getItems()).filter(e => e.accountId === account.id);
 
 		const removed = items.filter(e => !sources.map(e => e.id).includes(e.foreignId));
-		await Promise.all(removed.map(e => _db.__delete(e.id)));
+		await Promise.all(removed.map(e => db.collection('account_subsource').__delete(e.id)));
 		removed.forEach(e => wrapper.erase(e.data.cloneURL));
 
-		const created = await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => _db.hydrating.create({
+		const created = await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => db.collection('account_subsource').hydrating.create({
 			id: db.generateId(),
 			foreignId: data.id,
 			accountId: account.id,
