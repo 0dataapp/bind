@@ -1,7 +1,10 @@
 {
+  "title": "Bind",
+  "tagline": "Git personal data store for web apps.",
   "version": "0.0.1",
   "healthCheckPath": "/",
   "httpPort": 3000,
+  "website": "https://bind.0data.app",
   "addons": {
     "localstorage": {}
   },
