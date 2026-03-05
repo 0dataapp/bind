@@ -19,7 +19,6 @@ const mod = {
 	options: {
 
 		asMap,
-		asList: Object.entries(asMap).map(([slug, e]) => ({ slug, name: e.name })),
 
 	},
 

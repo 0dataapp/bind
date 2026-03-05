@@ -35,9 +35,9 @@ test.describe('sources', () => {
       
     });
 
-    depot.options.asList.forEach(e => {
+    Object.values(depot.options.asMap).forEach(e => {
 
-      sessionTest(e.slug, ({ page }) => expect(page.locator(`.${ e.slug }`)).toHaveText(e.name));
+      sessionTest(e.meta.id, ({ page }) => expect(page.locator(`.${ e.meta.id }`)).toHaveText(e.meta.name));
 
     });
     
