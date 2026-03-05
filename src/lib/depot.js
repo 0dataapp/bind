@@ -4,6 +4,7 @@ import gitea_selfhosted from './depot/gitea_selfhosted.js';
 
 import db from '$lib/database.js';
 const _db = db.collection('account_subsource');
+import { auth } from '$lib/auth/config';
 
 const mod = {
 
@@ -14,6 +15,29 @@ const mod = {
 		local_custody,
 		github,
 		gitea_selfhosted,
+	},
+
+	options2: async request => {
+		const subsources = await _db.hydrating.getItems();
+
+		const accounts = await auth.api.listUserAccounts({ headers: request.headers });
+		return accounts.filter(e => e.providerId !== 'credential').map(e => {
+			const meta = mod.options[e.providerId].meta;
+
+			Object.assign(e = structuredClone(e), {
+				name: meta.name,
+				optionId: e.id,
+			});
+
+			if (meta.hasSubsources)
+				e._subsources = subsources.filter(source => source.accountId === e.id).map(e => Object.assign(e, { optionId: e.id }));
+			
+			return e;
+		}).concat({
+			id: mod.options.local_custody.meta.id,
+			providerId: mod.options.local_custody.meta.id,
+			name: mod.options.local_custody.meta.name,
+		});
 	},
 
 	endpoint: provider => ({

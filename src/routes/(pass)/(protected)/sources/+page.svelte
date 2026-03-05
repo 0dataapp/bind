@@ -16,7 +16,7 @@ const { data } = $props();
 <ul>
 {#each data.linked as e }
 	<li>
-		<a href={ `/sources/${ e.id }` }>{ e.name }</a>
+		<a href={ `/sources/${ e.providerId }` }>{ e.name }</a>
 		{#if e.account._subsources && !e.account._subsources.length }
 			<strong> (no sources selected)</strong>
 		{:else if e.account._subsources && e.account._subsources.length }

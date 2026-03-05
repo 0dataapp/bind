@@ -1,5 +1,4 @@
 import { auth } from '$lib/auth/config';
-import db from '$lib/database.js';
 import depot from '$lib/depot.js';
 
 const mod = {
@@ -23,34 +22,6 @@ const mod = {
 	  return false;
 	},
 
-	depots: async request => {
-		const sources = await db.collection('account_subsource').hydrating.getItems();
-
-		return (await auth.api.listUserAccounts({
-			headers: request.headers,
-		})).filter(e => e.providerId !== 'credential').map(e => {
-			const meta = depot.options[e.providerId].meta;
-
-			Object.assign(e = structuredClone(e), {
-				name: meta.name,
-			});
-
-			if (meta.hasSubsources)
-				e._subsources = sources.filter(source => source.accountId === e.id);
-			
-			return e;
-		}).concat({
-			id: 'local_custody',
-			name: depot.options.local_custody.meta.name,
-		}).map(e => Object.assign(e, e._subsources ? {
-			_subsources: e._subsources.map(source => Object.assign(source, {
-				optionId: source.id,
-			})),
-		} : {
-			optionId: e.id,
-		}));
-	},
-
 };
 
 import { error } from '@sveltejs/kit';
@@ -68,7 +39,7 @@ export async function load({ url, request }) {
 		redirect_uri: params.redirect_uri,
 		client_id: params.client_id,
 		scopes: logic.parseScopes(params.scope),
-		depots: await mod.depots(request),
+		depots: await depot.options2(request),
 	};
 };
 
@@ -81,7 +52,7 @@ export const actions = {
 	default: async ({ request, url }) => {
 		const formData = await request.formData();
 
-		const _depot = (await mod.depots(request)).map(e => e._subsources ? e._subsources : e).flat().filter(e => e.optionId === formData.get('_depot')).shift();
+		const _depot = (await depot.options2(request)).map(e => e._subsources ? e._subsources : e).flat().filter(e => e.optionId === formData.get('_depot')).shift();
 
 		if (!_depot)
 			return {};
