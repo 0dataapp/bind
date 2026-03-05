@@ -14,7 +14,7 @@ import depot from '$lib/depot.js';
 
 export const auth = betterAuth({
   secret: building ? 'BUILD_SECRET_ONLY' : env.BETTER_AUTH_SECRET,
-  baseURL: building ? 'http://localhost' : env.BETTER_AUTH_URL,
+  // baseURL: building ? 'http://localhost' : env.BETTER_AUTH_URL,
 
   database: genericAdapter({
     // options
