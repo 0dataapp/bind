@@ -10,41 +10,29 @@ test.describe('dash', () => {
 
   test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
 
-  test.describe('session', () => {
+  test.describe('signedIn', () => {
 
-    const sessionTest = test.extend({
-      account: ({ page }, use) => use(stub.account()),
-    });
+    const signedIn = stub.signedIn();
 
-    sessionTest.beforeEach(async ({ page, account }) => {
-      await page.goto('/signup');
+    signedIn.describe('title', () => {
 
-      await page.locator('#email').fill(account.email);
-      await page.locator('#password').fill(account.password);
-      await page.locator('input[type="submit"]').click();
+      signedIn('head', async ({ page }) => expect(await page.title()).toEqual(_load.title));
 
-      await expect(page).toHaveURL(/\/dash/);
-    });
-
-    sessionTest.describe('title', () => {
-
-      sessionTest('head', async ({ page }) => expect(await page.title()).toEqual(_load.title));
-
-      sessionTest('h1', ({ page }) => expect(page.locator('h1')).toHaveText(_load.title));
+      signedIn('h1', ({ page }) => expect(page.locator('h1')).toHaveText(_load.title));
       
     });
 
-    sessionTest('sources', ({ page }) => expect(page.locator('a[href="/sources"]')).toHaveText('Data sources'));
+    signedIn('sources', ({ page }) => expect(page.locator('a[href="/sources"]')).toHaveText('Data sources'));
 
-    sessionTest('connected', ({ page }) => expect(page.locator('a[href="/connected"]')).toHaveText('Connected apps'));
+    signedIn('connected', ({ page }) => expect(page.locator('a[href="/connected"]')).toHaveText('Connected apps'));
 
-    sessionTest('account', ({ page }) => expect(page.locator('a[href="/account"]')).toHaveText('Account'));
+    signedIn('account', ({ page }) => expect(page.locator('a[href="/account"]')).toHaveText('Account'));
 
-    sessionTest.describe('logout', () => {
+    signedIn.describe('logout', () => {
 
-      sessionTest('text', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));
+      signedIn('text', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));
 
-      sessionTest('success', async ({ page }) => {
+      signedIn('success', async ({ page }) => {
         await page.locator('a[href="/logout"]').click();
 
         await expect(page).not.toHaveURL(/\/dash/);
