@@ -29,7 +29,7 @@ const mod = {
 				e._subsources = subsources.filter(source => source.accountId === e.account.id).map(e => Object.assign(e, { optionId: e.id }));
 
 			return e;
-		}).filter(e => !e._subsources || e._subsources.length);
+		});
 	},
 
 	endpoint: provider => ({
