@@ -1,7 +1,9 @@
+import props from './props.js';
+
 /** @type {import('./$types').LayoutLoad} */
 export function load({ route }) {
 	return {
-		title: 'Bind',
+		...props,
 		navigation: [].concat(
 			route.id.match(/\(protected\)\/(?!dash)/)
 			? { path: '/dash', title: 'Dashboard' }
@@ -16,4 +18,4 @@ export function load({ route }) {
 			: []
 			),
 	};
-}
+};
