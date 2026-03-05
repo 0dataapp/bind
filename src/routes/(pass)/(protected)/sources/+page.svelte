@@ -36,8 +36,16 @@ const { data } = $props();
 
 <h4>Link account</h4>
 
+<div class="available">
 {#each data.available as e }
 	<button class={ e.id } onclick={ () => link(e) }>{ e.name }</button>
 {/each}
+</div>
 
 {/if}
+
+<style>
+.available button {
+	margin-right: var(--spacing);
+}
+</style>
