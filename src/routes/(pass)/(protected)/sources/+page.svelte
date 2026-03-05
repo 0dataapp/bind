@@ -44,6 +44,14 @@ const { data } = $props();
 
 {/if}
 
+{#if !data.linked.length && !data.available.length }
+
+<p>No sources available.</p>
+
+<p>See <a href="https://bind.0data.app" target="_blank">documentation</a> for integration options.</p>
+
+{/if}
+
 <style>
 .available button {
 	margin-right: var(--spacing);

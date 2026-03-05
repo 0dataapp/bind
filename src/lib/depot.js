@@ -20,7 +20,7 @@ const mod = {
 	options2: async request => {
 		const subsources = await _db.hydrating.getItems();
 		const accounts = await auth.api.listUserAccounts({ headers: request.headers });
-		return Object.values(mod.options).map(e => {
+		return Object.values(mod.options).filter(e => !(e.credentials || []).filter(e => !process.env[e]).length).map(e => {
 			Object.assign(e = structuredClone(e.meta), {
 				optionId: e.id,
 				account: accounts.filter(account => account.providerId === e.id).shift(),

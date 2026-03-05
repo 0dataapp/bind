@@ -6,6 +6,13 @@ const mod = {
 		hasSubsources: true,
 	},
 
+	credentials: [
+		'GITEA_CLIENT_ID',
+		'GITEA_CLIENT_SECRET',
+		'GITEA_DISCOVERY_URL',
+		'GITEA_URL',
+	],
+
 	apiURL: e => process.env.GITEA_URL + '/api/v1' + e,
 
 	repos: {

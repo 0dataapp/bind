@@ -6,6 +6,11 @@ const mod = {
 		hasSubsources: true,
 	},
 
+	credentials: [
+		'GITHUB_CLIENT_ID',
+		'GITHUB_CLIENT_SECRET',
+	],
+
 	apiURL: e => 'https://api.github.com' + e,
 
 	repos: {
