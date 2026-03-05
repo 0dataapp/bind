@@ -2,43 +2,33 @@ import { test, expect } from '@playwright/test';
 import { load } from './+page.js';
 import stub from '$lib/stub.js';
 
-const _load = load({});
+const startPage = ({ page }) => page.goto('/account');
 
 test.describe('account', () => {
 
-  test.beforeEach(({ page }) => page.goto('/account'));
+  test.beforeEach(startPage);
 
   test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
 
-  test.describe('session', () => {
+  test.describe('signedIn', () => {
 
-    const sessionTest = test.extend({
-      account: ({ page }, use) => use(stub.account()),
-    });
+    const signedIn = stub.signedIn();
 
-    sessionTest.beforeEach(async ({ page, account }) => {
-      await page.goto('/signup');
+    signedIn.beforeEach(startPage);
 
-      await page.locator('#email').fill(account.email);
-      await page.locator('#password').fill(account.password);
-      await page.locator('input[type="submit"]').click();
+    signedIn.describe('title', () => {
 
-      await expect(page).toHaveURL(/\/dash/);
-    });
+      signedIn('head', async ({ page }) => expect(await page.title()).toEqual(load().title));
 
-    sessionTest.describe('title', () => {
-
-      sessionTest('head', async ({ page }) => expect(await page.title()).toEqual(_load.title));
-
-      sessionTest('h1', ({ page }) => expect(page.locator('h1')).toHaveText(_load.title));
+      signedIn('h1', ({ page }) => expect(page.locator('h1')).toHaveText(load().title));
       
     });
 
-    sessionTest('username', ({ page }) => expect(page.locator('a[href="/account/username"]')).toHaveText('Change username'));
+    signedIn('password', ({ page }) => expect(page.locator('a[href="/account/password"]')).toHaveText('Change password'));
 
-    sessionTest('password', ({ page }) => expect(page.locator('a[href="/account/password"]')).toHaveText('Change password'));
+    signedIn('username', ({ page }) => expect(page.locator('a[href="/account/username"]')).toHaveText('Change username'));
 
-    sessionTest('delete', ({ page }) => expect(page.locator('a[href="/account/delete"]')).toHaveText('Delete account'));
+    signedIn('delete', ({ page }) => expect(page.locator('a[href="/account/delete"]')).toHaveText('Delete account'));
     
   });
 
