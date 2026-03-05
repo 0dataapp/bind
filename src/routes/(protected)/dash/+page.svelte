@@ -1,7 +1,6 @@
 <script>
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
-
 const account = `${ data.authenticated.user.username }@${ data.origin }`;
 
 import CopyButton from '$lib/component/CopyButton.svelte';
