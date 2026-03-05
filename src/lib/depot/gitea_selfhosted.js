@@ -3,6 +3,7 @@ const mod = {
 	meta: {
 		id: 'gitea_selfhosted',
 		name: 'Gitea (self-hosted)',
+		hasSubsources: true,
 	},
 
 	apiURL: e => process.env.GITEA_URL + '/api/v1' + e,

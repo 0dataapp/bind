@@ -3,6 +3,7 @@ const mod = {
 	meta: {
 		id: 'github',
 		name: 'GitHub',
+		hasSubsources: true,
 	},
 
 	apiURL: e => 'https://api.github.com' + e,

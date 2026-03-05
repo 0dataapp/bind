@@ -7,11 +7,9 @@ export async function load({ request }) {
 	const accounts = await Promise.all((await auth.api.listUserAccounts({
 		headers: request.headers,
 	})).filter(e => e.providerId !== 'credential').map(async e => {
+		const meta = depot.options.asMap[e.providerId].meta;
 
-		if ([
-			'github',
-			'gitea_selfhosted',
-		].includes(e.providerId))
+		if (meta.hasSubsources)
 			e._subsources = (await db.collection('account_subsource').hydrating.getItems()).filter(source => source.accountId === e.id);
 		
 		return e;
