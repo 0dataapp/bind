@@ -18,9 +18,10 @@ export async function load({ request, params }) {
   	return redirect(307, '/sources');
 
   const { accessToken } = await auth.api.getAccessToken({
-  	body: { providerId: account.providerId, accountId: account.id },
+  	body: { providerId: account.providerId, accountId: account.accountId },
   	headers: request.headers,
   });
+  
   const repos = await depot.endpoint(account.providerId).repos({
   	accessToken,
   });
@@ -75,7 +76,7 @@ export const actions = {
 		})));
 
 		const { accessToken } = await auth.api.getAccessToken({
-			body: Object.assign(structuredClone(account), { accountId: account.id }),
+			body: { providerId: account.providerId, accountId: account.accountId },
 			headers: request.headers,
 		});
 		

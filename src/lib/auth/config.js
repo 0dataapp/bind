@@ -103,7 +103,7 @@ export const auth = betterAuth({
         },
         '/unlink-account': async () => {
           const { accessToken } = await auth.api.getAccessToken({
-            body: Object.assign(structuredClone(ctx.body), { accountId: ctx.body.id }),
+            body: { providerId: ctx.body.providerId, accountId: ctx.body.accountId },
             headers: ctx.headers,
           });
 
