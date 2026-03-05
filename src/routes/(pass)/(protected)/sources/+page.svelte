@@ -16,12 +16,12 @@ const { data } = $props();
 <ul>
 {#each data.linked as e }
 	<li>
-		<a href={ `/sources/${ e.providerId }` }>{ e.name }</a>
-		{#if e.account._subsources && !e.account._subsources.length }
+		<a href={ `/sources/${ e.id }` }>{ e.name }</a>
+		{#if e._subsources && !e._subsources.length }
 			<strong> (no sources selected)</strong>
-		{:else if e.account._subsources && e.account._subsources.length }
+		{:else if e._subsources && e._subsources.length }
 			<ul>
-				{#each e.account._subsources as e }
+				{#each e._subsources as e }
 					<li><a href={ e.data.webURL } target="_blank">{ e.data.scopedName }</a></li>
 				{/each}
 			</ul>

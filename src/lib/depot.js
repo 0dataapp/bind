@@ -12,31 +12,24 @@ const mod = {
 	maxSize: () => `${ mod._maxBytes / 1000 }MB`,
 
 	options: {
-		local_custody,
 		github,
 		gitea_selfhosted,
+		local_custody,
 	},
 
 	options2: async request => {
 		const subsources = await _db.hydrating.getItems();
-
 		const accounts = await auth.api.listUserAccounts({ headers: request.headers });
-		return accounts.filter(e => e.providerId !== 'credential').map(e => {
-			const meta = mod.options[e.providerId].meta;
-
-			Object.assign(e = structuredClone(e), {
-				name: meta.name,
+		return Object.values(mod.options).map(e => {
+			Object.assign(e = structuredClone(e.meta), {
 				optionId: e.id,
+				account: accounts.filter(account => account.providerId === e.id).shift(),
 			});
 
-			if (meta.hasSubsources)
-				e._subsources = subsources.filter(source => source.accountId === e.id).map(e => Object.assign(e, { optionId: e.id }));
-			
+			if (e.hasSubsources && e.account)
+				e._subsources = subsources.filter(source => source.accountId === e.account.id).map(e => Object.assign(e, { optionId: e.id }));
+
 			return e;
-		}).concat({
-			id: mod.options.local_custody.meta.id,
-			providerId: mod.options.local_custody.meta.id,
-			name: mod.options.local_custody.meta.name,
 		});
 	},
 
