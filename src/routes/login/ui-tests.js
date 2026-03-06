@@ -14,7 +14,7 @@ test.describe('signin', () => {
     
   });
 
-  test.describe('login', () => {
+  test.describe('form', () => {
 
     test('fail', async ({ page }) => {
       await page.locator('#emailOrHandle').fill(stub.email());
