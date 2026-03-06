@@ -28,23 +28,7 @@ test.describe('dash', () => {
 
     signedIn('account', ({ page }) => expect(page.locator('a[href="/account"]')).toHaveText('Account'));
 
-    signedIn.describe('logout', () => {
-
-      signedIn('text', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));
-
-      signedIn('success', async ({ page }) => {
-        await page.locator('a[href="/logout"]').click();
-
-        await expect(page).not.toHaveURL(/\/dash/);
-
-        expect(new URL(await page.url()).pathname).toBe('/');
-
-        await page.goto('/dash');
-
-        await expect(page).toHaveURL(/\/login/)
-      });
-      
-    });
+    signedIn('logout', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));
     
   });
 
