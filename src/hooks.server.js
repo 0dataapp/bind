@@ -59,7 +59,7 @@ export const handle = sequence(
   
   glue.sveltekit(glue.webfinger({
     storagePath: handle => `${ prefix }/${ handle }`,
-    authPath: '/oauth',
+    authPath: '/authorize',
   })),
   
 );

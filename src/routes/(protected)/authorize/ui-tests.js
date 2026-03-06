@@ -12,9 +12,9 @@ const _load = params => load({
   },
 });
 
-test.describe('oauth', () => {
+test.describe('authorize', () => {
 
-  test.beforeEach(({ page }) => page.goto('/oauth'));
+  test.beforeEach(({ page }) => page.goto('/authorize'));
 
   test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
 
@@ -33,7 +33,7 @@ test.describe('oauth', () => {
 
       await expect(page).toHaveURL(/\/dash/);
 
-      await page.goto('/oauth');
+      await page.goto('/authorize');
     });
 
     sessionTest.describe('title', () => {
