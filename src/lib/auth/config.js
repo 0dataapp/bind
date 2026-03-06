@@ -83,20 +83,12 @@ export const auth = betterAuth({
     before: createAuthMiddleware(async ctx => {
       const res = await Promise.all([{
         '/sign-up/email': async () => {
-          let username, response;
-          let tries = 0;
-          const check = username => auth.api.isUsernameAvailable({
-            body: { username },
-          });
-          while (!response || !response?.available)
-            response = await check(username = usernames.generate(3 + tries++ / 10));
-
           return {
             context: {
               ...ctx,
               body: {
                 ...ctx.body,
-                username,
+                username: await usernames.generate(auth),
               },
             },
           };
