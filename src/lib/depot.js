@@ -19,7 +19,15 @@ const mod = {
 	options2: async request => {
 		const subsources = await db.collection('account_subsource').hydrating.getItems();
 		const accounts = await auth.api.listUserAccounts({ headers: request.headers });
-		return Object.values(mod.options).filter(e => !(e.credentials || []).filter(e => !process.env[e]).length).map(e => {
+		return Object.values(mod.options).filter(e => !(e.credentials || []).filter(e => !process.env[e]).length).filter(e => {
+			if (e.meta.id !== 'gitea_selfhosted')
+				return true;
+
+			if (!process.env.GITEA_ACCOUNT)
+				return true;
+
+			return accounts.map(e => e.id).includes(process.env.GITEA_ACCOUNT);
+		}).map(e => {
 			Object.assign(e = structuredClone(e.meta), {
 				optionId: e.id,
 				account: accounts.filter(account => account.providerId === e.id).shift(),
