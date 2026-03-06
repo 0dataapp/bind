@@ -67,8 +67,6 @@ const mod = {
 				await repo.add('./*').commit('sync');
 				
 				debounce(() => repo.push('origin'));
-				debounce(() => repo.push('origin'));
-				debounce(() => repo.push('origin'));
 			},
 
 		};
@@ -188,11 +186,7 @@ const mod = {
 				return;
 			
 			fs.readdirSync(folder).map(e => path.join(folder, e)).filter(e => fs.statSync(e).isDirectory()).forEach(e => {
-				q._pushAuto(() => {
-					const repo = mod.git(e).repo;
-
-					repo.pull('origin');
-				});
+				q._pushAuto(() => mod.git(e).repo.pull('origin'));
 			});
 		},
 
