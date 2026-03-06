@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { load } from './+page.js';
 import stub from '$lib/stub.js';
 
+import { load } from './+page.js';
 const _load = load({});
 
 test.describe('dash', () => {
