@@ -22,6 +22,4 @@ test.describe('dash', () => {
 
   test('account', ({ page }) => expect(page.locator('a[href="/account"]')).toHaveText('Account'));
 
-  test('logout', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));
-
 });

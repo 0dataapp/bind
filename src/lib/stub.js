@@ -38,6 +38,11 @@ const mod = {
 		  	await page.goto(startPage);
 		});
 
+		if (startPage !== '/dash')
+			extended('dash', ({ page }) => expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard'));
+
+  	extended('logout', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));
+
 		return extended;
 	},
 

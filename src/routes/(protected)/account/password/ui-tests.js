@@ -94,8 +94,6 @@ test.describe('password', () => {
 			});
 			
 		});
-
-		test('dash', ({ page }) => expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard'));
 		
 	});
 

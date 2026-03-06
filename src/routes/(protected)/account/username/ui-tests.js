@@ -59,8 +59,6 @@ test.describe('username', () => {
 			});
 			
 		});
-
-		test('dash', ({ page }) => expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard'));
 		
 	});
 
