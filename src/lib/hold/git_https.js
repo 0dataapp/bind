@@ -61,8 +61,8 @@ const mod = {
 			repo,
 
 			async commit () {
-				repo.addConfig('user.name', env.GIT_CONFIG_NAME || 'me');
-				repo.addConfig('user.email', env.GIT_CONFIG_EMAIL || 'me@example.com');
+				repo.addConfig('user.name', env.GIT_CONFIG_NAME || 'Unknown');
+				repo.addConfig('user.email', env.GIT_CONFIG_EMAIL || 'noreply@example.com');
 
 				await repo.add('./*').commit('sync');
 				
