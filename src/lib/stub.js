@@ -15,12 +15,17 @@ const mod = {
 
 	scope: () => `${ Date.now().toString(36) }:rw`,
 
-	signedIn: () => {
+	signedIn: startPage => {
 		const extended = test.extend({
 		  account: ({ page }, use) => use(mod.account()),
 		});
 
 		extended.beforeEach(async ({ page, account }) => {
+			if (startPage) {
+				await page.goto(startPage);
+				await expect(page).toHaveURL(/\/login/);
+			}
+
 		  await page.goto('/signup');
 
 		  await page.locator('#email').fill(account.email);
@@ -28,6 +33,9 @@ const mod = {
 		  await page.locator('input[type="submit"]').click();
 
 		  await expect(page).toHaveURL(/\/dash/);
+
+		  if (startPage)
+		  	await page.goto(startPage);
 		});
 
 		return extended;

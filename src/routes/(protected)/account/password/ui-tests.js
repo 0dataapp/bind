@@ -1,116 +1,102 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { load } from './+page.js';
 import stub from '$lib/stub.js';
 
-const startPage = ({ page }) => page.goto('/account/password');
+const test = stub.signedIn('/account/password');
 
 test.describe('password', () => {
 
-  test.beforeEach(startPage);
+	test.describe('title', () => {
 
-  test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
+		test('head', async ({ page }) => expect(await page.title()).toEqual(load().title));
 
-  test.describe('signedIn', () => {
+		test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(load().title));
+		
+	});
 
-    const signedIn = stub.signedIn();
+	test.describe('form', () => {
 
-    signedIn.beforeEach(startPage);
+		test.describe('oldPassword', () => {
 
-    signedIn.describe('title', () => {
+			test('label', ({ page }) => expect(page.locator('label[for="oldPassword"]')).toHaveText('Current password'));
 
-      signedIn('head', async ({ page }) => expect(await page.title()).toEqual(load().title));
+			test.describe('input', () => {
 
-      signedIn('h1', ({ page }) => expect(page.locator('h1')).toHaveText(load().title));
-      
-    });
+				test('type', ({ page }) => expect(page.locator('#oldPassword')).toHaveAttribute('type', 'password'));
 
-    signedIn.describe('form', () => {
+				test('placeholder', ({ page }) => expect(page.locator('#oldPassword')).toHaveAttribute('placeholder', '…'));
 
-      signedIn.describe('oldPassword', () => {
+				test('required', ({ page }) => expect(page.locator('#oldPassword')).toHaveAttribute('required', ''));
 
-        signedIn('label', ({ page }) => expect(page.locator('label[for="oldPassword"]')).toHaveText('Current password'));
+			});
+			
+		});
 
-        signedIn.describe('input', () => {
+		test.describe('newPassword', () => {
 
-          signedIn('type', ({ page }) => expect(page.locator('#oldPassword')).toHaveAttribute('type', 'password'));
+			test('label', ({ page }) => expect(page.locator('label[for="newPassword"]')).toHaveText('New password'));
 
-          signedIn('placeholder', ({ page }) => expect(page.locator('#oldPassword')).toHaveAttribute('placeholder', '…'));
+			test.describe('input', () => {
 
-          signedIn('required', ({ page }) => expect(page.locator('#oldPassword')).toHaveAttribute('required', ''));
+				test('type', ({ page }) => expect(page.locator('#newPassword')).toHaveAttribute('type', 'password'));
 
-        });
-        
-      });
+				test('placeholder', ({ page }) => expect(page.locator('#newPassword')).toHaveAttribute('placeholder', '…'));
 
-      signedIn.describe('newPassword', () => {
+				test('required', ({ page }) => expect(page.locator('#newPassword')).toHaveAttribute('required', ''));
 
-        signedIn('label', ({ page }) => expect(page.locator('label[for="newPassword"]')).toHaveText('New password'));
+			});
+			
+		});
 
-        signedIn.describe('input', () => {
+		test.describe('confirmPassword', () => {
 
-          signedIn('type', ({ page }) => expect(page.locator('#newPassword')).toHaveAttribute('type', 'password'));
+			test('label', ({ page }) => expect(page.locator('label[for="confirmPassword"]')).toHaveText('Confirm password'));
 
-          signedIn('placeholder', ({ page }) => expect(page.locator('#newPassword')).toHaveAttribute('placeholder', '…'));
+			test.describe('input', () => {
 
-          signedIn('required', ({ page }) => expect(page.locator('#newPassword')).toHaveAttribute('required', ''));
+				test('type', ({ page }) => expect(page.locator('#confirmPassword')).toHaveAttribute('type', 'password'));
 
-        });
-        
-      });
+				test('placeholder', ({ page }) => expect(page.locator('#confirmPassword')).toHaveAttribute('placeholder', '…'));
 
-      signedIn.describe('confirmPassword', () => {
+				test('required', ({ page }) => expect(page.locator('#confirmPassword')).toHaveAttribute('required', ''));
 
-        signedIn('label', ({ page }) => expect(page.locator('label[for="confirmPassword"]')).toHaveText('Confirm password'));
+			});
+			
+		});
 
-        signedIn.describe('input', () => {
+		test.describe('submit', () => {
 
-          signedIn('type', ({ page }) => expect(page.locator('#confirmPassword')).toHaveAttribute('type', 'password'));
+			test('value', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Continue'));
 
-          signedIn('placeholder', ({ page }) => expect(page.locator('#confirmPassword')).toHaveAttribute('placeholder', '…'));
+			test.describe('error', () => {
 
-          signedIn('required', ({ page }) => expect(page.locator('#confirmPassword')).toHaveAttribute('required', ''));
+				test('shows error', async ({ page, account }) => {
+					await page.locator('#oldPassword').fill(account.password);
+					await page.locator('#newPassword').fill(Math.random().toString().slice(2));
+					await page.locator('#confirmPassword').fill(Math.random().toString().slice(2));
+					await page.locator('input[type="submit"]').click();
 
-        });
-        
-      });
+					await expect(page.locator('flash.error')).toBeVisible();
+					expect(page.locator('flash.error')).toHaveText('New password should match confirmation');
+				});
+				
+			});
 
-      signedIn.describe('submit', () => {
+			test('success', async ({ page, account }) => {
+				const newPassword = Math.random().toString().slice(2);
+				await page.locator('#oldPassword').fill(account.password);
+				await page.locator('#newPassword').fill(newPassword);
+				await page.locator('#confirmPassword').fill(newPassword);
+				await page.locator('input[type="submit"]').click();
 
-        signedIn('value', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Continue'));
+				await expect(page.locator('flash.success')).toBeVisible();
+				expect(page.locator('flash.success')).toHaveText('Password changed');
+			});
+			
+		});
 
-        signedIn.describe('error', () => {
-
-          signedIn('shows error', async ({ page, account }) => {
-            await page.locator('#oldPassword').fill(account.password);
-            await page.locator('#newPassword').fill(Math.random().toString().slice(2));
-            await page.locator('#confirmPassword').fill(Math.random().toString().slice(2));
-            await page.locator('input[type="submit"]').click();
-
-            expect(page.locator('flash.error')).toHaveText('New password should match confirmation');
-          });
-          
-        });
-
-        signedIn.skip('success', async ({ page, account }) => {
-          const newPassword = Math.random().toString().slice(2);
-          await page.locator('#oldPassword').fill(account.password);
-          await page.locator('#newPassword').fill(newPassword);
-          await page.locator('#confirmPassword').fill(newPassword);
-          await page.locator('input[type="submit"]').click();
-
-          // expect(page).toHaveURL(/\/dash/);
-          // #flake
-          // why does the flash appear when we check that the page url changed?
-
-          expect(page.locator('flash.success')).toHaveText('Password changed');
-        });
-        
-      });
-
-      signedIn('dash', ({ page }) => expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard'));
-      
-    });
-    
-  });
+		test('dash', ({ page }) => expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard'));
+		
+	});
 
 });

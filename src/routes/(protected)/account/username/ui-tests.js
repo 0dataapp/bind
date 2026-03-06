@@ -1,77 +1,67 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { load } from './+page.js';
 import stub from '$lib/stub.js';
 
-const startPage = ({ page }) => page.goto('/account/username');
+const test = stub.signedIn('/account/username');
 
 test.describe('username', () => {
 
-  test.beforeEach(startPage);
+	test.describe('title', () => {
 
-  test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
+		test('head', async ({ page }) => expect(await page.title()).toEqual(load().title));
 
-  test.describe('signedIn', () => {
+		test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(load().title));
+		
+	});
 
-    const signedIn = stub.signedIn();
+	test.describe('form', () => {
 
-    signedIn.beforeEach(startPage);
+		test.describe('username', () => {
 
-    signedIn.describe('title', () => {
+			test('label', ({ page }) => expect(page.locator('label[for="username"]')).toHaveText('New username'));
 
-      signedIn('head', async ({ page }) => expect(await page.title()).toEqual(load().title));
+			test.describe('input', () => {
 
-      signedIn('h1', ({ page }) => expect(page.locator('h1')).toHaveText(load().title));
-      
-    });
+				test('type', ({ page }) => expect(page.locator('#username')).toHaveAttribute('type', 'text'));
 
-    signedIn.describe('form', () => {
+				test('placeholder', ({ page }) => expect(page.locator('#username')).toHaveAttribute('placeholder', '…'));
 
-      signedIn.describe('username', () => {
+				test('required', ({ page }) => expect(page.locator('#username')).toHaveAttribute('required', ''));
 
-        signedIn('label', ({ page }) => expect(page.locator('label[for="username"]')).toHaveText('New username'));
+				test('autofocus', ({ page }) => expect(page.locator('#username')).toHaveAttribute('autofocus', ''));
 
-        signedIn.describe('input', () => {
+			});
+			
+		});
 
-          signedIn('type', ({ page }) => expect(page.locator('#username')).toHaveAttribute('type', 'text'));
+		test.describe('submit', () => {
 
-          signedIn('placeholder', ({ page }) => expect(page.locator('#username')).toHaveAttribute('placeholder', '…'));
+			test('value', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Continue'));
 
-          signedIn('required', ({ page }) => expect(page.locator('#username')).toHaveAttribute('required', ''));
+			test.describe('error', () => {
 
-          signedIn('autofocus', ({ page }) => expect(page.locator('#username')).toHaveAttribute('autofocus', ''));
+				test('shows error', async ({ page }) => {
+					await page.locator('#username').fill(Math.random().toString().split('.').join(' '));
+					await page.locator('input[type="submit"]').click();
 
-        });
-        
-      });
+					await expect(page.locator('flash.error')).toBeVisible();
+					expect(page.locator('flash.error')).toHaveText('Username is invalid');
+				});
+				
+			});
 
-      signedIn.describe('submit', () => {
+			test('success', async ({ page }) => {
+				await page.locator('#username').fill(Math.random().toString());
+				await page.locator('input[type="submit"]').click();
 
-        signedIn('value', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Continue'));
+				await expect(page.locator('flash.success')).toBeVisible();
+				expect(page.locator('flash.success')).toHaveText('Username changed');
+			});
+			
+		});
 
-        signedIn.describe('error', () => {
-
-          signedIn('shows error', async ({ page }) => {
-            await page.locator('#username').fill(Math.random().toString().split('.').join(' '));
-            await page.locator('input[type="submit"]').click();
-
-            expect(page.locator('flash.error')).toHaveText('Username is invalid');
-          });
-          
-        });
-
-        signedIn('success', async ({ page }) => {
-          await page.locator('#username').fill(Math.random().toString());
-          await page.locator('input[type="submit"]').click();
-
-            expect(page.locator('flash.success')).toHaveText('Username changed');
-        });
-        
-      });
-
-      signedIn('dash', ({ page }) => expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard'));
-      
-    });
-    
-  });
+		test('dash', ({ page }) => expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard'));
+		
+	});
 
 });

@@ -3,24 +3,24 @@ import stub from '$lib/stub.js';
 
 test.describe('logout', () => {
 
-  test('redirects to home', async ({ page }) => {
-    await page.goto('/logout');
+	test('redirects to home', async ({ page }) => {
+		await page.goto('/logout');
 
-    expect(page).toHaveURL('/')
-  });
+		expect(page).toHaveURL('/')
+	});
 
-  test.describe('signedIn', () => {
+	test.describe('signedIn', () => {
 
-    const signedIn = stub.signedIn();
+		const signedIn = stub.signedIn();
 
-    signedIn('logs out', async ({ page }) => {
-      await page.goto('/logout');
+		signedIn('logs out', async ({ page }) => {
+			await page.goto('/logout');
 
-      await page.goto('/dash');
+			await page.goto('/dash');
 
-      expect(page).toHaveURL(/\/login/);
-    });
-    
-  });
+			expect(page).toHaveURL(/\/login/);
+		});
+		
+	});
 
 });

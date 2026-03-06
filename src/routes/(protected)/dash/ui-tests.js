@@ -1,35 +1,27 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import stub from '$lib/stub.js';
 
 import { load } from './+page.js';
 const _load = load({});
 
+const test = stub.signedIn('/dash');
+
 test.describe('dash', () => {
 
-  test.beforeEach(({ page }) => page.goto('/dash'));
+  test.describe('title', () => {
 
-  test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
+    test('head', async ({ page }) => expect(await page.title()).toEqual(_load.title));
 
-  test.describe('signedIn', () => {
-
-    const signedIn = stub.signedIn();
-
-    signedIn.describe('title', () => {
-
-      signedIn('head', async ({ page }) => expect(await page.title()).toEqual(_load.title));
-
-      signedIn('h1', ({ page }) => expect(page.locator('h1')).toHaveText(_load.title));
-      
-    });
-
-    signedIn('sources', ({ page }) => expect(page.locator('a[href="/sources"]')).toHaveText('Data sources'));
-
-    signedIn('connected', ({ page }) => expect(page.locator('a[href="/connected"]')).toHaveText('Connected apps'));
-
-    signedIn('account', ({ page }) => expect(page.locator('a[href="/account"]')).toHaveText('Account'));
-
-    signedIn('logout', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));
+    test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(_load.title));
     
   });
+
+  test('sources', ({ page }) => expect(page.locator('a[href="/sources"]')).toHaveText('Data sources'));
+
+  test('connected', ({ page }) => expect(page.locator('a[href="/connected"]')).toHaveText('Connected apps'));
+
+  test('account', ({ page }) => expect(page.locator('a[href="/account"]')).toHaveText('Account'));
+
+  test('logout', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));
 
 });
