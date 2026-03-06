@@ -59,6 +59,7 @@ test.describe('signup', () => {
           await page.locator('#password').fill(Math.random().toString().slice(-4));
           await page.locator('input[type="submit"]').click();
 
+          await expect(page.locator('flash.error')).toBeVisible();
           expect(page.locator('flash.error')).toHaveText('Password too short');
         });
         
