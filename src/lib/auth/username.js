@@ -3,7 +3,7 @@ const mod = {
 	_randomCharacter: chars => chars.charAt(Math.floor(Math.random() * chars.length)),
 	_randomLetter: () => mod._randomCharacter('abcdefghjkmnpqrstuvwxyz'),
 	_randomDigit: () => mod._randomCharacter('23456789'),
-	generate (length = 3) {
+	_generate (length = 3) {
 		if (length < 3)
 			throw new Error('length too short');
 
@@ -17,7 +17,7 @@ const mod = {
 		  body: { username },
 		});
 		while (!response || !response?.available)
-		  response = await check(username = mod.generate(3 + tries++ / 10));
+		  response = await check(username = mod._generate(3 + tries++ / 10));
 
 		return username;
 	},
