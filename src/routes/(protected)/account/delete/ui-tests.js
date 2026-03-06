@@ -1,101 +1,80 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import data from './data.js';
 import stub from '$lib/stub.js';
 
+const test = stub.signedIn('/account/delete');
+
 test.describe('delete', () => {
 
-  test.beforeEach(({ page }) => page.goto('/delete'));
+	test.describe('title', () => {
 
-  test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
+		test('head', async ({ page }) => expect(await page.title()).toEqual(data.title));
 
-  test.describe('session', () => {
+		test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(data.title));
+		
+	});
 
-    const sessionTest = test.extend({
-      account: ({ page }, use) => use(stub.account()),
-    });
+	test.describe('form', () => {
 
-    sessionTest.beforeEach(async ({ page, account }) => {
-      await page.goto('/signup');
+		test.describe('password', () => {
 
-      await page.locator('#email').fill(account.email);
-      await page.locator('#password').fill(account.password);
-      await page.locator('input[type="submit"]').click();
+			test('label', ({ page }) => expect(page.locator('label[for="password"]')).toHaveText('Password'));
 
-      await expect(page).toHaveURL(/\/dash/);
+			test.describe('input', () => {
 
-      await page.goto('/delete');
-    });
+				test('type', ({ page }) => expect(page.locator('#password')).toHaveAttribute('type', 'password'));
 
-    sessionTest.describe('title', () => {
+				test('placeholder', ({ page }) => expect(page.locator('#password')).toHaveAttribute('placeholder', '…'));
 
-      sessionTest('head', async ({ page }) => expect(await page.title()).toEqual(data.title));
+				test('required', ({ page }) => expect(page.locator('#password')).toHaveAttribute('required', ''));
 
-      sessionTest('h1', ({ page }) => expect(page.locator('h1')).toHaveText(data.title));
-      
-    });
+			});
+			
+		});
 
-    sessionTest.describe('form', () => {
+		test.describe('confirm', () => {
 
-      sessionTest.describe('password', () => {
+			test('label', ({ page }) => expect(page.locator('label[for="confirm"]')).toHaveText('Confirmation (type CONFIRM)'));
 
-        sessionTest('label', ({ page }) => expect(page.locator('label[for="password"]')).toHaveText('Current password'));
+			test.describe('input', () => {
 
-        sessionTest.describe('input', () => {
+				test('type', ({ page }) => expect(page.locator('#confirm')).toHaveAttribute('type', 'text'));
 
-          sessionTest('type', ({ page }) => expect(page.locator('#password')).toHaveAttribute('type', 'password'));
+				test('placeholder', ({ page }) => expect(page.locator('#confirm')).toHaveAttribute('placeholder', '…'));
 
-          sessionTest('placeholder', ({ page }) => expect(page.locator('#password')).toHaveAttribute('placeholder', '…'));
+				test('required', ({ page }) => expect(page.locator('#confirm')).toHaveAttribute('required', ''));
 
-          sessionTest('required', ({ page }) => expect(page.locator('#password')).toHaveAttribute('required', ''));
+			});
+			
+		});
 
-        });
-        
-      });
+		test.describe('submit', () => {
 
-      sessionTest.describe('confirmPassword', () => {
+			test('value', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Delete my data'));
 
-        sessionTest('label', ({ page }) => expect(page.locator('label[for="confirmPassword"]')).toHaveText('Confirm password'));
+			test.describe('error', () => {
 
-        sessionTest.describe('input', () => {
+				test('shows error', async ({ page, account }) => {
+					await page.locator('#password').fill(account.password);
+					await page.locator('#confirm').fill(Math.random().toString().slice(2));
+					await page.locator('input[type="submit"]').click();
 
-          sessionTest('type', ({ page }) => expect(page.locator('#confirmPassword')).toHaveAttribute('type', 'password'));
+					await expect(page.locator('flash.error')).toBeVisible();
+					expect(page.locator('flash.error')).toHaveText('Confirmation incorrect');
+				});
+				
+			});
 
-          sessionTest('placeholder', ({ page }) => expect(page.locator('#confirmPassword')).toHaveAttribute('placeholder', '…'));
+			test('success', async ({ page, account }) => {
+				await page.locator('#password').fill(account.password);
+				await page.locator('#confirm').fill('CONFIRM');
+				await page.locator('input[type="submit"]').click();
 
-          sessionTest('required', ({ page }) => expect(page.locator('#confirmPassword')).toHaveAttribute('required', ''));
-
-        });
-        
-      });
-
-      sessionTest.describe('submit', () => {
-
-        sessionTest('value', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Delete my data'));
-
-        sessionTest.describe('error', () => {
-
-          sessionTest('shows error', async ({ page }) => {
-            await page.locator('#password').fill(account.password);
-            await page.locator('#confirmPassword').fill(Math.random().toString().slice(2));
-            await page.locator('input[type="submit"]').click();
-
-            expect(page.locator('error')).toHaveText('Passwords should match');
-          });
-          
-        });
-
-        sessionTest('success', async ({ page }) => {
-          await page.locator('#password').fill(account.password);
-          await page.locator('#confirmPassword').fill(account.password);
-          await page.locator('input[type="submit"]').click();
-
-          await expect(page).toHaveURL(/\//);
-        });
-        
-      });
-      
-    });
-    
-  });
+				await expect(page).toHaveURL(/\//);
+			});
+			
+		});
+		
+	});
 
 });
