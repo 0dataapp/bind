@@ -1,5 +1,7 @@
 import { betterAuth } from 'better-auth';
 import { username } from 'better-auth/plugins';
+import { admin } from 'better-auth/plugins';
+
 import { createAuthMiddleware } from 'better-auth/api';
 import { genericOAuth } from 'better-auth/plugins';
 
@@ -23,14 +25,6 @@ export const auth = betterAuth({
   emailAndPassword: { enabled: true },
 
   user: {
-    additionalFields: {
-      trust: {
-        type: ['user', 'admin'],
-        required: false,
-        defaultValue: 'user',
-        input: false, // disable modification
-      },
-    },
     deleteUser: {
       enabled: true,
       beforeDelete: async (user, request) => {
@@ -76,7 +70,8 @@ export const auth = betterAuth({
         },
       ],
       // Add more providers as needed
-    })
+    }),
+    admin(),
   ],
 
   hooks: {
