@@ -77,6 +77,19 @@ export const auth = betterAuth({
   hooks: {
     before: createAuthMiddleware(async ctx => {
       const res = await Promise.all([{
+        '/admin/create-user': async () => {
+          return {
+            context: {
+              ...ctx,
+              body: {
+                ...ctx.body,
+                data: Object.assign(ctx.body.data || {}, {
+                  username: await usernames.generate(auth),
+                }),
+              },
+            },
+          };
+        },
         '/sign-up/email': async () => {
           return {
             context: {
