@@ -15,33 +15,34 @@ const mod = {
 
 	scope: () => `${ Date.now().toString(36) }:rw`,
 
-	signedIn: startPage => {
+	signedIn (startPage) {
 		const extended = test.extend({
-		  account: ({ page }, use) => use(mod.account()),
+			account: ({ page }, use) => use(mod.account()),
 		});
 
 		extended.beforeEach(async ({ page, account }) => {
-			if (startPage) {
+			if (startPage && startPage !== '/logout') {
 				await page.goto(startPage);
 				await expect(page).toHaveURL(/\/login/);
 			}
 
-		  await page.goto('/signup');
+			await page.goto('/signup');
 
-		  await page.locator('#email').fill(account.email);
-		  await page.locator('#password').fill(account.password);
-		  await page.locator('input[type="submit"]').click();
+			await page.locator('#email').fill(account.email);
+			await page.locator('#password').fill(account.password);
+			await page.locator('input[type="submit"]').click();
 
-		  await expect(page).toHaveURL(/\/dash/);
+			await expect(page).toHaveURL(/\/dash/);
 
-		  if (startPage)
-		  	await page.goto(startPage);
+			if (startPage)
+				await page.goto(startPage);
 		});
 
-		if (startPage !== '/dash')
+		if (startPage && startPage !== '/dash')
 			extended('dash', ({ page }) => expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard'));
 
-  	extended('logout', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));
+		if (startPage !== '/logout')
+			extended('logout', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));
 
 		return extended;
 	},
