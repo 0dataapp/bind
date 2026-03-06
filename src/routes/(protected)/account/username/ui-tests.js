@@ -2,83 +2,73 @@ import { test, expect } from '@playwright/test';
 import { load } from './+page.js';
 import stub from '$lib/stub.js';
 
-const _load = load({});
+const startPage = ({ page }) => page.goto('/account/username');
 
 test.describe('username', () => {
 
-  test.beforeEach(({ page }) => page.goto('/username'));
+  test.beforeEach(startPage);
 
   test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
 
-  test.describe('session', () => {
+  test.describe('signedIn', () => {
 
-    const sessionTest = test.extend({
-      account: ({ page }, use) => use(stub.account()),
-    });
+    const signedIn = stub.signedIn();
 
-    sessionTest.beforeEach(async ({ page, account }) => {
-      await page.goto('/signup');
+    signedIn.beforeEach(startPage);
 
-      await page.locator('#email').fill(account.email);
-      await page.locator('#password').fill(account.password);
-      await page.locator('input[type="submit"]').click();
+    signedIn.describe('title', () => {
 
-      await expect(page).toHaveURL(/\/dash/);
-    });
+      signedIn('head', async ({ page }) => expect(await page.title()).toEqual(load().title));
 
-    sessionTest.describe('title', () => {
-
-      sessionTest('head', async ({ page }) => expect(await page.title()).toEqual(_load.title));
-
-      sessionTest('h1', ({ page }) => expect(page.locator('h1')).toHaveText(_load.title));
+      signedIn('h1', ({ page }) => expect(page.locator('h1')).toHaveText(load().title));
       
     });
 
-    sessionTest.describe('form', () => {
+    signedIn.describe('form', () => {
 
-      sessionTest.describe('username', () => {
+      signedIn.describe('username', () => {
 
-        sessionTest('label', ({ page }) => expect(page.locator('label[for="username"]')).toHaveText('New username'));
+        signedIn('label', ({ page }) => expect(page.locator('label[for="username"]')).toHaveText('New username'));
 
-        sessionTest.describe('input', () => {
+        signedIn.describe('input', () => {
 
-          sessionTest('type', ({ page }) => expect(page.locator('#username')).toHaveAttribute('type', 'text'));
+          signedIn('type', ({ page }) => expect(page.locator('#username')).toHaveAttribute('type', 'text'));
 
-          sessionTest('placeholder', ({ page }) => expect(page.locator('#username')).toHaveAttribute('placeholder', '…'));
+          signedIn('placeholder', ({ page }) => expect(page.locator('#username')).toHaveAttribute('placeholder', '…'));
 
-          sessionTest('required', ({ page }) => expect(page.locator('#username')).toHaveAttribute('required', ''));
+          signedIn('required', ({ page }) => expect(page.locator('#username')).toHaveAttribute('required', ''));
 
-          sessionTest('autofocus', ({ page }) => expect(page.locator('#username')).toHaveAttribute('autofocus', ''));
+          signedIn('autofocus', ({ page }) => expect(page.locator('#username')).toHaveAttribute('autofocus', ''));
 
         });
         
       });
 
-      sessionTest.describe('submit', () => {
+      signedIn.describe('submit', () => {
 
-        sessionTest('value', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Continue'));
+        signedIn('value', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Continue'));
 
-        sessionTest.describe('error', () => {
+        signedIn.describe('error', () => {
 
-          sessionTest('shows error', async ({ page }) => {
+          signedIn('shows error', async ({ page }) => {
             await page.locator('#username').fill(Math.random().toString().split('.').join(' '));
             await page.locator('input[type="submit"]').click();
 
-            expect(page.locator('error')).toHaveText('Invalid username');
+            expect(page.locator('flash.error')).toHaveText('Username is invalid');
           });
           
         });
 
-        sessionTest('success', async ({ page }) => {
+        signedIn('success', async ({ page }) => {
           await page.locator('#username').fill(Math.random().toString());
           await page.locator('input[type="submit"]').click();
 
-          await expect(page).toHaveURL(/\/dash/);
+            expect(page.locator('flash.success')).toHaveText('Username changed');
         });
         
       });
 
-      sessionTest('dash', ({ page }) => expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard'));
+      signedIn('dash', ({ page }) => expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard'));
       
     });
     
