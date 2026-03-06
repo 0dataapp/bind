@@ -1,8 +1,8 @@
-import data from './data.js';
+import props from './props.js';
 
 /** @type {import('./$types').PageLoad} */
 export function load() {
-	return data;
+	return props;
 };
 
 import { auth } from '$lib/auth/config';

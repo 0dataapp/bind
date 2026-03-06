@@ -1,10 +1,11 @@
 import { redirect } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
-import data from './data.js';
+import props from './props.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ locals }) {
-	return locals.authenticated ? redirect(307, '/dash') : Object.assign(data, {
+	return locals.authenticated ? redirect(307, '/dash') : {
+		...props,
 		DISABLE_SIGNUPS: env.DISABLE_SIGNUPS,
-	});
+	};
 };

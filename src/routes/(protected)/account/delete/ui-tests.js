@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import data from './data.js';
+import props from './props.js';
 import stub from '$lib/stub.js';
 
 const test = stub.signedIn('/account/delete');
@@ -8,9 +8,9 @@ test.describe('delete', () => {
 
 	test.describe('title', () => {
 
-		test('head', async ({ page }) => expect(await page.title()).toEqual(data.title));
+		test('head', async ({ page }) => expect(await page.title()).toEqual(props.title));
 
-		test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(data.title));
+		test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(props.title));
 		
 	});
 
