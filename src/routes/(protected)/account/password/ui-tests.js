@@ -72,8 +72,8 @@ test.describe('password', () => {
 
 				test('shows error', async ({ page, account }) => {
 					await page.locator('#oldPassword').fill(account.password);
-					await page.locator('#newPassword').fill(Math.random().toString().slice(2));
-					await page.locator('#confirmPassword').fill(Math.random().toString().slice(2));
+					await page.locator('#newPassword').fill(stub.password());
+					await page.locator('#confirmPassword').fill(stub.password());
 					await page.locator('input[type="submit"]').click();
 
 					await expect(page.locator('flash.error')).toBeVisible();
@@ -83,7 +83,7 @@ test.describe('password', () => {
 			});
 
 			test('success', async ({ page, account }) => {
-				const newPassword = Math.random().toString().slice(2);
+				const newPassword = stub.password();
 				await page.locator('#oldPassword').fill(account.password);
 				await page.locator('#newPassword').fill(newPassword);
 				await page.locator('#confirmPassword').fill(newPassword);

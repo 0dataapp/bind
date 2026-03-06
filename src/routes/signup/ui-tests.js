@@ -56,7 +56,7 @@ test.describe('signup', () => {
 
         test('shows error', async ({ page }) => {
           await page.locator('#email').fill(stub.email());
-          await page.locator('#password').fill(Math.random().toString().slice(-4));
+          await page.locator('#password').fill(stub.password().slice(-4));
           await page.locator('input[type="submit"]').click();
 
           expect(page.locator('flash.error')).toBeVisible();

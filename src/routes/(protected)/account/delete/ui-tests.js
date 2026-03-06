@@ -56,7 +56,7 @@ test.describe('delete', () => {
 
 				test('shows error', async ({ page, account }) => {
 					await page.locator('#password').fill(account.password);
-					await page.locator('#confirm').fill(Math.random().toString().slice(2));
+					await page.locator('#confirm').fill(stub.password());
 					await page.locator('input[type="submit"]').click();
 
 					await expect(page.locator('flash.error')).toBeVisible();

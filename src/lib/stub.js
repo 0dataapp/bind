@@ -2,18 +2,22 @@ import { test, expect } from '@playwright/test';
 
 const mod = {
 
-	domain: () => `${ Date.now().toString(36) }.xyz`,
+	slug: () => Date.now().toString(36),
 	
-	email: () => `${ 'example' || Math.random().toString(36) }@${ mod.domain() }`,
+	domain: () => `${ mod.slug() }.xyz`,
+	
+	email: () => `${ mod.slug() }@${ mod.domain() }`,
+	
+	password: () => Math.random().toString().slice(2),
 	
 	account: () => ({
 		email: mod.email(),
-		password: Math.random().toString(),
+		password: mod.password(),
 	}),
 
 	origin: () => `http://${ mod.domain() }`,
 
-	scope: () => `${ Date.now().toString(36) }:rw`,
+	scope: () => `${ mod.slug() }:rw`,
 
 	signedIn (startPage) {
 		const extended = test.extend({
