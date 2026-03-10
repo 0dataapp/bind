@@ -25,16 +25,13 @@ const q = Object.assign(new Queue({
 	_pushAuto: job => Promise.resolve(job()),
 });
 
-const debounceSeconds = 1.5;
-let timeout;
-const debounce = cb => {
-	const context = this;
-	clearTimeout(timeout);
-	timeout = setTimeout(function() {
-		timeout = null;
-		cb.apply(context);
-	}, debounceSeconds * 1000);
-};
+const debounceMilliseconds = 1500;
+import pDebounce from 'p-debounce';
+const _debounceMap = {};
+const debounce = (id, cb) => (_debounceMap[id] = _debounceMap[id] || pDebounce(() => {
+	cb()
+	delete _debounceMap[id];
+}, debounceMilliseconds))();
 
 const mod = {
 
@@ -60,13 +57,15 @@ const mod = {
 
 			repo,
 
-			async commit () {
+			commit () {
 				repo.addConfig('user.name', env.GIT_CONFIG_NAME || 'Unknown');
 				repo.addConfig('user.email', env.GIT_CONFIG_EMAIL || 'noreply@example.com');
 
-				await repo.add('./*').commit('sync');
-				
-				debounce(() => repo.push('origin'));
+				debounce(`commit-${ path }`, () => {
+					repo.add('./*').commit('sync');
+
+					debounce(`push-${ path }`, () => repo.push('origin'));
+				});
 			},
 
 		};

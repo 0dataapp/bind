@@ -31,6 +31,7 @@
     "lowdb": "^7.0.1",
     "mime": "^4.1.0",
     "normalize.css": "^8.0.1",
+    "p-debounce": "^5.1.0",
     "queue": "^7.0.0",
     "simple-git": "^3.30.0",
     "svelecte": "^5.3.0",
