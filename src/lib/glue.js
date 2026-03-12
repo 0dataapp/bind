@@ -127,7 +127,7 @@ const mod = {
 		});
 	},
 
-	storage: ({ hold, getScope }) => async (req, res, next) => {
+	remotestorage: ({ hold, getScope }) => async (req, res, next) => {
 		// console.info(req.method, req.url);
 		const [handle, isPublicFolder, path] = mod.util.parsePathname(req.url);
 		const token = mod.util.parseToken(req.headers.authorization);

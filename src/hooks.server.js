@@ -51,7 +51,7 @@ export const handle = sequence(
       }
     }
     
-    return glue.util.sveltekit(glue.storage({
+    return glue.util.sveltekit(glue.remotestorage({
       getScope: oauth.getScope,
       hold,
     }), prefix)(params)
