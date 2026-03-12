@@ -3,7 +3,7 @@ import { svelteKitHandler } from 'better-auth/svelte-kit';
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
 
-import glue from 'bind-glue';
+import glue from '$lib/glue.js';
 
 import hold from '$lib/hold.js';
 Object.keys(hold._wrappers).forEach(wrapperId => hold.interface(wrapperId).startup());
