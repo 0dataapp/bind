@@ -29,7 +29,7 @@ export const handle = sequence(
     return resolve(event);
   },
   
-  glue.sveltekit(glue.cors()),
+  glue.util.sveltekit(glue.cors()),
 	
   async params => {
     const { pathname } = new URL(params.event.request.url);
@@ -51,13 +51,13 @@ export const handle = sequence(
       }
     }
     
-    return glue.sveltekit(glue.storage({
+    return glue.util.sveltekit(glue.storage({
       getScope: oauth.getScope,
       hold,
     }), prefix)(params)
   },
   
-  glue.sveltekit(glue.webfinger({
+  glue.util.sveltekit(glue.webfinger({
     storagePath: handle => `${ prefix }/${ handle }`,
     authPath: '/authorize',
   })),

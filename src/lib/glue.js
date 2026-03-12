@@ -30,6 +30,61 @@ const mod = {
 			return string.startsWith(quote) && string.endsWith(quote) ? string.slice(1, -1) : string;
 		},
 
+		sveltekit: (middleware, path) => async ({ event, resolve }) => {
+			if (path && !event.url.pathname.startsWith(path))
+				return resolve(event);
+
+			const [protocol, host] = [event.url.protocol.replace(/\:$/, ''), event.url.host];
+			const req = {
+				url: `${ event.url.pathname }${ event.url.search }`,
+				protocol,
+				query: event.url.search,
+				method: event.request.method,
+				headers: Object.fromEntries(event.request.headers),
+				get: key => ({
+					host,
+				}[key]),
+			};
+
+			if (path)
+				req.url = req.url.replace(new RegExp(`^${ path.replaceAll('/', '\\/') }`), '');
+
+			if (req.method === 'PUT' && !event.request.__body)
+				event.request.__body = await (function () {
+					if (event.request.headers.get('content-type').startsWith('application/json'))
+						return event.request.json();
+
+					if (event.request.headers.get('content-type').startsWith('text/'))
+						return event.request.text();
+					
+					return event.request.arrayBuffer();
+				})();
+
+			if (req.method === 'PUT')
+				req.body = event.request.__body;
+
+			event.__headers = event.__headers || {};
+
+			const res = {
+				set: obj => (Object.keys(obj).forEach(key => event.__headers[key] = obj[key]), res),
+
+				status: code => (res._status = code, res),
+				json: obj => res.send(JSON.stringify(obj)),
+				send: body => (res.body = body, res.end()),
+				end: () => new Response(res.body, {
+					status: res._status || 200,
+					headers: event.__headers,
+				}),
+			};
+
+			return middleware(req, res, err => {
+				if (err)
+					throw err;
+
+				return resolve(event);
+			});
+		},
+
 	},
 
 	cors: () => (req, res, next) => {
@@ -174,61 +229,6 @@ const mod = {
 			});
 
 		return res.send(fs.readFileSync(target, meta['Content-Type'].startsWith('application/json') ? 'utf8' : undefined));
-	},
-
-	sveltekit: (middleware, path) => async ({ event, resolve }) => {
-		if (path && !event.url.pathname.startsWith(path))
-			return resolve(event);
-
-		const [protocol, host] = [event.url.protocol.replace(/\:$/, ''), event.url.host];
-		const req = {
-			url: `${ event.url.pathname }${ event.url.search }`,
-			protocol,
-			query: event.url.search,
-			method: event.request.method,
-			headers: Object.fromEntries(event.request.headers),
-			get: key => ({
-				host,
-			}[key]),
-		};
-
-		if (path)
-			req.url = req.url.replace(new RegExp(`^${ path.replaceAll('/', '\\/') }`), '');
-
-		if (req.method === 'PUT' && !event.request.__body)
-			event.request.__body = await (function () {
-				if (event.request.headers.get('content-type').startsWith('application/json'))
-					return event.request.json();
-
-				if (event.request.headers.get('content-type').startsWith('text/'))
-					return event.request.text();
-				
-				return event.request.arrayBuffer();
-			})();
-
-		if (req.method === 'PUT')
-			req.body = event.request.__body;
-
-		event.__headers = event.__headers || {};
-
-		const res = {
-			set: obj => (Object.keys(obj).forEach(key => event.__headers[key] = obj[key]), res),
-
-			status: code => (res._status = code, res),
-			json: obj => res.send(JSON.stringify(obj)),
-			send: body => (res.body = body, res.end()),
-			end: () => new Response(res.body, {
-				status: res._status || 200,
-				headers: event.__headers,
-			}),
-		};
-
-		return middleware(req, res, err => {
-			if (err)
-				throw err;
-
-			return resolve(event);
-		});
 	},
 
 };
