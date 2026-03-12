@@ -4,10 +4,10 @@ const mod = {
 
 	_generateToken: () => Array.from(crypto.getRandomValues(new Uint8Array(32)), byte => byte.toString(16).padStart(2, '0')).join(''),
 
-	createToken (username, data) {
+	async createToken (username, data) {
 		const token = mod._generateToken();
 
-		db.collection('oauth_connections').hydrating.create({
+		await db.collection('oauth_connections').hydrating.create({
 			id: db.generateId(),
 			username,
 			token,
