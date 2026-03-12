@@ -129,7 +129,7 @@ const mod = {
 
 	remotestorage: ({ hold, getScope }) => async (req, res, next) => {
 		// console.info(req.method, req.url);
-		const [handle, isPublicFolder, path] = mod.util.parsePathname(req.url);
+		const [handle, isPublicFolder, _path] = mod.util.parsePathname(req.url);
 		const token = mod.util.parseToken(req.headers.authorization);
 
 		if (!isPublicFolder && !token)
@@ -145,7 +145,7 @@ const mod = {
 		if (!scope && !isPublicFolder)
 			return res.status(401).send('missing scope');
 
-		const _scope = path === '/' ? '/' : path.match(/^\/([^\/]+)/).pop();
+		const _scope = _path === '/' ? '/' : _path.match(/^\/([^\/]+)/).pop();
 
 		const scopes = !scope ? {
 			// if isPublicFolder, we may not have a token
@@ -160,7 +160,7 @@ const mod = {
 		if (req.method === 'PUT' && req.headers['content-range'])
 			return res.status(400).end();
 
-		const __url = `${ isPublicFolder ? '/public' : ''}${ path }`;
+		const __url = `${ isPublicFolder ? '/public' : ''}${ _path }`;
 		const target = hold.dataPath(handle, __url);
 		const targetExists = fs.existsSync(target);
 		
@@ -196,7 +196,7 @@ const mod = {
 		if (req.method === 'PUT')
 			await hold.put({
 				handle,
-				path: __url,
+				_path: __url,
 				data: req.body,
 				ancestors,
 				meta: Object.assign(meta, {

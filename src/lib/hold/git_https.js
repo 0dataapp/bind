@@ -37,7 +37,7 @@ const mod = {
 
 	util: {
 
-		_gitPath: _url => `.${ _url }`,
+		_gitPath: _path => `.${ _path }`,
 
 		_isIgnored: e => [
 			'.DS_Store',
@@ -75,10 +75,10 @@ const mod = {
 
 		dataPath: (handle, url) => path.join(mod.util._clonePath(cloneURL), url),
 		
-		async meta (handle, _url) {
-			const _etag = async (_url, isFolder) => (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? _url.replace(/\/$/, '') : _url)))).trim().split('\n').pop();
+		async meta (handle, _path) {
+			const _etag = async (_path, isFolder) => (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? _path.replace(/\/$/, '') : _path)))).trim().split('\n').pop();
 
-			async function guessType (data, _path) {
+			async function guessType (data, __path) {
 				function guessJSON (e) {
 					if (!['{', '['].includes(e.trim()[0]))
 						return false;
@@ -103,10 +103,10 @@ const mod = {
 				if (guessHTML(string))
 					return 'text/html';
 				
-				return mime.getType(_path) || 'text/plain';
+				return mime.getType(__path) || 'text/plain';
 			};
 			
-			const target = this.dataPath(handle, _url);
+			const target = this.dataPath(handle, _path);
 
 			if (!fs.existsSync(target))
 				return {};
@@ -114,7 +114,7 @@ const mod = {
 			const isFolder = fs.statSync(target).isDirectory();
 
 			const meta = {
-				ETag: await _etag(_url, isFolder),
+				ETag: await _etag(_path, isFolder),
 			};
 
 			if (isFolder)
@@ -128,8 +128,8 @@ const mod = {
 			});
 		},
 
-		async put ({ handle, _url, data, ancestors, meta }) {
-			const target = this.dataPath(handle, _url);
+		async put ({ handle, _path, data, ancestors, meta }) {
+			const target = this.dataPath(handle, _path);
 
 			fs.mkdirSync(path.dirname(target), { recursive: true });
 
@@ -137,7 +137,7 @@ const mod = {
 
 			await mod.git(mod.util._clonePath(cloneURL)).commit();
 
-			Object.assign(meta, await this.meta(handle, _url));
+			Object.assign(meta, await this.meta(handle, _path));
 		},
 
 		async delete (target, ancestors) {
@@ -148,11 +148,11 @@ const mod = {
 			await mod.git(mod.util._clonePath(cloneURL)).commit();
 		},
 
-		async folderItems (handle, _url) {
-			const target = this.dataPath(handle, _url);
+		async folderItems (handle, _path) {
+			const target = this.dataPath(handle, _path);
 			const _this = this;
 
-			const tree = (await mod.git(mod.util._clonePath(cloneURL)).repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod.util._gitPath(_url))).trim();
+			const tree = (await mod.git(mod.util._clonePath(cloneURL)).repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod.util._gitPath(_path))).trim();
 
 			return !tree.length ? {} : tree.split('\n').map(e => {
 				const [type, hash, size, path] = e.split(/\s+/);
@@ -163,11 +163,11 @@ const mod = {
 					size: size === '-' ? null : parseInt(size),
 				};
 			}).reduce((coll, item) => {
-				const _path = path.join(_url, item.name);
-				coll[item.name.match(new RegExp(`^${ _url.slice(1) }(.*)`)).pop()] = Object.assign(item.type === 'tree' ? {} : {
+				const __path = path.join(_path, item.name);
+				coll[item.name.match(new RegExp(`^${ _path.slice(1) }(.*)`)).pop()] = Object.assign(item.type === 'tree' ? {} : {
 					'Content-Length': item.size,
-					'Content-Type': mime.getType(_path) || 'application/json',
-					'Last-Modified': fs.statSync(_this.dataPath(handle, _url)).mtime.toUTCString(),
+					'Content-Type': mime.getType(__path) || 'application/json',
+					'Last-Modified': fs.statSync(_this.dataPath(handle, _path)).mtime.toUTCString(),
 				}, {
 					ETag: item.hash,
 				});

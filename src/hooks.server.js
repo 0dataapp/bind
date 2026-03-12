@@ -40,7 +40,7 @@ export const handle = sequence(
 
     const token = glue.util.parseToken(params.event.request.headers.get('authorization'))
     if (token) {
-      const [handle, publicFolder, _url] = glue.util.parsePathname(pathname.slice(prefix.length));
+      const [handle, publicFolder] = glue.util.parsePathname(pathname.slice(prefix.length));
       
       if (!publicFolder) {
         const authorization = await oauth.authorization(handle, token);

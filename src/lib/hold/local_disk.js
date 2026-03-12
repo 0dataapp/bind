@@ -21,14 +21,14 @@ const mod = {
 		dataPath: (handle, url) => mod.middleware._resolvePath(handle, url),
 
 		_metaPath: target => `${ target }${ metaSuffix }`,
-		meta (handle, _url) {
-			const target = mod.middleware.dataPath(handle, _url);
+		meta (handle, _path) {
+			const target = mod.middleware.dataPath(handle, _path);
 			return fs.existsSync(target) ? JSON.parse(fs.readFileSync(mod.middleware._metaPath(target), 'utf8')) : {};
 		},
 
 		_etag: () => new Date().toJSON(),
-		put ({ handle, _url, data, ancestors, meta }) {
-			const target = mod.middleware.dataPath(handle, _url);
+		put ({ handle, _path, data, ancestors, meta }) {
+			const target = mod.middleware.dataPath(handle, _path);
 
 			fs.mkdirSync(path.dirname(target), { recursive: true });
 			ancestors.forEach(e => fs.writeFileSync(mod.middleware._metaPath(`${ e }/`), JSON.stringify({
@@ -56,8 +56,8 @@ const mod = {
 			})));
 		},
 
-		folderItems (handle, _url) {
-			const target = mod.middleware.dataPath(handle, _url);
+		folderItems (handle, _path) {
+			const target = mod.middleware.dataPath(handle, _path);
 
 			return fs.readdirSync(target).filter(e => !mod._isIgnored(e)).reduce((coll, item) => {
 				let _path = path.join(target, item);
