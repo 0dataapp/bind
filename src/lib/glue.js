@@ -212,7 +212,11 @@ const mod = {
 			});
 
 		if (req.method === 'DELETE') {
-			await hold.delete(target, ancestors);
+			await hold.delete({
+				handle,
+				target: _path,
+				ancestors,
+			});
 			return res.status(200).end();
 		} 
 

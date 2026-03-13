@@ -57,7 +57,8 @@ const mod = {
 			})));
 		},
 
-		delete (target, ancestors) {
+		async delete ({ handle, target: _path, ancestors }) {
+			const target = this.dataPath(handle, _path);
 			fs.unlinkSync(target);
 			fs.unlinkSync(mod.middleware._metaPath(target))
 

@@ -160,7 +160,8 @@ const mod = {
 			Object.assign(meta, await this.meta(handle, _path));
 		},
 
-		async delete (target, ancestors) {
+		async delete ({ handle, target: _path, ancestors }) {
+			const target = this.dataPath(handle, _path);
 			fs.unlinkSync(target);
 
 			ancestors.filter(e => !fs.readdirSync(e).filter(e => !mod.util._isIgnored(e)).length).forEach(e => fs.rmdirSync(e));
