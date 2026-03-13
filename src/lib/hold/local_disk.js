@@ -84,6 +84,11 @@ const mod = {
 			return fs.readFileSync(this._localPath(params), this._encoding(params.contentType));
 		},
 
+		meta (params) {
+			const target = this._localPath(params);
+			return fs.existsSync(target) ? JSON.parse(fs.readFileSync(this._metaPath(target), 'utf8')) : {};
+		},
+
 	},
 	
 	middleware: {

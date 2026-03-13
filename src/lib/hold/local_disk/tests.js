@@ -368,4 +368,56 @@ describe('filesystem', () => {
 
 	});
 
+	describe('meta', () => {
+
+		test('file', () => {
+			const handle = stub.ulid();
+			const target = stub.basename();
+			const data = Math.random().toString();
+			const encoding = 'text/plain';
+			mod.filesystem.put({
+				handle,
+				target,
+				data,
+				ancestors: [],
+				meta: stub.headers(encoding),
+			});
+			const _target = mod.filesystem._localPath({
+				handle,
+				target,
+			});
+			const stat = fs.statSync(_target);
+			expect(mod.filesystem.meta({
+				handle,
+				target,
+			})).toEqual({
+				'Content-Length': stat.size,
+				'Content-Type': encoding,
+				ETag: stat.mtime.toJSON(),
+			});
+		});
+
+		test('folder', () => {
+			const handle = stub.ulid();
+
+			const parent = stub.ulid();
+			const ancestors = [parent].map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+
+			const target = path.join(parent, stub.basename());
+			const data = Math.random().toString();
+			mod.filesystem.put({
+				handle,
+				target,
+				data,
+				ancestors,
+				meta: stub.headers('text/plain'),
+			});
+			expect(mod.filesystem.meta({
+				handle,
+				target: parent + '/',
+			}).ETag.slice(0, -5)).toEqual(fs.statSync(ancestors[0]).mtime.toJSON().slice(0, -5));
+		});
+
+	});
+
 });
