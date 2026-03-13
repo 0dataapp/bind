@@ -2,13 +2,15 @@ import { test, expect } from '@playwright/test';
 
 const mod = {
 
-	slug: () => Date.now().toString(36),
+	random: () => Math.random().toString(36).slice(2),
+	
+	slug: () => mod.random(),
 	
 	domain: () => `${ mod.slug() }.xyz`,
 	
 	email: () => `${ mod.slug() }@${ mod.domain() }`,
 	
-	password: () => Math.random().toString().slice(2),
+	password: () => mod.random(),
 	
 	account: () => ({
 		email: mod.email(),
