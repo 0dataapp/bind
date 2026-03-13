@@ -36,7 +36,7 @@ const mod = {
 		dataPath: (handle, url) => mod.middleware._resolvePath(handle, url),
 
 		_metaPath: target => `${ target }${ metaSuffix }`,
-		meta (handle, _path) {
+		meta ({ handle, target: _path }) {
 			const target = mod.middleware.dataPath(handle, _path);
 			return fs.existsSync(target) ? JSON.parse(fs.readFileSync(mod.middleware._metaPath(target), 'utf8')) : {};
 		},

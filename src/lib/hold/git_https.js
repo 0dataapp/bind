@@ -90,7 +90,7 @@ const mod = {
 		
 		dataPath: (handle, url) => path.join(mod.util._clonePath(cloneURL), url),
 		
-		async meta (handle, _path) {
+		async meta ({ handle, target: _path }) {
 			const target = this.dataPath(handle, _path);
 
 			async function _etag (_path, isFolder) {
@@ -157,7 +157,10 @@ const mod = {
 
 			await mod.git(mod.util._clonePath(cloneURL)).commit();
 
-			Object.assign(meta, await this.meta(handle, _path));
+			Object.assign(meta, await this.meta({
+				handle,
+				target: _path,
+			}));
 		},
 
 		async delete ({ handle, target: _path, ancestors }) {
@@ -192,7 +195,10 @@ const mod = {
 					basename,
 					e.type === 'tree'
 					? { ETag: e.hash }
-					: await _this.meta(handle, path.join(_path, basename)),
+					: await _this.meta({
+						handle,
+						target: path.join(_path, basename),
+					}),
 				];
 			})).then(Object.fromEntries);
 		},

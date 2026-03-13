@@ -180,7 +180,10 @@ const mod = {
 			if (ancestors.filter(e => fs.existsSync(e) && fs.statSync(e).isFile()).length)
 				return res.status(409).end();
 
-		const meta = await hold.meta(handle, __url);
+		const meta = await hold.meta({
+			handle,
+			target: __url,
+		});
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
 			!targetExists && req.headers['if-match']
