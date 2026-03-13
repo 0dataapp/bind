@@ -80,6 +80,10 @@ const mod = {
 			return fs.statSync(this._localPath(params)).isDirectory();
 		},
 
+		get (params) {
+			return fs.readFileSync(this._localPath(params), this._encoding(params.contentType));
+		},
+
 	},
 	
 	middleware: {

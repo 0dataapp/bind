@@ -326,4 +326,46 @@ describe('filesystem', () => {
 
 	});
 
+	describe('get', () => {
+
+		test('text', () => {
+			const handle = stub.ulid();
+			const target = stub.basename();
+			const data = Math.random().toString();
+			const contentType = 'text/plain';
+			mod.filesystem.put({
+				handle,
+				target,
+				data,
+				ancestors: [],
+				meta: stub.headers(contentType),
+			});
+			expect(mod.filesystem.get({
+				handle,
+				target,
+				contentType,
+			})).toBe(data);
+		});
+
+		test('buffer', () => {
+			const handle = stub.ulid();
+			const target = stub.basename();
+			const data = Buffer.from(Math.random().toString());
+			const contentType = 'application/octet-stream';
+			mod.filesystem.put({
+				handle,
+				target,
+				data,
+				ancestors: [],
+				meta: stub.headers(contentType),
+			});
+			expect(mod.filesystem.get({
+				handle,
+				target,
+				contentType,
+			})).toEqual(data);
+		});
+
+	});
+
 });
