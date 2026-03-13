@@ -1,4 +1,8 @@
+import crypto from 'crypto';
+
 const mod = {
+
+	hash: e => crypto.createHash('sha256').update(e).digest('hex').substring(0, 8),
 
 	encoding: contentType => [
 		'application/json',
