@@ -79,6 +79,9 @@ const mod = {
 			exists ({ target }) {
 				return fs.existsSync(this.localPath(target));
 			},
+			isFolder ({ target }) {
+				return fs.statSync(this.localPath(target)).isDirectory();
+			},
 
 		},
 		

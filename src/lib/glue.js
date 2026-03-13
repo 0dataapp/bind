@@ -162,12 +162,15 @@ const mod = {
 
 		const __url = `${ isPublicFolder ? '/public' : ''}${ _path }`;
 		const target = hold.dataPath(handle, __url);
-		const targetExists = hold.target.exists({
+		const targetExists = await hold.target.exists({
 			handle,
 			target: _path,
 		});
 		
-		if (req.method === 'PUT' && targetExists && fs.statSync(target).isDirectory())
+		if (req.method === 'PUT' && targetExists && (await hold.target.isFolder({
+			handle,
+			target: _path,
+		})))
 			return res.status(409).end();
 
 		const ancestors = __url.split('/').slice(0, -1).reduce((coll, item) => {
