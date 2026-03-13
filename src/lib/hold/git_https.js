@@ -159,7 +159,10 @@ const mod = {
 
 			const tree = (await mod.git(mod.util._clonePath(cloneURL)).repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod.util._gitPath(_path))).trim();
 
-			return !tree.length ? {} : tree.split('\n').map(e => {
+			if (!tree.length)
+				return {};
+
+			return Promise.all(tree.split('\n').map(e => {
 				const [type, hash, size, path] = e.split(/\s+/);
 				return {
 					name: type === 'tree' ? `${ path }/` : path,
@@ -167,18 +170,15 @@ const mod = {
 					hash,
 					size: size === '-' ? null : parseInt(size),
 				};
-			}).reduce((coll, item) => {
-				const __path = path.join(_path, item.name);
-				coll[item.name.match(new RegExp(`^${ _path.slice(1) }(.*)`)).pop()] = Object.assign(item.type === 'tree' ? {} : {
-					'Content-Length': item.size,
-					'Content-Type': mime.getType(__path) || 'application/json',
-					'Last-Modified': fs.statSync(_this.dataPath(handle, _path)).mtime.toUTCString(),
-				}, {
-					ETag: item.hash,
-				});
-
-				return coll;
-			}, {});
+			}).map(async e => {
+				const basename = e.name.match(new RegExp(`^${ _path.slice(1) }(.*)`)).pop();
+				return [
+					basename,
+					e.type === 'tree'
+					? { ETag: e.hash }
+					: await _this.meta(handle, path.join(_path, basename)),
+				];
+			})).then(Object.fromEntries);
 		},
 
 	}),
