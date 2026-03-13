@@ -18,13 +18,25 @@ describe('filesystem', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
 			const data = Math.random().toString();
+			const encoding = 'text/plain';
+			const meta = stub.headers(encoding);
+			
 			expect(mod.filesystem.put({
 				handle,
 				target,
 				data,
 				ancestors: [],
-				meta: stub.headers('text/plain'),
+				meta,
 			})).toBe(undefined);
+
+			const stat = fs.statSync(mod.filesystem._localPath({
+				handle,
+				target,
+			}));
+			expect(meta).toEqual(Object.assign(stub.headers(encoding), {
+				ETag: stat.mtime.toJSON(),
+				'Content-Length': stat.size,
+			}));
 			expect(fs.readFileSync(mod.filesystem._localPath({
 				handle,
 				target,
