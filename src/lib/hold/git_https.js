@@ -35,6 +35,8 @@ const debounce = (id, cb) => (_debounceMap[id] = _debounceMap[id] || pDebounce((
 
 const mod = {
 
+	folder,
+
 	util: {
 
 		_gitPath: _path => `.${ _path }`,
@@ -43,7 +45,7 @@ const mod = {
 			'.DS_Store',
 		].includes(path.basename(e)),
 
-		_clonePath: id => path.join(folder, util.hash(id)),
+		_clonePath: id => path.join(mod.folder, util.hash(id)),
 
 	},
 
@@ -57,9 +59,14 @@ const mod = {
 
 			repo,
 
-			commit () {
+			_init: () => repo.init(),
+
+			commit: direct => {
 				repo.addConfig('user.name', env.GIT_CONFIG_NAME || 'Unknown');
 				repo.addConfig('user.email', env.GIT_CONFIG_EMAIL || 'noreply@example.com');
+
+				if (direct)
+					return repo.add('./*').commit('sync');
 
 				debounce(`commit-${ path }`, () => {
 					repo.add('./*').commit('sync');
@@ -70,6 +77,110 @@ const mod = {
 
 		};
 	},
+
+	filesystem: cloneURL => ({
+
+		_localPath: _path => path.join(mod.util._clonePath(cloneURL), _path),
+		
+		async put ({ target: _path, data, ancestors, meta }) {
+			const target = this._localPath(_path);
+
+			fs.mkdirSync(path.dirname(target), { recursive: true });
+
+			fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
+
+			await mod.git(mod.util._clonePath(cloneURL)).commit();
+
+			Object.assign(meta, await this.meta({
+				target: _path,
+			}));
+		},
+
+		async delete ({ target: _path, ancestors }) {
+			const target = this._localPath(_path);
+			fs.unlinkSync(target);
+
+			ancestors.slice().sort().reverse().forEach(e => {
+				if (fs.readdirSync(e).filter(e => !util.isJunk(e)).length)
+					return;
+
+				fs.rmSync(e, { recursive: true, force: true })
+			});
+
+			await mod.git(mod.util._clonePath(cloneURL)).commit();
+		},
+
+		async meta ({ target: _path }) {
+			const target = this._localPath(_path);
+			const stat = fs.statSync(target);
+
+			async function guessType (data, __path) {
+				function guessJSON (e) {
+					if (!['{', '['].includes(e.trim()[0]))
+						return false;
+
+					try {
+						return JSON.parse(e);
+					} catch (e) {
+						return false
+					}
+				};
+				const guessHTML = e => e.startsWith('<!DOCTYPE html>');
+
+				const type = await fileTypeFromBuffer(data);
+				if (type)
+					return type.mime;
+
+				const string = data.toString();
+
+				if (guessJSON(string))
+					return 'application/json';
+				
+				if (guessHTML(string))
+					return 'text/html';
+				
+				return mime.getType(__path) || 'text/plain';
+			};
+			
+			if (!fs.existsSync(target))
+				return {};
+
+			const isFolder = fs.statSync(target).isDirectory();
+
+			const meta = {
+				ETag: isFolder
+					// ? (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? _path.replace(/\/$/, '') : _path)))).trim().split('\n').pop()
+					? (
+						await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['show-ref'])
+						? (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', _path.replace(/\/$/, '')])).trim().split('\n').pop()
+						: 'empty'
+						)
+					: stat.mtime.toJSON(),
+			};
+
+			if (isFolder)
+				return meta;
+
+			return Object.assign(meta, {
+				'Content-Length': stat.size,
+				'Content-Type': await guessType(fs.readFileSync(target), target),
+				'Last-Modified': stat.mtime.toUTCString(),
+			});
+		},
+
+		exists ({ target }) {
+			return fs.existsSync(this._localPath(target));
+		},
+
+		isFolder ({ target }) {
+			return fs.statSync(this._localPath(target)).isDirectory();
+		},
+
+		get ({ target, contentType }) {
+			return fs.readFileSync(this._localPath(target), util.encoding(contentType));
+		},
+
+	}),
 
 	middleware: cloneURL => ({
 
