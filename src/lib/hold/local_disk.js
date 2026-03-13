@@ -25,6 +25,9 @@ const mod = {
 			'application/json',
 			'text',
 		].filter(e => contentType.startsWith(e)).length ? 'utf8' : undefined,
+		_isJunk: e => [
+			'.DS_Store',
+		].includes(path.basename(e)),
 		
 		put ({ handle, target: _path, data, ancestors, meta }) {
 			const target = this._localPath({
@@ -46,6 +49,26 @@ const mod = {
 			fs.writeFileSync(mod.middleware._metaPath(target), JSON.stringify(Object.assign(meta, {
 				ETag: stat.mtime.toJSON(),
 				'Content-Length': Buffer.isBuffer(data) ? data.length : stat.size,
+			})));
+		},
+
+		delete ({ handle, target: _path, ancestors }) {
+			const target = this._localPath({
+				handle,
+				target: _path,
+			});
+			fs.unlinkSync(target);
+			fs.unlinkSync(this._metaPath(target));
+
+			ancestors.slice().sort().reverse().forEach(e => {
+				if (fs.readdirSync(e).filter(e => !mod.filesystem._isJunk(e) && (e !== metaSuffix)).length)
+					return;
+
+				fs.rmSync(e, { recursive: true, force: true })
+			});
+
+			ancestors.filter(e => fs.existsSync(e) && fs.readdirSync(e).filter(e => !mod._isIgnored(e)).length).forEach(e => fs.writeFileSync(this._metaPath(`${ e }/`), JSON.stringify({
+				ETag: mod.middleware._etag(),
 			})));
 		},
 
