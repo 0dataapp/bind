@@ -14,6 +14,11 @@ const mod = {
 	_isIgnored: e => e.endsWith(metaSuffix) || [
 		'.DS_Store',
 	].includes(path.basename(e)),
+
+	filesystem: {
+		_encoding: contentType => [
+
+	},
 	
 	middleware: {
 
