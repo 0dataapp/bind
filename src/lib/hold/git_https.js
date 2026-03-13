@@ -73,6 +73,15 @@ const mod = {
 
 	middleware: cloneURL => ({
 
+		target: {
+
+			localPath: _path => path.join(mod.util._clonePath(cloneURL), _path),
+			exists ({ target }) {
+				return fs.existsSync(this.localPath(target));
+			},
+
+		},
+		
 		dataPath: (handle, url) => path.join(mod.util._clonePath(cloneURL), url),
 		
 		async meta (handle, _path) {

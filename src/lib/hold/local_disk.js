@@ -17,6 +17,15 @@ const mod = {
 	
 	middleware: {
 
+		target: {
+
+			localPath: ({ handle, target }) => path.join(folder, handle, target),
+			exists (params) {
+				return fs.existsSync(this.localPath(params));
+			},
+
+		},
+
 		_resolvePath: (handle, url) => path.join(folder, handle, url),
 		dataPath: (handle, url) => mod.middleware._resolvePath(handle, url),
 

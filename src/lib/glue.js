@@ -162,7 +162,10 @@ const mod = {
 
 		const __url = `${ isPublicFolder ? '/public' : ''}${ _path }`;
 		const target = hold.dataPath(handle, __url);
-		const targetExists = fs.existsSync(target);
+		const targetExists = hold.target.exists({
+			handle,
+			target: _path,
+		});
 		
 		if (req.method === 'PUT' && targetExists && fs.statSync(target).isDirectory())
 			return res.status(409).end();
