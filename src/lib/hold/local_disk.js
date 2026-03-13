@@ -23,8 +23,8 @@ const mod = {
 			exists (params) {
 				return fs.existsSync(this.localPath(params));
 			},
-			isFolder ({ target }) {
-				return fs.statSync(this.localPath(target)).isDirectory();
+			isFolder (params) {
+				return fs.statSync(this.localPath(params)).isDirectory();
 			},
 
 		},
