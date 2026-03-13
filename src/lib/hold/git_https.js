@@ -172,7 +172,7 @@ const mod = {
 			await mod.git(mod.util._clonePath(cloneURL)).commit();
 		},
 
-		async folderItems (handle, _path) {
+		async folderItems ({ handle, target: _path }) {
 			const target = this.dataPath(handle, _path);
 			const _this = this;
 

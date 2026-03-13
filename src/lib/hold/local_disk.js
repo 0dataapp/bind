@@ -72,7 +72,7 @@ const mod = {
 			})));
 		},
 
-		folderItems (handle, _path) {
+		folderItems ({ handle, target: _path }) {
 			const target = mod.middleware.dataPath(handle, _path);
 
 			return fs.readdirSync(target).filter(e => !mod._isIgnored(e)).reduce((coll, item) => {

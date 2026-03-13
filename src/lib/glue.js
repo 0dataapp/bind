@@ -237,7 +237,10 @@ const mod = {
 		if (isFolderRequest)
 			return res.json({
 				'@context': 'http://remotestorage.io/spec/folder-description',
-				items: await hold.folderItems(handle, __url),
+				items: await hold.folderItems({
+					handle,
+					target: __url,
+				}),
 			});
 
 		return res.send(await hold.target.read({
