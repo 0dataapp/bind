@@ -46,6 +46,7 @@ const mod = {
 			fs.writeFileSync(mod.middleware._metaPath(target), JSON.stringify(Object.assign(meta, {
 				ETag: stat.mtime.toJSON(),
 				'Content-Length': Buffer.isBuffer(data) ? data.length : stat.size,
+				'Last-Modified': stat.mtime.toUTCString(),
 			})));
 		},
 

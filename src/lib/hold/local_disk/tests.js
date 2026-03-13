@@ -20,7 +20,7 @@ describe('filesystem', () => {
 			const data = Math.random().toString();
 			const encoding = 'text/plain';
 			const meta = stub.headers(encoding);
-			
+
 			expect(mod.filesystem.put({
 				handle,
 				target,
@@ -36,6 +36,7 @@ describe('filesystem', () => {
 			expect(meta).toEqual(Object.assign(stub.headers(encoding), {
 				ETag: stat.mtime.toJSON(),
 				'Content-Length': stat.size,
+				'Last-Modified': stat.mtime.toUTCString(),
 			}));
 			expect(fs.readFileSync(mod.filesystem._localPath({
 				handle,
@@ -64,6 +65,7 @@ describe('filesystem', () => {
 				'Content-Length': stat.size,
 				'Content-Type': encoding,
 				ETag: stat.mtime.toJSON(),
+				'Last-Modified': stat.mtime.toUTCString(),
 			});
 		});
 
@@ -390,6 +392,7 @@ describe('filesystem', () => {
 				'Content-Length': stat.size,
 				'Content-Type': encoding,
 				ETag: stat.mtime.toJSON(),
+				'Last-Modified': stat.mtime.toUTCString(),
 			});
 		});
 
