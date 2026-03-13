@@ -36,7 +36,7 @@ export const handle = sequence(
     if (!pathname.startsWith(prefix))
       return params.resolve(params.event);
 
-    let hold = local_disk.middleware;
+    let hold = local_disk.filesystem;
 
     const token = glue.util.parseToken(params.event.request.headers.get('authorization'))
     if (token) {
@@ -46,7 +46,7 @@ export const handle = sequence(
         const authorization = await oauth.authorization(handle, token);
 
         if (authorization && authorization.data.depotId !== 'local_custody') {
-          hold = git_https.middleware(await depot.depotURL(authorization.data.depotId));
+          hold = git_https.filesystem(await depot.depotURL(authorization.data.depotId));
         }
       }
     }

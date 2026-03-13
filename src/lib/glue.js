@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 const mod = {
 
 	util: {
@@ -161,23 +159,31 @@ const mod = {
 			return res.status(400).end();
 
 		const __url = `${ isPublicFolder ? '/public' : ''}${ target }`;
-		const targetExists = await hold.target.exists({
+		const targetExists = await hold.exists({
 			handle,
-			target,
+			target: __url,
 		});
-		
-		if (req.method === 'PUT' && targetExists && (await hold.target.isFolder({
+
+		if (req.method === 'PUT' && targetExists && (await hold.isFolder({
 			handle,
-			target,
+			target: __url,
 		})))
 			return res.status(409).end();
 
-		const ancestors = __url.split('/').slice(0, -1).reduce((coll, item) => {
-			return coll.concat(`${ coll.at(-1) || '' }/${ item }`);
-		}, []).map(e => hold.dataPath(handle, e));
-		
+		const ancestors = __url.split('/').slice(1, -1).reduce((coll, item) => {
+			if (coll.at(-1))
+				item = `${ coll.at(-1) || '' }/${ item}`;
+			return coll.concat(`${ item }/`);
+		}, []);
+
 		if (req.method === 'PUT' && !targetExists)
-			if (ancestors.filter(e => fs.existsSync(e) && fs.statSync(e).isFile()).length)
+			if ((await Promise.all(ancestors.slice(1).map(async e => await hold.exists({
+				handle,
+				target: e,
+			}) && (await hold.isFolder({
+				handle,
+				target: e,
+			}))))).filter(e => !!e).length)
 				return res.status(409).end();
 
 		const meta = await hold.meta({
@@ -209,7 +215,6 @@ const mod = {
 				ancestors,
 				meta: Object.assign(meta, {
 					'Content-Type': req.headers['content-type'],
-					'Last-Modified': new Date().toUTCString(),
 				}),
 			});
 
@@ -237,13 +242,13 @@ const mod = {
 		if (isFolderRequest)
 			return res.json({
 				'@context': 'http://remotestorage.io/spec/folder-description',
-				items: await hold.folderItems({
+				items: await hold.list({
 					handle,
 					target: __url,
 				}),
 			});
 
-		return res.send(await hold.target.read({
+		return res.send(await hold.get({
 			handle,
 			target: __url,
 			contentType: meta['Content-Type'],
