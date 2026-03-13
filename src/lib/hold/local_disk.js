@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import util from './util.js';
 
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -21,10 +22,6 @@ const mod = {
 
 		_localPath: ({ handle, target }) => path.join(mod.folder, handle, target),
 		_metaPath: target => `${ target }${ metaSuffix }`,
-		_encoding: contentType => [
-			'application/json',
-			'text',
-		].filter(e => contentType.startsWith(e)).length ? 'utf8' : undefined,
 		_isJunk: e => [
 			'.DS_Store',
 		].includes(path.basename(e)),
@@ -81,7 +78,7 @@ const mod = {
 		},
 
 		get (params) {
-			return fs.readFileSync(this._localPath(params), this._encoding(params.contentType));
+			return fs.readFileSync(this._localPath(params), util.encoding(params.contentType));
 		},
 
 		meta (params) {

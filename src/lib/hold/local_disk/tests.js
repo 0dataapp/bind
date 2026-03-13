@@ -12,22 +12,6 @@ describe('filesystem', () => {
 
 	beforeAll(() => fs.rmSync(testFolder, { recursive: true, force: true }));
 
-	describe('_encoding', () => {
-
-		test('text', () => {
-			expect(mod.filesystem._encoding(`text/${ Math.random().toString() }`)).toBe('utf8');
-		});
-
-		test('application/json', () => {
-			expect(mod.filesystem._encoding('application/json')).toBe('utf8');
-		});
-
-		test('other', () => {
-			expect(mod.filesystem._encoding(Math.random().toString())).toBe(undefined);
-		});
-
-	});
-
 	describe('put', () => {
 
 		test('data', () => {
