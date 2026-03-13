@@ -199,6 +199,12 @@ describe('filesystem', () => {
 				ancestors: ancestors.slice(0, 1),
 				meta: stub.headers('text/plain'),
 			});
+			
+			const meta = mod.filesystem.meta({
+				handle,
+				target: parents[0] + '/',
+			});
+			
 			mod.filesystem.delete({
 				handle,
 				target,
@@ -212,6 +218,10 @@ describe('filesystem', () => {
 			ancestors.forEach((e, i) => {
 				expect(fs.existsSync(e)).toBe(i === 0);
 			});
+			expect(meta.ETag).not.toBe(mod.filesystem.meta({
+				handle,
+				target: parents[0] + '/',
+			}).ETag);
 		});
 
 	});
