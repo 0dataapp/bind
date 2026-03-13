@@ -129,7 +129,7 @@ const mod = {
 
 	remotestorage: ({ hold, getScope }) => async (req, res, next) => {
 		// console.info(req.method, req.url);
-		const [handle, isPublicFolder, _path] = mod.util.parsePathname(req.url);
+		const [handle, isPublicFolder, target] = mod.util.parsePathname(req.url);
 		const token = mod.util.parseToken(req.headers.authorization);
 
 		if (!isPublicFolder && !token)
@@ -145,7 +145,7 @@ const mod = {
 		if (!scope && !isPublicFolder)
 			return res.status(401).send('missing scope');
 
-		const _scope = _path === '/' ? '/' : _path.match(/^\/([^\/]+)/).pop();
+		const _scope = target === '/' ? '/' : target.match(/^\/([^\/]+)/).pop();
 
 		const scopes = !scope ? {
 			// if isPublicFolder, we may not have a token
@@ -160,16 +160,15 @@ const mod = {
 		if (req.method === 'PUT' && req.headers['content-range'])
 			return res.status(400).end();
 
-		const __url = `${ isPublicFolder ? '/public' : ''}${ _path }`;
-		const target = hold.dataPath(handle, __url);
+		const __url = `${ isPublicFolder ? '/public' : ''}${ target }`;
 		const targetExists = await hold.target.exists({
 			handle,
-			target: _path,
+			target,
 		});
 		
 		if (req.method === 'PUT' && targetExists && (await hold.target.isFolder({
 			handle,
-			target: _path,
+			target,
 		})))
 			return res.status(409).end();
 
@@ -202,7 +201,7 @@ const mod = {
 		if (req.method === 'PUT')
 			await hold.put({
 				handle,
-				_path: __url,
+				target: __url,
 				data: req.body,
 				ancestors,
 				meta: Object.assign(meta, {
@@ -214,7 +213,7 @@ const mod = {
 		if (req.method === 'DELETE') {
 			await hold.delete({
 				handle,
-				target: _path,
+				target,
 				ancestors,
 			});
 			return res.status(200).end();
@@ -240,7 +239,7 @@ const mod = {
 
 		return res.send(await hold.target.read({
 			handle,
-			target: _path,
+			target,
 			contentType: meta['Content-Type'],
 		}));
 	},
