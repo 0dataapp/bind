@@ -82,6 +82,9 @@ const mod = {
 			isFolder ({ target }) {
 				return fs.statSync(this.localPath(target)).isDirectory();
 			},
+			read ({ target, contentType }) {
+				return fs.readFileSync(this.localPath(target), contentType.startsWith('application/json') ? 'utf8' : undefined);
+			},
 
 		},
 		

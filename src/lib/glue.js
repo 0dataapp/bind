@@ -234,7 +234,11 @@ const mod = {
 				items: await hold.folderItems(handle, __url),
 			});
 
-		return res.send(fs.readFileSync(target, meta['Content-Type'].startsWith('application/json') ? 'utf8' : undefined));
+		return res.send(await hold.target.read({
+			handle,
+			target: _path,
+			contentType: meta['Content-Type'],
+		}));
 	},
 
 };

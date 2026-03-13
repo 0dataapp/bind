@@ -26,6 +26,9 @@ const mod = {
 			isFolder (params) {
 				return fs.statSync(this.localPath(params)).isDirectory();
 			},
+			read (params) {
+				return fs.readFileSync(this.localPath(params), params.contentType.startsWith('application/json') ? 'utf8' : undefined);
+			},
 
 		},
 
