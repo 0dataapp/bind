@@ -110,6 +110,36 @@ const mod = {
 			await mod.git(mod.util._clonePath(cloneURL)).commit();
 		},
 
+		async list ({ target: _path }) {
+			const target = this._localPath(_path);
+			const _this = this;
+
+			const tree = (await mod.git(mod.util._clonePath(cloneURL)).repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod.util._gitPath(_path))).trim();
+
+			if (!tree.length)
+				return {};
+
+			return Promise.all(tree.split('\n').map(e => {
+				const [type, hash, size, path] = e.split(/\s+/);
+				return {
+					name: type === 'tree' ? `${ path }/` : path,
+					type,
+					hash,
+					size: size === '-' ? null : parseInt(size),
+				};
+			}).map(async e => {
+				const basename = e.name.match(new RegExp(`^${ _path.slice(1) }(.*)`)).pop();
+				return [
+					basename,
+					e.type === 'tree'
+					? { ETag: e.hash }
+					: await _this.meta({
+						target: path.join(_path, basename),
+					}),
+				];
+			})).then(Object.fromEntries);
+		},
+
 		async meta ({ target: _path }) {
 			const target = this._localPath(_path);
 			const stat = fs.statSync(target);
