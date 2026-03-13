@@ -284,4 +284,46 @@ describe('filesystem', () => {
 
 	});
 
+	describe('isFolder', () => {
+
+		test('file', () => {
+			const handle = stub.ulid();
+			const target = stub.basename();
+			const data = Math.random().toString();
+			mod.filesystem.put({
+				handle,
+				target,
+				data,
+				ancestors: [],
+				meta: stub.headers('text/plain'),
+			});
+			expect(mod.filesystem.isFolder({
+				handle,
+				target,
+			})).toBe(false);
+		});
+
+		test('folder', () => {
+			const handle = stub.ulid();
+
+			const parent = stub.ulid();
+			const ancestors = [parent].map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+
+			const target = path.join(parent, stub.basename());
+			const data = Math.random().toString();
+			mod.filesystem.put({
+				handle,
+				target,
+				data,
+				ancestors,
+				meta: stub.headers('text/plain'),
+			});
+			expect(mod.filesystem.isFolder({
+				handle,
+				target: parent,
+			})).toBe(true);
+		});
+
+	});
+
 });

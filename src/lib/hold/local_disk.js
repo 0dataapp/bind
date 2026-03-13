@@ -76,6 +76,10 @@ const mod = {
 			return fs.existsSync(this._localPath(params));
 		},
 
+		isFolder (params) {
+			return fs.statSync(this._localPath(params)).isDirectory();
+		},
+
 	},
 	
 	middleware: {
