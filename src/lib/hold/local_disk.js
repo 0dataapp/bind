@@ -72,6 +72,10 @@ const mod = {
 			})));
 		},
 
+		exists (params) {
+			return fs.existsSync(this._localPath(params));
+		},
+
 	},
 	
 	middleware: {

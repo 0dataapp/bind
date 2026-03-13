@@ -218,4 +218,70 @@ describe('filesystem', () => {
 
 	});
 
+	describe('exists', () => {
+
+		test('file', () => {
+			const handle = stub.ulid();
+			const target = stub.basename();
+			const data = Math.random().toString();
+			mod.filesystem.put({
+				handle,
+				target,
+				data,
+				ancestors: [],
+				meta: stub.headers('text/plain'),
+			});
+			expect(mod.filesystem.exists({
+				handle,
+				target,
+			})).toBe(true);
+		});
+
+		test('folder', () => {
+			const handle = stub.ulid();
+
+			const parent = stub.ulid();
+			const ancestors = [parent].map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+
+			const target = path.join(parent, stub.basename());
+			const data = Math.random().toString();
+			mod.filesystem.put({
+				handle,
+				target,
+				data,
+				ancestors,
+				meta: stub.headers('text/plain'),
+			});
+			expect(mod.filesystem.exists({
+				handle,
+				target: parent,
+			})).toBe(true);
+		});
+
+		test('non-existant', () => {
+			const handle = stub.ulid();
+
+			const parent = stub.ulid();
+			const ancestors = [parent].map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+
+			const data = Math.random().toString();
+			mod.filesystem.put({
+				handle,
+				target: path.join(parent, stub.basename()),
+				data,
+				ancestors,
+				meta: stub.headers('text/plain'),
+			});
+			expect(mod.filesystem.exists({
+				handle,
+				target: path.join(parent, stub.basename()),
+			})).toBe(false);
+			expect(mod.filesystem.exists({
+				handle,
+				target: path.join(parent, `${ stub.basename() }/`),
+			})).toBe(false);
+		});
+
+	});
+
 });
