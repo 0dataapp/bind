@@ -148,7 +148,7 @@ const mod = {
 			});
 		},
 
-		async put ({ handle, _path, data, ancestors, meta }) {
+		async put ({ handle, target: _path, data, ancestors, meta }) {
 			const target = this.dataPath(handle, _path);
 
 			fs.mkdirSync(path.dirname(target), { recursive: true });
