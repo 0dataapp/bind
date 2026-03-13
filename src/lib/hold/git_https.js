@@ -76,7 +76,14 @@ const mod = {
 		dataPath: (handle, url) => path.join(mod.util._clonePath(cloneURL), url),
 		
 		async meta (handle, _path) {
-			const _etag = async (_path, isFolder) => (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? _path.replace(/\/$/, '') : _path)))).trim().split('\n').pop();
+			const target = this.dataPath(handle, _path);
+
+			async function _etag (_path, isFolder) {
+				if (isFolder)
+					return (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? _path.replace(/\/$/, '') : _path)))).trim().split('\n').pop();
+
+				return fs.statSync(target).mtime.toUTCString();
+			};
 
 			async function guessType (data, __path) {
 				function guessJSON (e) {
@@ -106,8 +113,6 @@ const mod = {
 				return mime.getType(__path) || 'text/plain';
 			};
 			
-			const target = this.dataPath(handle, _path);
-
 			if (!fs.existsSync(target))
 				return {};
 
