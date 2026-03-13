@@ -74,7 +74,7 @@ describe('filesystem', () => {
 		test('subfolders', () => {
 			const handle = stub.ulid();
 
-			const length = Math.max(Date.now() % 3, 3);
+			const length = Math.max(Date.now() % 5, 2);
 			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
 				return coll.concat(path.join(coll.at(-1) || '', item));
 			}, []);
