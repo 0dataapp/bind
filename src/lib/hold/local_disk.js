@@ -11,12 +11,43 @@ const folder = path.join(env.DATA_DIRECTORY || __dirname, '__hold/local_disk');
 
 const mod = {
 
+	folder,
+
 	_isIgnored: e => e.endsWith(metaSuffix) || [
 		'.DS_Store',
 	].includes(path.basename(e)),
 
 	filesystem: {
+
+		_localPath: ({ handle, target }) => path.join(mod.folder, handle, target),
+		_metaPath: target => `${ target }${ metaSuffix }`,
 		_encoding: contentType => [
+			'application/json',
+			'text',
+		].filter(e => contentType.startsWith(e)).length ? 'utf8' : undefined,
+		
+		put ({ handle, target: _path, data, ancestors, meta }) {
+			const target = this._localPath({
+				handle,
+				target: _path,
+			});
+
+			fs.mkdirSync(path.dirname(target), { recursive: true });
+			ancestors.forEach(e => {
+				const stat = fs.statSync(e);
+				fs.writeFileSync(mod.middleware._metaPath(e), JSON.stringify({
+					ETag: stat.mtime.toJSON(),
+				}));
+			});
+			
+			fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
+
+			const stat = fs.statSync(target);
+			fs.writeFileSync(mod.middleware._metaPath(target), JSON.stringify(Object.assign(meta, {
+				ETag: stat.mtime.toJSON(),
+				'Content-Length': Buffer.isBuffer(data) ? data.length : stat.size,
+			})));
+		},
 
 	},
 	

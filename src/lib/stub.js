@@ -4,7 +4,15 @@ const mod = {
 
 	random: () => Math.random().toString(36).slice(2),
 	
+	ulid: () => Date.now().toString(36) + mod.random().slice(0, 4),
+	
 	slug: () => mod.random(),
+	
+	basename: () => `${ mod.ulid() }.txt`,
+	
+	headers: contentType => ({
+		'Content-Type': contentType,
+	}),
 	
 	domain: () => `${ mod.slug() }.xyz`,
 	
