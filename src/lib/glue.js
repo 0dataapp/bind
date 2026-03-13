@@ -213,7 +213,7 @@ const mod = {
 		if (req.method === 'DELETE') {
 			await hold.delete({
 				handle,
-				target,
+				target: __url,
 				ancestors,
 			});
 			return res.status(200).end();
@@ -239,7 +239,7 @@ const mod = {
 
 		return res.send(await hold.target.read({
 			handle,
-			target,
+			target: __url,
 			contentType: meta['Content-Type'],
 		}));
 	},
