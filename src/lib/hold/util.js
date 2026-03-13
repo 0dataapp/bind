@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import path from 'path';
 
 const mod = {
 
@@ -8,6 +9,10 @@ const mod = {
 		'application/json',
 		'text',
 	].filter(e => contentType.startsWith(e)).length ? 'utf8' : undefined,
+	
+	isJunk: e => [
+		'.DS_Store',
+	].includes(path.basename(e)),
 
 };
 

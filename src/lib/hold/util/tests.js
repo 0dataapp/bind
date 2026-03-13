@@ -27,3 +27,16 @@ describe('encoding', () => {
 	});
 
 });
+
+describe('isJunk', () => {
+
+	test('.DS_Store', () => {
+		expect(mod.isJunk('.DS_Store')).toBe(true);
+		expect(mod.isJunk(`${ stub.ulid() }/.DS_Store`)).toBe(true);
+	});
+
+	test('other', () => {
+		expect(mod.isJunk(Math.random().toString())).toBe(false);
+	});
+
+});

@@ -22,9 +22,6 @@ const mod = {
 
 		_localPath: ({ handle, target }) => path.join(mod.folder, handle, target),
 		_metaPath: target => `${ target }${ metaSuffix }`,
-		_isJunk: e => [
-			'.DS_Store',
-		].includes(path.basename(e)),
 		
 		put ({ handle, target: _path, data, ancestors, meta }) {
 			const target = this._localPath({
@@ -59,7 +56,7 @@ const mod = {
 			fs.unlinkSync(this._metaPath(target));
 
 			ancestors.slice().sort().reverse().forEach(e => {
-				if (fs.readdirSync(e).filter(e => !mod.filesystem._isJunk(e) && (e !== metaSuffix)).length)
+				if (fs.readdirSync(e).filter(e => !util.isJunk(e) && (e !== metaSuffix)).length)
 					return;
 
 				fs.rmSync(e, { recursive: true, force: true })
