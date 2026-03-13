@@ -141,7 +141,7 @@ describe('filesystem', () => {
 			expect(fs.existsSync(mod.filesystem._metaPath(target))).toBe(false);
 		});
 
-		test('subfolders without items', () => {
+		test('parents without items', () => {
 			const handle = stub.ulid();
 
 			const length = Math.max(Date.now() % 5, 2);
@@ -174,7 +174,7 @@ describe('filesystem', () => {
 			});
 		});
 
-		test('subfolders with items', () => {
+		test('parents with items', () => {
 			const handle = stub.ulid();
 
 			const length = Math.max(Date.now() % 5, 2);
