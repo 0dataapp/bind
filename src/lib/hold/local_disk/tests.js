@@ -76,7 +76,7 @@ describe('filesystem', () => {
 			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
 				return coll.concat(path.join(coll.at(-1) || '', item));
 			}, []);
-			const ancestors = parents.map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+			const ancestors = parents.map(e => e + '/');
 
 			const target = path.join(parents.at(-1), stub.basename());
 			const data = Math.random().toString();
@@ -92,6 +92,7 @@ describe('filesystem', () => {
 				target,
 			}), 'utf8')).toEqual(data);
 			ancestors.forEach(e => {
+				e = mod.filesystem._localPath({ handle, target: e });
 				expect(JSON.parse(fs.readFileSync(mod.filesystem._metaPath(e), 'utf8')).ETag.slice(0, -5)).toEqual(fs.statSync(e).mtime.toJSON().slice(0, -5));
 			});
 		});
@@ -148,7 +149,7 @@ describe('filesystem', () => {
 			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
 				return coll.concat(path.join(coll.at(-1) || '', item));
 			}, []);
-			const ancestors = parents.map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+			const ancestors = parents.map(e => e + '/');
 
 			const target = path.join(parents.at(-1), stub.basename());
 			const data = Math.random().toString();
@@ -181,7 +182,7 @@ describe('filesystem', () => {
 			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
 				return coll.concat(path.join(coll.at(-1) || '', item));
 			}, []);
-			const ancestors = parents.map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+			const ancestors = parents.map(e => e + '/');
 
 			const target = path.join(parents.at(-1), stub.basename());
 			const data = Math.random().toString();
@@ -216,6 +217,7 @@ describe('filesystem', () => {
 			}))).toBe(false);
 			expect(fs.existsSync(mod.filesystem._metaPath(target))).toBe(false);
 			ancestors.forEach((e, i) => {
+				e = mod.filesystem._localPath({ handle, target: e });
 				expect(fs.existsSync(e)).toBe(i === 0);
 			});
 			expect(meta.ETag).not.toBe(mod.filesystem.meta({
@@ -260,7 +262,7 @@ describe('filesystem', () => {
 			const handle = stub.ulid();
 
 			const parent = stub.ulid();
-			const ancestors = [parent].map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+			const ancestors = [parent].map(e => e + '/');
 
 			const target = path.join(parent, stub.basename());
 			const data = Math.random().toString();
@@ -307,7 +309,7 @@ describe('filesystem', () => {
 			const handle = stub.ulid();
 
 			const parent = stub.ulid();
-			const ancestors = [parent].map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+			const ancestors = [parent].map(e => e + '/');
 
 			const target = path.join(parent, stub.basename());
 			const data = Math.random().toString();
@@ -328,7 +330,7 @@ describe('filesystem', () => {
 			const handle = stub.ulid();
 
 			const parent = stub.ulid();
-			const ancestors = [parent].map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+			const ancestors = [parent].map(e => e + '/');
 
 			const data = Math.random().toString();
 			mod.filesystem.put({
@@ -373,7 +375,7 @@ describe('filesystem', () => {
 			const handle = stub.ulid();
 
 			const parent = stub.ulid();
-			const ancestors = [parent].map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+			const ancestors = [parent].map(e => e + '/');
 
 			const target = path.join(parent, stub.basename());
 			const data = Math.random().toString();
@@ -468,7 +470,7 @@ describe('filesystem', () => {
 			const handle = stub.ulid();
 
 			const parent = stub.ulid();
-			const ancestors = [parent].map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+			const ancestors = [parent].map(e => e + '/');
 
 			const target = path.join(parent, stub.basename());
 			const data = Math.random().toString();
@@ -482,7 +484,7 @@ describe('filesystem', () => {
 			expect(mod.filesystem.meta({
 				handle,
 				target: parent + '/',
-			}).ETag.slice(0, -5)).toEqual(fs.statSync(ancestors[0]).mtime.toJSON().slice(0, -5));
+			}).ETag.slice(0, -5)).toEqual(fs.statSync(mod.filesystem._localPath({ handle, target: ancestors[0] })).mtime.toJSON().slice(0, -5));
 		});
 
 	});
