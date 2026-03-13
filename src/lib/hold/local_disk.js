@@ -18,6 +18,12 @@ const mod = {
 		'.DS_Store',
 	].includes(path.basename(e)),
 
+	util: {
+
+		isIgnored: e => util.isJunk(e) || e.endsWith(metaSuffix),
+
+	},
+
 	filesystem: {
 
 		_localPath: ({ handle, target }) => path.join(mod.folder, handle, target),
@@ -56,7 +62,7 @@ const mod = {
 			fs.unlinkSync(this._metaPath(target));
 
 			ancestors.slice().sort().reverse().forEach(e => {
-				if (fs.readdirSync(e).filter(e => !util.isJunk(e) && (e !== metaSuffix)).length)
+				if (fs.readdirSync(e).filter(e => !mod.util.isIgnored(e)).length)
 					return;
 
 				fs.rmSync(e, { recursive: true, force: true })
@@ -65,6 +71,26 @@ const mod = {
 			ancestors.filter(e => fs.existsSync(e) && fs.readdirSync(e).filter(e => !mod._isIgnored(e)).length).forEach(e => fs.writeFileSync(this._metaPath(`${ e }/`), JSON.stringify({
 				ETag: mod.middleware._etag(),
 			})));
+		},
+
+		list ({ handle, target: _path }) {
+			const target = this._localPath({
+				handle,
+				target: _path,
+			});
+
+			return fs.readdirSync(target).filter(e => !mod.util.isIgnored(e)).reduce((coll, item) => {
+				let e = path.join(target, item);
+
+				if (fs.statSync(e).isDirectory()) {
+					item += '/';
+					e += '/';
+				}
+
+				return Object.assign(coll, {
+					[item]: JSON.parse(fs.readFileSync(mod.middleware._metaPath(e), 'utf8')),
+				});
+			}, {});
 		},
 
 		exists (params) {

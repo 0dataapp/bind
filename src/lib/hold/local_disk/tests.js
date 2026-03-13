@@ -226,6 +226,64 @@ describe('filesystem', () => {
 
 	});
 
+	describe('list', () => {
+
+		test('file', () => {
+			const handle = stub.ulid();
+			const target = stub.basename();
+			const data = Math.random().toString();
+			const encoding = 'text/plain';
+			mod.filesystem.put({
+				handle,
+				target,
+				data,
+				ancestors: [],
+				meta: stub.headers(encoding),
+			});
+			const _target = mod.filesystem._localPath({
+				handle,
+				target,
+			});
+			const stat = fs.statSync(_target);
+			expect(mod.filesystem.list({
+				handle,
+				target: '/',
+			})).toEqual({
+				[target]: mod.filesystem.meta({
+					handle,
+					target,
+				}),
+			});
+		});
+
+		test('folder', () => {
+			const handle = stub.ulid();
+
+			const parent = stub.ulid();
+			const ancestors = [parent].map(e => mod.filesystem._localPath({ handle, target: e }) + '/');
+
+			const target = path.join(parent, stub.basename());
+			const data = Math.random().toString();
+			mod.filesystem.put({
+				handle,
+				target,
+				data,
+				ancestors,
+				meta: stub.headers('text/plain'),
+			});
+			expect(mod.filesystem.list({
+				handle,
+				target: '/',
+			})).toEqual({
+				[parent + '/']: mod.filesystem.meta({
+					handle,
+					target: parent + '/',
+				}),
+			});
+		});
+
+	});
+
 	describe('exists', () => {
 
 		test('file', () => {
