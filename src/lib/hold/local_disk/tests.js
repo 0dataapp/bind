@@ -47,12 +47,11 @@ describe('filesystem', () => {
 		test('meta', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
-			const data = Math.random().toString();
 			const encoding = 'text/plain';
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs: [],
 				meta: stub.headers(encoding),
 			});
@@ -104,11 +103,10 @@ describe('filesystem', () => {
 		test('data', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
-			const data = Math.random().toString();
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs: [],
 				meta: stub.headers('text/plain'),
 			});
@@ -126,11 +124,10 @@ describe('filesystem', () => {
 		test('meta', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
-			const data = Math.random().toString();
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs: [],
 				meta: stub.headers('text/plain'),
 			});
@@ -152,11 +149,10 @@ describe('filesystem', () => {
 			const breadcrumbs = parents;
 
 			const target = path.join(parents.at(-1), stub.basename());
-			const data = Math.random().toString();
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
@@ -185,11 +181,10 @@ describe('filesystem', () => {
 			const breadcrumbs = parents;
 
 			const target = path.join(parents.at(-1), stub.basename());
-			const data = Math.random().toString();
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
@@ -233,12 +228,11 @@ describe('filesystem', () => {
 		test('file', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
-			const data = Math.random().toString();
 			const encoding = 'text/plain';
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs: [],
 				meta: stub.headers(encoding),
 			});
@@ -265,11 +259,10 @@ describe('filesystem', () => {
 			const breadcrumbs = [parent];
 
 			const target = path.join(parent, stub.basename());
-			const data = Math.random().toString();
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
@@ -291,11 +284,10 @@ describe('filesystem', () => {
 		test('file', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
-			const data = Math.random().toString();
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs: [],
 				meta: stub.headers('text/plain'),
 			});
@@ -312,11 +304,10 @@ describe('filesystem', () => {
 			const breadcrumbs = [parent];
 
 			const target = path.join(parent, stub.basename());
-			const data = Math.random().toString();
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
@@ -336,11 +327,10 @@ describe('filesystem', () => {
 			const parent = stub.ulid();
 			const breadcrumbs = [parent];
 
-			const data = Math.random().toString();
 			mod.filesystem.put({
 				handle,
 				target: path.join(parent, stub.basename()),
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
@@ -361,11 +351,10 @@ describe('filesystem', () => {
 		test('file', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
-			const data = Math.random().toString();
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs: [],
 				meta: stub.headers('text/plain'),
 			});
@@ -382,11 +371,10 @@ describe('filesystem', () => {
 			const breadcrumbs = [parent];
 
 			const target = path.join(parent, stub.basename());
-			const data = Math.random().toString();
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
@@ -445,12 +433,11 @@ describe('filesystem', () => {
 		test('file', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
-			const data = Math.random().toString();
 			const encoding = 'text/plain';
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs: [],
 				meta: stub.headers(encoding),
 			});
@@ -477,11 +464,10 @@ describe('filesystem', () => {
 			const breadcrumbs = [parent];
 
 			const target = path.join(parent, stub.basename());
-			const data = Math.random().toString();
 			mod.filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});

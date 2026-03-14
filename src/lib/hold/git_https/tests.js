@@ -71,10 +71,9 @@ describe('filesystem', () => {
 
 		test('data', async () => {
 			const target = stub.basename();
-			const data = Math.random().toString();
 			await filesystem.put({
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs: [],
 				meta: stub.headers('text/plain'),
 			});
@@ -93,10 +92,9 @@ describe('filesystem', () => {
 			const breadcrumbs = parents.map(e => filesystem._localPath(e));
 
 			const target = path.join(parents.at(-1), stub.basename());
-			const data = Math.random().toString();
 			await filesystem.put({
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
@@ -118,10 +116,9 @@ describe('filesystem', () => {
 			const breadcrumbs = parents.map(e => filesystem._localPath(e));
 
 			const target = path.join(parents.at(-1), stub.basename());
-			const data = Math.random().toString();
 			await filesystem.put({
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
@@ -163,12 +160,11 @@ describe('filesystem', () => {
 		test('file', async () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
-			const data = Math.random().toString();
 			const encoding = 'text/plain';
 			await filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs: [],
 				meta: stub.headers(encoding),
 			});
@@ -193,11 +189,10 @@ describe('filesystem', () => {
 			const breadcrumbs = [parent].map(e => filesystem._localPath(e));
 
 			const target = path.join(parent, stub.basename());
-			const data = Math.random().toString();
 			await filesystem.put({
 				handle,
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
@@ -219,10 +214,9 @@ describe('filesystem', () => {
 
 		test('file', async () => {
 			const target = stub.basename();
-			const data = Math.random().toString();
 			await filesystem.put({
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs: [],
 				meta: stub.headers('text/plain'),
 			});
@@ -236,10 +230,9 @@ describe('filesystem', () => {
 			const breadcrumbs = [parent].map(e => filesystem._localPath(e));
 
 			const target = path.join(parent, stub.basename());
-			const data = Math.random().toString();
 			await filesystem.put({
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
@@ -255,10 +248,9 @@ describe('filesystem', () => {
 			const parent = stub.ulid();
 			const breadcrumbs = [parent].map(e => filesystem._localPath(e));
 
-			const data = Math.random().toString();
 			await filesystem.put({
 				target: path.join(parent, stub.basename()),
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
@@ -276,10 +268,9 @@ describe('filesystem', () => {
 
 		test('file', async () => {
 			const target = stub.basename();
-			const data = Math.random().toString();
 			await filesystem.put({
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs: [],
 				meta: stub.headers('text/plain'),
 			});
@@ -291,10 +282,9 @@ describe('filesystem', () => {
 			const breadcrumbs = [parent].map(e => filesystem._localPath(e));
 
 			const target = path.join(parent, stub.basename());
-			const data = Math.random().toString();
 			await filesystem.put({
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
@@ -345,11 +335,10 @@ describe('filesystem', () => {
 
 		test('file', async () => {
 			const target = stub.basename();
-			const data = Math.random().toString();
 			const encoding = 'text/plain';
 			await filesystem.put({
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs: [],
 				meta: stub.headers(encoding),
 			});
@@ -368,10 +357,9 @@ describe('filesystem', () => {
 			const breadcrumbs = [parent].map(e => filesystem._localPath(e));
 
 			const target = path.join(parent, stub.basename());
-			const data = Math.random().toString();
 			await filesystem.put({
 				target,
-				data,
+				data: Math.random().toString(),
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
