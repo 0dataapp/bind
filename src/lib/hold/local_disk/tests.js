@@ -494,3 +494,29 @@ describe('filesystem', () => {
 	});
 
 });
+
+describe('hold', () => {
+
+	test('erase', () => {
+		const handle = stub.ulid();
+		const target = stub.basename();
+		mod.filesystem.put({
+			handle,
+			target,
+			data: Math.random().toString(),
+			breadcrumbs: [],
+			meta: stub.headers('text/plain'),
+		});
+		expect(() => mod.hold.erase('')).toThrow('username blank');
+		expect(fs.existsSync(mod.util.localPath({
+			handle,
+			target,
+		}))).toBe(true);
+		expect(mod.hold.erase(handle)).toBe(undefined);
+		expect(fs.existsSync(mod.util.localPath({
+			handle,
+			target: '/',
+		}))).toBe(false);
+	});
+
+});

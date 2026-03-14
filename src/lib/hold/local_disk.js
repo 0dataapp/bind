@@ -132,7 +132,10 @@ const mod = {
 
 		startup () {},
 		
-		erase: handle => fs.rmSync(mod.middleware.dataPath(handle, '/'), { recursive: true, force: true }),
+		erase: handle => handle ? fs.rmSync(mod.util.localPath({
+			handle,
+			target: '/',
+		}), { recursive: true, force: true }) : (function () { throw new Error('username blank') })(),
 
 	},
 	
