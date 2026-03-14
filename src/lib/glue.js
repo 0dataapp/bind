@@ -199,11 +199,16 @@ const mod = {
 			))
 			return res.status(412).end();
 
-		if (['HEAD', 'GET', 'DELETE'].includes(req.method) && !exists)
-			return isFolderRequest ? res.status(200).json({
+		const listResponse = {
 			'@context': 'http://remotestorage.io/spec/folder-description',
-				items: {},
-			}) : res.status(404).send('Not found');
+			items: {},
+		};
+
+		if (isFolderRequest)
+			meta['Content-Type'] = 'application/ld+json';
+
+		if (['HEAD', 'GET', 'DELETE'].includes(req.method) && !exists)
+			return isFolderRequest ? res.set(meta).status(200).json(listResponse) : res.status(404).send('Not found');
 
 		if (req.method === 'GET' && exists && req.headers['if-none-match'] && req.headers['if-none-match'].split(',').map(mod.util.tidyEtag).includes(meta.ETag))
 			return res.status(304).end();
@@ -232,10 +237,7 @@ const mod = {
 			return res.set({
 				ETag: meta['ETag'],
 			}).status(200).end();
-		} 
-
-		if (isFolderRequest)
-			meta['Content-Type'] = 'application/ld+json';
+		}
 		
 		res
 			.set(meta)
@@ -245,13 +247,12 @@ const mod = {
 			return res.end();
 
 		if (isFolderRequest)
-			return res.json({
-				'@context': 'http://remotestorage.io/spec/folder-description',
+			return res.json(Object.assign(listResponse, {
 				items: await hold.list({
 					handle,
 					target,
 				}),
-			});
+			}));
 
 		return res.send(await hold.get({
 			handle,
