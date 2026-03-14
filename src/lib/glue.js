@@ -177,22 +177,20 @@ const mod = {
 			return coll.concat(item);
 		}, []);
 
-		if (req.method === 'PUT' && !targetExists)
-			if (await Promise.all(ancestors.slice(1).map(async e => {
-				const exists = await hold.exists({
+		if (req.method === 'PUT' && await Promise.all(ancestors.slice(1).map(async e => {
+			const exists = await hold.exists({
+				handle,
+				target: e,
+			});
+			return {
+				exists,
+				isFolder: exists && await hold.isFolder({
 					handle,
 					target: e,
-				});
-				return {
-					crumb: e,
-					exists,
-					isFolder: exists && await hold.isFolder({
-						handle,
-						target: e,
-					}),
-				};
-			})).then(e => e.filter(e => e.exists && !e.isFolder).length))
-				return res.status(409).end();
+				}),
+			};
+		})).then(e => e.filter(e => e.exists && !e.isFolder).length))
+			return res.status(409).end();
 
 		const meta = await hold.meta({
 			handle,
