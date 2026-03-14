@@ -246,6 +246,9 @@ describe('filesystem', () => {
 			expect(filesystem.exists({
 				target: parent,
 			})).toBe(true);
+			expect(filesystem.exists({
+				target: parent + '/',
+			})).toBe(true);
 		});
 
 		test('non-existant', async () => {
