@@ -127,7 +127,7 @@ const mod = {
 
 	remotestorage: ({ hold, getScope }) => async (req, res, next) => {
 		// console.info(req.method, req.url);
-		const [handle, isPublicFolder, target] = mod.util.parsePathname(req.url);
+		const [handle, isPublicFolder, relative] = mod.util.parsePathname(req.url);
 		const token = mod.util.parseToken(req.headers.authorization);
 
 		if (!isPublicFolder && !token)
@@ -143,7 +143,7 @@ const mod = {
 		if (!scope && !isPublicFolder)
 			return res.status(401).send('missing scope');
 
-		const _scope = target === '/' ? '/' : target.match(/^\/([^\/]+)/).pop();
+		const _scope = relative === '/' ? '/' : relative.match(/^\/([^\/]+)/).pop();
 
 		const scopes = !scope ? {
 			// if isPublicFolder, we may not have a token
@@ -158,38 +158,38 @@ const mod = {
 		if (req.method === 'PUT' && req.headers['content-range'])
 			return res.status(400).end();
 
-		const __url = `${ isPublicFolder ? '/public' : ''}${ target }`;
+		const target = `${ isPublicFolder ? '/public' : ''}${ relative }`;
 		const exists = await hold.exists({
 			handle,
-			target: __url,
+			target,
 		});
 
-		const _breadcrumbs = __url.split('/').slice(1).reduce((coll, item) => {
+		const _breadcrumbs = target.split('/').slice(1).reduce((coll, item) => {
 			if (coll.at(-1))
 				item = `${ coll.at(-1) || '' }/${ item }`;
 
 			return coll.concat(item);
 		}, []);
 
-		if (req.method === 'PUT' && await Promise.all(_breadcrumbs.slice(1).map(async e => {
+		if (req.method === 'PUT' && await Promise.all(_breadcrumbs.slice(1).map(async target => {
 			const exists = await hold.exists({
 				handle,
-				target: e,
+				target,
 			});
 			return {
-				path: e,
+				target,
 				exists,
 				isFolder: exists && await hold.isFolder({
 					handle,
-					target: e,
+					target,
 				}),
 			};
-		})).then(e => e.filter(e => e.exists && (`/${ e.path }` === __url ? e.isFolder : !e.isFolder)).length))
+		})).then(e => e.filter(e => e.exists && (`/${ e.target }` === target ? e.isFolder : !e.isFolder)).length))
 			return res.status(409).end();
 
 		const meta = await hold.meta({
 			handle,
-			target: __url,
+			target,
 		});
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
@@ -213,7 +213,7 @@ const mod = {
 		if (req.method === 'PUT')
 			await hold.put({
 				handle,
-				target: __url,
+				target,
 				data: req.body,
 				breadcrumbs,
 				meta: Object.assign(meta, {
@@ -226,7 +226,7 @@ const mod = {
 		if (req.method === 'DELETE') {
 			await hold.delete({
 				handle,
-				target: __url,
+				target,
 				breadcrumbs,
 			});
 			return res.set({
@@ -249,13 +249,13 @@ const mod = {
 				'@context': 'http://remotestorage.io/spec/folder-description',
 				items: await hold.list({
 					handle,
-					target: __url,
+					target,
 				}),
 			});
 
 		return res.send(await hold.get({
 			handle,
-			target: __url,
+			target,
 			contentType: meta['Content-Type'],
 		}));
 	},
