@@ -144,6 +144,12 @@ const mod = {
 
 		async meta ({ target: _path }) {
 			const target = this._localPath(_path);
+			
+			if (!fs.existsSync(target))
+				return {
+					ETag: 'empty',
+				};
+
 			const stat = fs.statSync(target);
 
 			async function guessType (data, __path) {
@@ -174,9 +180,6 @@ const mod = {
 				return mime.getType(__path) || 'text/plain';
 			};
 			
-			if (!fs.existsSync(target))
-				return {};
-
 			const isFolder = fs.statSync(target).isDirectory();
 
 			const meta = {
