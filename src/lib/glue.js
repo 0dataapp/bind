@@ -164,32 +164,27 @@ const mod = {
 			target: __url,
 		});
 
-		if (req.method === 'PUT' && targetExists && (await hold.isFolder({
-			handle,
-			target: __url,
-		})))
-			return res.status(409).end();
-
-		const breadcrumbs = __url.split('/').slice(1, -1).reduce((coll, item) => {
+		const _breadcrumbs = __url.split('/').slice(1).reduce((coll, item) => {
 			if (coll.at(-1))
 				item = `${ coll.at(-1) || '' }/${ item }`;
 
 			return coll.concat(item);
 		}, []);
 
-		if (req.method === 'PUT' && await Promise.all(breadcrumbs.slice(1).map(async e => {
+		if (req.method === 'PUT' && await Promise.all(_breadcrumbs.slice(1).map(async e => {
 			const exists = await hold.exists({
 				handle,
 				target: e,
 			});
 			return {
+				path: e,
 				exists,
 				isFolder: exists && await hold.isFolder({
 					handle,
 					target: e,
 				}),
 			};
-		})).then(e => e.filter(e => e.exists && !e.isFolder).length))
+		})).then(e => e.filter(e => e.exists && (`/${ e.path }` === __url ? e.isFolder : !e.isFolder)).length))
 			return res.status(409).end();
 
 		const meta = await hold.meta({
@@ -212,6 +207,8 @@ const mod = {
 
 		if (req.method === 'GET' && targetExists && req.headers['if-none-match'] && req.headers['if-none-match'].split(',').map(mod.util.tidyEtag).includes(meta.ETag))
 			return res.status(304).end();
+
+		const breadcrumbs = _breadcrumbs.slice(0, -1);
 
 		if (req.method === 'PUT')
 			await hold.put({
