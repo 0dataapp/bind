@@ -104,6 +104,8 @@ const mod = {
 			fs.unlinkSync(target);
 
 			breadcrumbs.slice().sort().reverse().forEach(e => {
+				e = this._localPath(e);
+
 				if (fs.readdirSync(e).filter(e => !util.isJunk(e)).length)
 					return;
 
