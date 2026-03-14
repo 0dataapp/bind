@@ -17,24 +17,24 @@ const mod = {
 	util: {
 
 		isIgnored: e => util.isJunk(e) || e.endsWith(metaSuffix),
+		localPath: ({ handle, target }) => path.join(mod.folder, handle, target),
 
 	},
 
 	filesystem: {
 
-		_localPath: ({ handle, target }) => path.join(mod.folder, handle, target),
 		_metaPath: target => `${ target }${ metaSuffix }`,
 		_etag: () => (new Date()).toUTCString(),
 		
 		put ({ handle, target: _path, data, breadcrumbs, meta }) {
-			const target = this._localPath({
+			const target = mod.util.localPath({
 				handle,
 				target: _path,
 			});
 
 			fs.mkdirSync(path.dirname(target), { recursive: true });
 			breadcrumbs.forEach(e => {
-				e = this._localPath({
+				e = mod.util.localPath({
 					handle,
 					target: e,
 				}) + '/';
@@ -56,7 +56,7 @@ const mod = {
 		},
 
 		delete ({ handle, target: _path, breadcrumbs }) {
-			const target = this._localPath({
+			const target = mod.util.localPath({
 				handle,
 				target: _path,
 			});
@@ -64,7 +64,7 @@ const mod = {
 			fs.unlinkSync(this._metaPath(target));
 
 			breadcrumbs.slice().sort().reverse().forEach(e => {
-				e = this._localPath({
+				e = mod.util.localPath({
 					handle,
 					target: e,
 				});
@@ -75,7 +75,7 @@ const mod = {
 				fs.rmSync(e, { recursive: true, force: true })
 			});
 
-			breadcrumbs.map(e => this._localPath({
+			breadcrumbs.map(e => mod.util.localPath({
 				handle,
 				target: e,
 			})).filter(e => fs.existsSync(e) && fs.readdirSync(e).filter(e => !mod.util.isIgnored(e)).length).forEach(e => fs.writeFileSync(this._metaPath(`${ e }/`), JSON.stringify({
@@ -84,7 +84,7 @@ const mod = {
 		},
 
 		list ({ handle, target: _path }) {
-			const target = this._localPath({
+			const target = mod.util.localPath({
 				handle,
 				target: _path,
 			});
@@ -104,19 +104,19 @@ const mod = {
 		},
 
 		exists (params) {
-			return fs.existsSync(this._localPath(params));
+			return fs.existsSync(mod.util.localPath(params));
 		},
 
 		isFolder (params) {
-			return fs.statSync(this._localPath(params)).isDirectory();
+			return fs.statSync(mod.util.localPath(params)).isDirectory();
 		},
 
 		get (params) {
-			return fs.readFileSync(this._localPath(params), util.encoding(params.contentType));
+			return fs.readFileSync(mod.util.localPath(params), util.encoding(params.contentType));
 		},
 
 		meta (params) {
-			const target = this._localPath(params);
+			const target = mod.util.localPath(params);
 
 			if (!fs.existsSync(target) || !fs.existsSync(this._metaPath(target)))
 				return {

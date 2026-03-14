@@ -29,7 +29,7 @@ describe('filesystem', () => {
 				meta,
 			})).toBe(undefined);
 
-			const stat = fs.statSync(mod.filesystem._localPath({
+			const stat = fs.statSync(mod.util.localPath({
 				handle,
 				target,
 			}));
@@ -38,7 +38,7 @@ describe('filesystem', () => {
 				'Content-Length': stat.size,
 				'Last-Modified': stat.mtime.toUTCString(),
 			}));
-			expect(fs.readFileSync(mod.filesystem._localPath({
+			expect(fs.readFileSync(mod.util.localPath({
 				handle,
 				target,
 			}), 'utf8')).toEqual(data);
@@ -56,7 +56,7 @@ describe('filesystem', () => {
 				breadcrumbs: [],
 				meta: stub.headers(encoding),
 			});
-			const _target = mod.filesystem._localPath({
+			const _target = mod.util.localPath({
 				handle,
 				target,
 			});
@@ -87,12 +87,12 @@ describe('filesystem', () => {
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
-			expect(fs.readFileSync(mod.filesystem._localPath({
+			expect(fs.readFileSync(mod.util.localPath({
 				handle,
 				target,
 			}), 'utf8')).toEqual(data);
 			breadcrumbs.forEach(e => {
-				e = mod.filesystem._localPath({ handle, target: e }) + '/';
+				e = mod.util.localPath({ handle, target: e }) + '/';
 				expect(JSON.parse(fs.readFileSync(mod.filesystem._metaPath(e), 'utf8')).ETag.slice(0, -5)).toEqual(fs.statSync(e).mtime.toJSON().slice(0, -5));
 			});
 		});
@@ -117,7 +117,7 @@ describe('filesystem', () => {
 				target,
 				breadcrumbs: [],
 			})).toBe(undefined);
-			expect(fs.existsSync(mod.filesystem._localPath({
+			expect(fs.existsSync(mod.util.localPath({
 				handle,
 				target,
 			}))).toBe(false);
@@ -165,7 +165,7 @@ describe('filesystem', () => {
 				target,
 				breadcrumbs,
 			});
-			expect(fs.existsSync(mod.filesystem._localPath({
+			expect(fs.existsSync(mod.util.localPath({
 				handle,
 				target,
 			}))).toBe(false);
@@ -211,13 +211,13 @@ describe('filesystem', () => {
 				target,
 				breadcrumbs,
 			});
-			expect(fs.existsSync(mod.filesystem._localPath({
+			expect(fs.existsSync(mod.util.localPath({
 				handle,
 				target,
 			}))).toBe(false);
 			expect(fs.existsSync(mod.filesystem._metaPath(target))).toBe(false);
 			breadcrumbs.forEach((e, i) => {
-				e = mod.filesystem._localPath({ handle, target: e });
+				e = mod.util.localPath({ handle, target: e });
 				expect(fs.existsSync(e)).toBe(i === 0);
 			});
 			expect(meta.ETag).not.toBe(mod.filesystem.meta({
@@ -242,7 +242,7 @@ describe('filesystem', () => {
 				breadcrumbs: [],
 				meta: stub.headers(encoding),
 			});
-			const _target = mod.filesystem._localPath({
+			const _target = mod.util.localPath({
 				handle,
 				target,
 			});
@@ -454,7 +454,7 @@ describe('filesystem', () => {
 				breadcrumbs: [],
 				meta: stub.headers(encoding),
 			});
-			const _target = mod.filesystem._localPath({
+			const _target = mod.util.localPath({
 				handle,
 				target,
 			});
@@ -488,7 +488,7 @@ describe('filesystem', () => {
 			expect(mod.filesystem.meta({
 				handle,
 				target: parent + '/',
-			}).ETag.slice(0, -5)).toEqual(fs.statSync(mod.filesystem._localPath({ handle, target: breadcrumbs[0] })).mtime.toJSON().slice(0, -5));
+			}).ETag.slice(0, -5)).toEqual(fs.statSync(mod.util.localPath({ handle, target: breadcrumbs[0] })).mtime.toJSON().slice(0, -5));
 		});
 
 	});
