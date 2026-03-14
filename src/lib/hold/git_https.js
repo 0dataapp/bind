@@ -227,7 +227,7 @@ const mod = {
 			setInterval(mod.sync.pull, pollSeconds * 1000);
 		},
 
-		erase: id => fs.rmSync(mod.util._clonePath(id), { recursive: true, force: true }),
+		erase: id => id ? fs.rmSync(mod.util._clonePath(id), { recursive: true, force: true }) : (function () { throw new Error('url blank') })(),
 
 		async _prepare (id, url) {
 			const target = mod.util._clonePath(id);

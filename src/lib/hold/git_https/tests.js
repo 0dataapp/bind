@@ -384,3 +384,21 @@ describe('filesystem', () => {
 	});
 
 });
+
+describe('hold', () => {
+
+	test('erase', async () => {
+		const target = stub.basename();
+		await filesystem.put({
+			target,
+			data: Math.random().toString(),
+			breadcrumbs: [],
+			meta: stub.headers('text/plain'),
+		});
+		expect(() => mod.hold.erase('')).toThrow('url blank');
+		expect(fs.existsSync(filesystem._localPath(target))).toBe(true);
+		expect(mod.hold.erase(cloneURL)).toBe(undefined);
+		expect(fs.existsSync(filesystem._localPath('/'))).toBe(false);
+	});
+
+});
