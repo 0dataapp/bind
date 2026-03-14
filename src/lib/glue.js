@@ -159,7 +159,7 @@ const mod = {
 			return res.status(400).end();
 
 		const __url = `${ isPublicFolder ? '/public' : ''}${ target }`;
-		const targetExists = await hold.exists({
+		const exists = await hold.exists({
 			handle,
 			target: __url,
 		});
@@ -193,19 +193,19 @@ const mod = {
 		});
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
-			!targetExists && req.headers['if-match']
-			|| targetExists && req.headers['if-match'] && mod.util.tidyEtag(req.headers['if-match']) !== meta.ETag
-			|| targetExists && req.headers['if-none-match']
+			!exists && req.headers['if-match']
+			|| exists && req.headers['if-match'] && mod.util.tidyEtag(req.headers['if-match']) !== meta.ETag
+			|| exists && req.headers['if-none-match']
 			))
 			return res.status(412).end();
 
-		if (['HEAD', 'GET', 'DELETE'].includes(req.method) && !targetExists)
+		if (['HEAD', 'GET', 'DELETE'].includes(req.method) && !exists)
 			return isFolderRequest ? res.status(200).json({
 			'@context': 'http://remotestorage.io/spec/folder-description',
 				items: {},
 			}) : res.status(404).send('Not found');
 
-		if (req.method === 'GET' && targetExists && req.headers['if-none-match'] && req.headers['if-none-match'].split(',').map(mod.util.tidyEtag).includes(meta.ETag))
+		if (req.method === 'GET' && exists && req.headers['if-none-match'] && req.headers['if-none-match'].split(',').map(mod.util.tidyEtag).includes(meta.ETag))
 			return res.status(304).end();
 
 		const breadcrumbs = _breadcrumbs.slice(0, -1);
