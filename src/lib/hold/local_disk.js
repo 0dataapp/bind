@@ -24,7 +24,7 @@ const mod = {
 	filesystem: {
 
 		_metaPath: target => `${ target }${ metaSuffix }`,
-		_etag: () => (new Date()).toUTCString(),
+		_etag: () => (new Date()).toJSON(),
 		
 		put ({ handle, target: _path, data, breadcrumbs, meta }) {
 			const target = mod.util.localPath({
