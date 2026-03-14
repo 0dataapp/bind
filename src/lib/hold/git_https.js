@@ -49,6 +49,10 @@ const mod = {
 		const repo = simpleGit(path, {
 			maxConcurrentProcesses: 10,
 			trimmed: true,
+			config: [
+				`user.name=${ env.GIT_CONFIG_NAME || 'Unknown' }`,
+				`user.email=${ env.GIT_CONFIG_EMAIL || 'noreply@example.com' }`,
+			],
 		});
 
 		return {
@@ -58,9 +62,6 @@ const mod = {
 			_init: () => repo.init(),
 
 			commit: direct => {
-				repo.addConfig('user.name', env.GIT_CONFIG_NAME || 'Unknown');
-				repo.addConfig('user.email', env.GIT_CONFIG_EMAIL || 'noreply@example.com');
-
 				if (direct)
 					return repo.add('./*').commit('sync');
 
