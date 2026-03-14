@@ -37,7 +37,7 @@ const mod = {
 				e = this._localPath({
 					handle,
 					target: e,
-				});
+				}) + '/';
 
 				const stat = fs.statSync(e);
 				fs.writeFileSync(this._metaPath(e), JSON.stringify({

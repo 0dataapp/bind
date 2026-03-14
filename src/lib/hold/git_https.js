@@ -78,7 +78,7 @@ const mod = {
 
 		_localPath: _path => path.join(mod.util._clonePath(cloneURL), _path),
 		
-		async put ({ target: _path, data, ancestors, meta }) {
+		async put ({ target: _path, data, meta }) {
 			const target = this._localPath(_path);
 
 			fs.mkdirSync(path.dirname(target), { recursive: true });

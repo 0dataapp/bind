@@ -172,8 +172,9 @@ const mod = {
 
 		const ancestors = __url.split('/').slice(1, -1).reduce((coll, item) => {
 			if (coll.at(-1))
-				item = `${ coll.at(-1) || '' }/${ item}`;
-			return coll.concat(`${ item }/`);
+				item = `${ coll.at(-1) || '' }/${ item }`;
+
+			return coll.concat(item);
 		}, []);
 
 		if (req.method === 'PUT' && !targetExists)

@@ -52,7 +52,7 @@ describe('filesystem', () => {
 			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
 				return coll.concat(path.join(coll.at(-1) || '', item));
 			}, []);
-			const ancestors = parents.map(e => filesystem._localPath(e) + '/');
+			const ancestors = parents.map(e => filesystem._localPath(e));
 
 			const target = path.join(parents.at(-1), stub.basename());
 			const data = Math.random().toString();
@@ -90,7 +90,7 @@ describe('filesystem', () => {
 			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
 				return coll.concat(path.join(coll.at(-1) || '', item));
 			}, []);
-			const ancestors = parents.map(e => filesystem._localPath(e) + '/');
+			const ancestors = parents.map(e => filesystem._localPath(e));
 
 			const target = path.join(parents.at(-1), stub.basename());
 			const data = Math.random().toString();
@@ -115,7 +115,7 @@ describe('filesystem', () => {
 			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
 				return coll.concat(path.join(coll.at(-1) || '', item));
 			}, []);
-			const ancestors = parents.map(e => filesystem._localPath(e) + '/');
+			const ancestors = parents.map(e => filesystem._localPath(e));
 
 			const target = path.join(parents.at(-1), stub.basename());
 			const data = Math.random().toString();
@@ -190,7 +190,7 @@ describe('filesystem', () => {
 			const handle = stub.ulid();
 
 			const parent = stub.ulid();
-			const ancestors = [parent].map(e => filesystem._localPath(e) + '/');
+			const ancestors = [parent].map(e => filesystem._localPath(e));
 
 			const target = path.join(parent, stub.basename());
 			const data = Math.random().toString();
@@ -233,7 +233,7 @@ describe('filesystem', () => {
 
 		test('folder', async () => {
 			const parent = stub.ulid();
-			const ancestors = [parent].map(e => filesystem._localPath(e) + '/');
+			const ancestors = [parent].map(e => filesystem._localPath(e));
 
 			const target = path.join(parent, stub.basename());
 			const data = Math.random().toString();
@@ -250,7 +250,7 @@ describe('filesystem', () => {
 
 		test('non-existant', async () => {
 			const parent = stub.ulid();
-			const ancestors = [parent].map(e => filesystem._localPath(e) + '/');
+			const ancestors = [parent].map(e => filesystem._localPath(e));
 
 			const data = Math.random().toString();
 			await filesystem.put({
@@ -285,7 +285,7 @@ describe('filesystem', () => {
 
 		test('folder', async () => {
 			const parent = stub.ulid();
-			const ancestors = [parent].map(e => filesystem._localPath(e) + '/');
+			const ancestors = [parent].map(e => filesystem._localPath(e));
 
 			const target = path.join(parent, stub.basename());
 			const data = Math.random().toString();
@@ -362,7 +362,7 @@ describe('filesystem', () => {
 
 		test('folder', async () => {
 			const parent = stub.ulid();
-			const ancestors = [parent].map(e => filesystem._localPath(e) + '/');
+			const ancestors = [parent].map(e => filesystem._localPath(e));
 
 			const target = path.join(parent, stub.basename());
 			const data = Math.random().toString();
