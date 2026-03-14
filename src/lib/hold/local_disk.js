@@ -26,14 +26,14 @@ const mod = {
 		_metaPath: target => `${ target }${ metaSuffix }`,
 		_etag: () => (new Date()).toUTCString(),
 		
-		put ({ handle, target: _path, data, ancestors, meta }) {
+		put ({ handle, target: _path, data, breadcrumbs, meta }) {
 			const target = this._localPath({
 				handle,
 				target: _path,
 			});
 
 			fs.mkdirSync(path.dirname(target), { recursive: true });
-			ancestors.forEach(e => {
+			breadcrumbs.forEach(e => {
 				e = this._localPath({
 					handle,
 					target: e,
@@ -55,7 +55,7 @@ const mod = {
 			})));
 		},
 
-		delete ({ handle, target: _path, ancestors }) {
+		delete ({ handle, target: _path, breadcrumbs }) {
 			const target = this._localPath({
 				handle,
 				target: _path,
@@ -63,7 +63,7 @@ const mod = {
 			fs.unlinkSync(target);
 			fs.unlinkSync(this._metaPath(target));
 
-			ancestors.slice().sort().reverse().forEach(e => {
+			breadcrumbs.slice().sort().reverse().forEach(e => {
 				e = this._localPath({
 					handle,
 					target: e,
@@ -75,7 +75,7 @@ const mod = {
 				fs.rmSync(e, { recursive: true, force: true })
 			});
 
-			ancestors.map(e => this._localPath({
+			breadcrumbs.map(e => this._localPath({
 				handle,
 				target: e,
 			})).filter(e => fs.existsSync(e) && fs.readdirSync(e).filter(e => !mod.util.isIgnored(e)).length).forEach(e => fs.writeFileSync(this._metaPath(`${ e }/`), JSON.stringify({

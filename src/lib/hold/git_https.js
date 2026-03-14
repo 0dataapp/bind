@@ -92,11 +92,11 @@ const mod = {
 			}));
 		},
 
-		async delete ({ target: _path, ancestors }) {
+		async delete ({ target: _path, breadcrumbs }) {
 			const target = this._localPath(_path);
 			fs.unlinkSync(target);
 
-			ancestors.slice().sort().reverse().forEach(e => {
+			breadcrumbs.slice().sort().reverse().forEach(e => {
 				if (fs.readdirSync(e).filter(e => !util.isJunk(e)).length)
 					return;
 

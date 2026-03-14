@@ -170,14 +170,14 @@ const mod = {
 		})))
 			return res.status(409).end();
 
-		const ancestors = __url.split('/').slice(1, -1).reduce((coll, item) => {
+		const breadcrumbs = __url.split('/').slice(1, -1).reduce((coll, item) => {
 			if (coll.at(-1))
 				item = `${ coll.at(-1) || '' }/${ item }`;
 
 			return coll.concat(item);
 		}, []);
 
-		if (req.method === 'PUT' && await Promise.all(ancestors.slice(1).map(async e => {
+		if (req.method === 'PUT' && await Promise.all(breadcrumbs.slice(1).map(async e => {
 			const exists = await hold.exists({
 				handle,
 				target: e,
@@ -218,7 +218,7 @@ const mod = {
 				handle,
 				target: __url,
 				data: req.body,
-				ancestors,
+				breadcrumbs,
 				meta: Object.assign(meta, {
 					'Content-Type': req.headers['content-type'],
 				}),
@@ -230,7 +230,7 @@ const mod = {
 			await hold.delete({
 				handle,
 				target: __url,
-				ancestors,
+				breadcrumbs,
 			});
 			return res.set({
 				ETag: meta['ETag'],
