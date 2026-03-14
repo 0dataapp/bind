@@ -118,7 +118,7 @@ const mod = {
 				rel: 'http://tools.ietf.org/id/draft-dejong-remotestorage',
 				href: `${ base }${ await storagePath(handle) }`,
 				properties: {
-					'http://remotestorage.io/spec/version': 'draft-dejong-remotestorage-11',
+					'http://remotestorage.io/spec/version': 'draft-dejong-remotestorage-13',
 					'http://tools.ietf.org/html/rfc6749#section-4.2': `${ base }${ authPath }`,
 				},
 			}],
@@ -178,13 +178,20 @@ const mod = {
 		}, []);
 
 		if (req.method === 'PUT' && !targetExists)
-			if ((await Promise.all(ancestors.slice(1).map(async e => await hold.exists({
-				handle,
-				target: e,
-			}) && (await hold.isFolder({
-				handle,
-				target: e,
-			}))))).filter(e => !!e).length)
+			if (await Promise.all(ancestors.slice(1).map(async e => {
+				const exists = await hold.exists({
+					handle,
+					target: e,
+				});
+				return {
+					crumb: e,
+					exists,
+					isFolder: exists && await hold.isFolder({
+						handle,
+						target: e,
+					}),
+				};
+			})).then(e => e.filter(e => e.exists && !e.isFolder).length))
 				return res.status(409).end();
 
 		const meta = await hold.meta({
