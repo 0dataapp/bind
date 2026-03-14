@@ -218,20 +218,22 @@ const mod = {
 				}),
 			});
 
+		meta['ETag'] = `"${ meta['ETag'] }"`;
+
 		if (req.method === 'DELETE') {
 			await hold.delete({
 				handle,
 				target: __url,
 				ancestors,
 			});
-			return res.status(200).end();
+			return res.set({
+				ETag: meta['ETag'],
+			}).status(200).end();
 		} 
 
 		if (isFolderRequest)
 			meta['Content-Type'] = 'application/ld+json';
 		
-		meta['ETag'] = `"${ meta['ETag'] }"`;
-
 		res
 			.set(meta)
 			.status(200);
