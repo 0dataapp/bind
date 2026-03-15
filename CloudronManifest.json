@@ -1,6 +1,6 @@
 {
   "title": "Bind",
-  "tagline": "Git personal data store for web apps.",
+  "tagline": "Git-backed web apps.",
   "version": "0.0.1",
   "healthCheckPath": "/",
   "httpPort": 3000,

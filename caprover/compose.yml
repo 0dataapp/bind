@@ -11,5 +11,5 @@ caproverOneClickApp:
   instructions:
     end: Bind is deployed and available as $$cap_appname. 
   displayName: Bind
-  description: Git personal data store for web apps.
+  description: Git-backed web apps.
   documentation: See documentation for details https://bind.0data.app

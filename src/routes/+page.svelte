@@ -1,4 +1,4 @@
-<p>Git personal data store for web apps.</p>
+<p>Git-backed web apps.</p>
 
 <p>
 	<a class="login" href="/login" role="button">Sign in</a>
