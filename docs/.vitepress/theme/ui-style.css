@@ -1,5 +1,6 @@
 :root {
   --vp-c-bg: var(--zd-bg-main);
+  --vp-c-bg-alt: var(--zd-bg-main);
   --vp-sidebar-bg-color: var(--zd-bg-main2);
 
   --vp-c-text-1: var(--zd-text-main);
