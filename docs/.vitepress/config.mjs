@@ -19,7 +19,7 @@ export default withMermaid({
           { text: 'Quickstart', link: '/quickstart' },
           { text: 'How it works', link: '/understand' },
           { text: 'Make apps', link: '/integrate' },
-          { text: 'Self-host', link: '/host' },
+          { text: 'Host', link: '/host' },
           { text: 'Contribute', link: '/contribute' },
         ]
       }

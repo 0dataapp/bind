@@ -1,4 +1,4 @@
-# Self-host
+# Host
 
 Bind is designed to be easy to self-host.
 
