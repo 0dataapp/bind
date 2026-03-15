@@ -38,6 +38,10 @@ export default withMermaid({
     search: {
       provider: 'local',
     },
+
+    editLink: {
+      pattern: 'https://github.com/0dataapp/bind/docs/:path'
+    },
   },
 
   head: [['link', { rel: 'icon', href: 'data:;base64,=' }]],
