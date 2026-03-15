@@ -14,6 +14,7 @@ Simpler options are first.
 - automatic backups
 - multi-user management
 - [175+ one-click apps](https://www.cloudron.io/store/index.html)
+- demo: https://my.demo.cloudron.io
 
 ::: details Setup
 
@@ -55,6 +56,7 @@ cloudron update --image 0data/bind:cloudron --app bind
 - open-source
 - deploy from a local directory or docker images
 - [300+ apps](https://wizardly-ptolemy-8fcac8.netlify.app/) (often requires setting environment variables)
+- demo: https://captain.server.demo.caprover.com/?demo=true
 
 ::: details Setup
 
@@ -66,9 +68,7 @@ cloudron update --image 0data/bind:cloudron --app bind
 
 ---
 
-Once you sign up for an account, you may want disable signups by adding `DISABLE_SIGNUPS=true` to your environment variables.
-
-You may also want to enable `Force HTTPS by redirecting all HTTP traffic to HTTPS`.
+Once you sign up for an account, you may want disable signups by adding `DISABLE_SIGNUPS=true` in `App Configs` →  `Environment Variables`.
 
 :::
 
