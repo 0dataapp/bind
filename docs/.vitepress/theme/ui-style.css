@@ -59,6 +59,22 @@
   }
 }
 
+.app {
+  display: flex;
+  text-decoration: none !important;
+
+  img {
+    --size: 48px;
+    max-width: var(--size);
+    max-height: var(--size);
+  }
+
+  span {
+    font-weight: normal;
+    color: unset;
+  }
+}
+
 details hr {
   border-top-color: #bdbdbd;
 }
