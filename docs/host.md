@@ -12,7 +12,10 @@ Simpler options are first.
 
 ### [Cloudron](https://cloudron.io)
 
-Automatic updates and backups, multi-user management, [175+ one-click apps](https://www.cloudron.io/store/index.html).
+- automatic updates
+- automatic backups
+- multi-user management
+- [175+ one-click apps](https://www.cloudron.io/store/index.html)
 
 ::: details Setup
 
@@ -49,7 +52,11 @@ cloudron update --image 0data/bind:cloudron --app bind
 
 ### [Caprover](https://caprover.com)
 
-Developer-oriented platform-as-a-service, open-source, deploy from a local directory or docker images, [300+ apps](https://wizardly-ptolemy-8fcac8.netlify.app/) (often requires setting environment variables).
+- developer-oriented
+- platform-as-a-service
+- open-source
+- deploy from a local directory or docker images
+- [300+ apps](https://wizardly-ptolemy-8fcac8.netlify.app/) (often requires setting environment variables)
 
 ::: details Setup
 
@@ -75,7 +82,10 @@ You may also want to enable `Force HTTPS by redirecting all HTTP traffic to HTTP
 
 ### [Coolify](https://coolify.io)
 
-Developer-oriented platform-as-a-service, open-source, [280+ one-click services](https://coolify.io/docs/services/overview).
+- developer-oriented
+- platform-as-a-service
+- open-source
+- [280+ one-click services](https://coolify.io/docs/services/overview)
 
 ::: details Setup
 
