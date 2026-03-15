@@ -89,9 +89,9 @@ Once you sign up for an account, you may want disable signups by adding `DISABLE
 
 0. Subscribe to [Coolify Cloud](https://coolify.io/cloud), or [install Coolify](https://coolify.io/docs/get-started/installation) via one-click images on Hetzner, DigitalOcean or other hosting platforms.
 
-1. Navigate to `Projects` → choose/create a project… → `Resources` → `+ New` → `Applications` → `Git Based` → `Public Repository`
+1. Navigate to `Projects` → choose/create a project… → `Resources` → `+ New` → `Applications` → `Git Based` → `Public Repository`.
 
-2. Configure the following parameters
+2. Configure the following parameters:
 
 <dl>
 <dt>Repository URL</dt>
@@ -120,8 +120,9 @@ Docker Compose
 </dd>
 </dl>
 
-3. select `Continue` and then, on the following `Configuration` page, click `Deploy`.
-4. setup a domain under `Configuration` → `General` → `Domains` by entering something like `https://bind.[your root domain]` and clicking `Save`, or make a random one by clicking `Generate Domain`; in case of [SSL issues](https://coolify.io/docs/troubleshoot/dns-and-domains/lets-encrypt-not-working) click `Redeploy`.
+3. Select `Continue` and then, on the following `Configuration` page, click `Deploy`.
+
+4. Setup a domain under `Configuration` → `General` → `Domains` by entering something like `https://bind.[your root domain]` and clicking `Save`, or make a random one by clicking `Generate Domain`; in case of [SSL issues](https://coolify.io/docs/troubleshoot/dns-and-domains/lets-encrypt-not-working) click `Redeploy`.
 
 ---
 
