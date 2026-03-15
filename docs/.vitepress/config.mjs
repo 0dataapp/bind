@@ -34,6 +34,10 @@ export default withMermaid({
       level: [2, 3], // Show h2 and h3 headings
       label: 'On this page'
     },
+
+    search: {
+      provider: 'local',
+    },
   },
 
   head: [['link', { rel: 'icon', href: 'data:;base64,=' }]],
