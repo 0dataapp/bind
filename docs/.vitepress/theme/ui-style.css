@@ -63,14 +63,31 @@
 }
 
 @media (max-width: 450px) {
-  .way svg {
-    --clip: 40px;
+  svg {
+    --clip: 80px;
     clip-path: inset(0 0 0 var(--clip));
     margin-left: calc(-1 * var(--clip));
   }
 
+  .way:nth-child(1) svg {
+    --clip: 40px;
+  }
+
   .way:nth-child(2) svg {
-    --clip: 30px;
+    width: 130%;
+  }
+
+  .way-alt:nth-of-type(1) svg {
+    --clip: 70px;
+  }
+
+  .way-alt:nth-of-type(2) svg {
+    --clip: 90px;
+    width: 130%;
+  }
+
+  .way-host svg {
+    width: 120%;
   }
 }
 

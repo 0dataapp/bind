@@ -9,6 +9,8 @@ It avoids inventing (see [Don't fork the ecosystem](https://newsletter.squishy.c
 
 The standard setup for most apps is like a snowglobe (where you can see inside but not touch) or like an arcade claw machine (where you use a joystick to grab toys with a wonky crane).
 
+<div class="way-alt">
+
 ```mermaid
 flowchart LR
   you@{ shape: circle } --- app@{ shape: rounded }
@@ -18,11 +20,19 @@ flowchart LR
   style app rx:4px,ry:4px
 ```
 
+</div>
+
 You're one step removed, going <em>'through'</em> apps to access your stuff, and it's tricky to get things out. When the app isn't available for some reason, your data isn't either; you can just hope it comes back.
 
 Bind flips this around by letting you use data you already have, and keeping it in your hands when apps do their thing.
 
+<div class="way-alt">
+
 ```mermaid
+---
+config:
+  title: alfa
+---
 flowchart LR
   you@{ shape: circle } --- data[data here]@{ shape: das }
   you --- data2[data there]@{ shape: das }
@@ -33,6 +43,8 @@ flowchart LR
   you --- app@{ shape: rounded }
   Bind@{ shape: diamond } --- app
 ```
+
+</div>
 
 You don't need permission to get your stuff because you already have it. If the app goes away, you can simply use 100% of your data with another one.
 

@@ -80,6 +80,8 @@ Hosting Bind is *optional*, but you might like to offer accounts for anyone who 
 
 Users can connect their own sources so that you take no custody over their data while still allowing accounts from other servers to use your app.
 
+<div class="way-host">
+
 ```mermaid
 flowchart LR
   user1 --- data1[data external]@{ shape: das }
@@ -93,6 +95,8 @@ flowchart LR
   data1 --- server1
   app --- server2
 ```
+
+</div>
 
 Offering storage locally on your server is also an option.
 
