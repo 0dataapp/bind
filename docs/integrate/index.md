@@ -82,17 +82,16 @@ Users can connect their own sources so that you take no custody over their data 
 
 ```mermaid
 flowchart LR
-	user1 --- data1[data external]@{ shape: das }
+  user1 --- data1[data external]@{ shape: das }
   user2[non-hosted user]@{ shape: circle } --- data2[data external]@{ shape: das }
   user2 --- app
-  subgraph Optional hosting
+  subgraph Hosting
     app@{ shape: rounded } --- server1["Bind"]@{ shape: diamond }
-    user1[hosted user]@{ shape: circle }
-    user1 --- app
+    user1[hosted user]@{ shape: circle } --- app
   end
-  server2 --- app
   data2 --- server2["other server"]@{ shape: diamond }
-	data1 --- server1
+  data1 --- server1
+  app --- server2
 ```
 
 Offering storage locally on your server is also an option.
