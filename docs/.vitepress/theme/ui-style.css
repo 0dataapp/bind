@@ -16,7 +16,7 @@
   --vp-nav-logo-height: 60px;
 }
 
-.VPNavBarExtra, .VPNavBarAppearance {
+.VPNavBarExtra, .VPNavBarAppearance, .VPNavScreenAppearance {
   display: none !important;
 }
 
