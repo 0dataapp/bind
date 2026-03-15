@@ -72,7 +72,7 @@ const mod = {
 						try {
 							return await repo.push('origin');
 						} catch (error) {
-							console.error(e, error.message);
+							console.error(path, error.message);
 						}
 					});
 				});
