@@ -10,6 +10,7 @@ export default withMermaid({
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/quickstart' },
+      { text: 'Source', link: 'https://github.com/0dataapp/bind' },
     ],
 
     sidebar: [
