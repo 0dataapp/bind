@@ -16,11 +16,11 @@ export default withMermaid({
       {
         text: 'Guide',
         items: [
-          { text: 'Quickstart', link: '/quickstart' },
-          { text: 'How it works', link: '/understand' },
-          { text: 'Make apps', link: '/integrate' },
-          { text: 'Host', link: '/host' },
-          { text: 'Contribute', link: '/contribute' },
+          { text: 'Quickstart', link: '/quickstart/' },
+          { text: 'How it works', link: '/understand/' },
+          { text: 'Make apps', link: '/integrate/' },
+          { text: 'Host', link: '/host/' },
+          { text: 'Contribute', link: '/contribute/' },
         ]
       }
     ],
