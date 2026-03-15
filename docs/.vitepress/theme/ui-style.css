@@ -60,6 +60,18 @@
   }
 }
 
+@media (max-width: 450px) {
+  .way svg {
+    --clip: 40px;
+    clip-path: inset(0 0 0 var(--clip));
+    margin-left: calc(-1 * var(--clip));
+  }
+
+  .way:nth-child(2) svg {
+    --clip: 30px;
+  }
+}
+
 .app {
   display: flex;
   text-decoration: none !important;
