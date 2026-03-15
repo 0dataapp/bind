@@ -2,9 +2,7 @@
 
 Bind is designed to be easy to self-host.
 
-The 'lowest-maintenance' way is via [one-click](https://easyindie.app) deploys on the following panels; this also means you can install other things relevant to your community on the same server.
-
-## Panels
+The 'lowest-maintenance' way is via [one-click](https://easyindie.app) deploys on the following panels; this also lets you install other things relevant to your community on the same server with little effort.
 
 Each panel maintain its own app catalog for one-click installs; if Bind is not included there, it's possible to deploy as a 'custom app'.
 
@@ -135,7 +133,6 @@ You may also want to enable `Force HTTPS by redirecting all HTTP traffic to HTTP
 
 ::: details Updates
 
-Click `Redeploy` or `Advanced` → `Force deploy (without cache)` to pull from the Git repository.
+1. Click `Redeploy` or `Advanced` → `Force deploy (without cache)` to pull from the Git repository.
 
 :::
-
