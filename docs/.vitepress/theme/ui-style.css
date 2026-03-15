@@ -58,3 +58,27 @@
     }
   }
 }
+
+details hr {
+  border-top-color: #bdbdbd;
+}
+
+dl {
+  margin-left: var(--zd-spacing);
+}
+
+dl :first-child {
+  margin-top: 0;
+}
+
+dl :last-child {
+  margin-bottom: 0;
+}
+
+dl dt {
+  font-weight: bold;
+}
+
+dl dd {
+  margin: 10px 0;
+}

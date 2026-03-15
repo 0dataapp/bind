@@ -2,73 +2,130 @@
 
 Bind is designed to be easy to self-host.
 
-The 'lowest-maintenance' way is via [one-click](https://easyindie.app) deploys on the following panels, but you can choose what works best for you.
+The 'lowest-maintenance' way is via [one-click](https://easyindie.app) deploys on the following panels; this also means you can install other things relevant to your community on the same server.
 
 ## Panels
 
-These panels maintain their own 'app stores' for one-click installs; until this is included there, it takes more clicks to setup.
+Each panel maintain its own app catalog for one-click installs; if Bind is not included there, it's possible to deploy as a 'custom app'.
+
+Simpler options are first.
 
 ### [Cloudron](https://cloudron.io)
 
-First clone the project locally:
+Automatic updates and backups, multi-user management, [175+ one-click apps](https://www.cloudron.io/store/index.html).
+
+::: details Setup
+
+0. [Install Cloudron](https://www.cloudron.io/get.html) via one-click images on one of various hosting platforms.
+
+1. Clone the project locally:
 
 ```
 git clone https://github.com/0dataapp/bind
+```
+
+2. From the project directory, run the `install` command via the [Cloudron CLI](https://docs.cloudron.io/packaging/cli/):
+
+```
 cd bind
-```
-
-Then from the project directory, run the `install` command via the [Cloudron CLI](https://docs.cloudron.io/packaging/cli/):
-
-```
 cloudron install --image 0data/bind:cloudron --location bind
 ```
 
-Updates are also done from the project directory:
+---
+
+Once you sign up for an account, you may want disable signups by setting `DISABLE_SIGNUPS` to `true` in `/app/data/.env` and restarting the app.
+
+:::
+
+::: details Updates
+
+1. From the project directory, run the `update` command via the [Cloudron CLI](https://docs.cloudron.io/packaging/cli/):
 
 ```
 cloudron update --image 0data/bind:cloudron --app bind
 ```
 
-Once you sign up for an account, you may want disable signups by setting `DISABLE_SIGNUPS` to `true` in `/app/data/.env` and restarting the app.
+:::
 
 ### [Caprover](https://caprover.com)
 
-1. navigate to `Apps` → `Create A New App` → `One-Click Apps/Databases`
-, then search for `>> TEMPLATE <<` or scroll to bottom.
-2. select the `>> TEMPLATE <<` app and paste the configuration from `caprover/compose.yml`.
-3. name your app as `bind` or something else, and then deploy.
+Developer-oriented platform-as-a-service, open-source, deploy from a local directory or docker images, [300+ apps](https://wizardly-ptolemy-8fcac8.netlify.app/) (often requires setting environment variables).
 
-To update an existing app: navigate to `Deployment`, enter `0data/bind:latest` into `Deploy via ImageName`, then click `Deploy`. It may take some time after 'finishing' so give it a minute.
+::: details Setup
+
+0. [Install Caprover](https://caprover.com/docs/get-started.html) via one-click DigitalOcean droplet.
+1. Navigate to `Apps` → `Create A New App` → `One-Click Apps/Databases`
+, then search for `>> TEMPLATE <<` or scroll to the bottom.
+2. Select the `>> TEMPLATE <<` app and paste the configuration from `caprover/compose.yml`.
+3. Name your app `bind` or something else, then click `Deploy`.
+
+---
 
 Once you sign up for an account, you may want disable signups by adding `DISABLE_SIGNUPS=true` to your environment variables.
 
+You may also want to enable `Force HTTPS by redirecting all HTTP traffic to HTTPS`.
+
+:::
+
+::: details Updates
+
+1. Navigate to `Deployment`, enter `0data/bind:latest` into `Deploy via ImageName`, then click `Deploy`. It may take some time after 'finishing' so give it a minute.
+
+:::
+
 ### [Coolify](https://coolify.io)
 
-1. navigate to `Projects` → choose/create a project… → `Resources` → `+ New` → `Applications` → `Git Based` → `Public Repository`
-2. configure as follows:
-  - Repository URL:
-    
-    ```
-    https://github.com/0dataapp/bind/tree/master
-    ```
-  
-  - Build Pack:
-    
-    ```
-    Docker Compose
-    ```
-  
-  - Docker Compose Location:
-    
-    ```
-    /coolify/compose.yml
-    ```
+Developer-oriented platform-as-a-service, open-source, [280+ one-click services](https://coolify.io/docs/services/overview).
+
+::: details Setup
+
+0. Subscribe to [Coolify Cloud](https://coolify.io/cloud), or [install Coolify](https://coolify.io/docs/get-started/installation) via one-click images on Hetzner, DigitalOcean or other hosting platforms.
+
+1. Navigate to `Projects` → choose/create a project… → `Resources` → `+ New` → `Applications` → `Git Based` → `Public Repository`
+
+2. Configure the following parameters
+
+<dl>
+<dt>Repository URL</dt>
+<dd>
+
+```
+https://github.com/0dataapp/bind/tree/master
+```
+
+</dd>
+<dt>Build Pack</dt>
+<dd>
+
+```
+Docker Compose
+```
+
+</dd>
+<dt>Docker Compose Location</dt>
+<dd>
+
+```
+/coolify/compose.yml
+```
+
+</dd>
+</dl>
+
 3. select `Continue` and then, on the following `Configuration` page, click `Deploy`.
 4. setup a domain under `Configuration` → `General` → `Domains` by entering something like `https://bind.[your root domain]` and clicking `Save`, or make a random one by clicking `Generate Domain`; in case of [SSL issues](https://coolify.io/docs/troubleshoot/dns-and-domains/lets-encrypt-not-working) click `Redeploy`.
 
-Update by clicking `Redeploy` or `Advanced` → `Force deploy (without cache)` to pull from the Git repository.
+---
 
 Once you sign up for an account, you may want disable signups by navigating to `Environment Variables` and set `DISABLE_SIGNUPS` to `true`.
 
 You may also want to enable `Force HTTPS by redirecting all HTTP traffic to HTTPS`.
+
+:::
+
+::: details Updates
+
+Click `Redeploy` or `Advanced` → `Force deploy (without cache)` to pull from the Git repository.
+
+:::
 
