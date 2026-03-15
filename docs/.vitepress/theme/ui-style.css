@@ -37,6 +37,10 @@
   }
 }
 
+.way {
+  text-align: center;
+}
+
 @media (min-width: 450px) {
   .ways {
     display: flex;
@@ -46,8 +50,6 @@
       padding: calc(var(--zd-spacing) * 2);
 
       width: 40%;
-
-      text-align: center;
 
       &:nth-child(1) svg {
         max-width: 92% !important;
