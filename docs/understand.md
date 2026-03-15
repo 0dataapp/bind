@@ -18,7 +18,7 @@ flowchart LR
   style app rx:4px,ry:4px
 ```
 
-You're one step removed, going <em>'through'</em> apps to access your stuff and it's not easy to get it out. When the app isn't available for some reason, you just have to hope it comes back.
+You're one step removed, going <em>'through'</em> apps to access your stuff, and it's tricky to get things out. When the app isn't available for some reason, your data isn't either; you can just hope it comes back.
 
 Bind flips this around by letting you use data you already have, and keeping it in your hands when apps do their thing.
 
@@ -34,7 +34,7 @@ flowchart LR
   Bind@{ shape: diamond } --- app
 ```
 
-You don't need permission to get your stuff because you already have it. If the app goes away, you can just use 100% of your data with another one.
+You don't need permission to get your stuff because you already have it. If the app goes away, you can simply use 100% of your data with another one.
 
 ## Sync with Git
 

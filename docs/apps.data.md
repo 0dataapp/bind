@@ -14,7 +14,7 @@ data:
     description: group expense tracking
   - name: Hyperdraft
     url: https://hyperdraft.rosano.ca
-    description: turn your text notes into a website
+    description: link between notes
   - name: Joybox
     url: https://joybox.rosano.ca
     description: pinboard for audiovisual media.

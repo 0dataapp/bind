@@ -72,13 +72,13 @@ await client.getAll('');
 // [{ name: 'buy vegetables', completed: true }, { name: 'read mail' }]
 ```
 
-Read more about multiple scopes in the [remoteStorage.js documentation](https://remotestorage.io/rs.js/docs/data-modules/).
+Read more about [multiple scopes](https://remotestorage.io/rs.js/docs/data-modules/) and [change events](https://remotestorage.io/rs.js/docs/api/baseclient/classes/BaseClient.html#change-events).
 
 ### Host
 
-Hosting Bind is *optional*, but you might like to offer accounts for anyone who doesn't already have one. It's simple to run and works anywhere that supports Node.js and persistant storage.
+Hosting Bind is *optional*, but you might like to offer accounts for anyone who doesn't already have one. It's simple to run and works anywhere that supports Node.js and persistent storage.
 
-Users can connect their own sources so that you take no custody over their data while still allowing people from other servers to bring their accounts to your web app.
+Users can connect their own sources so that you take no custody over their data while still allowing accounts from other servers to use your app.
 
 ```mermaid
 flowchart LR

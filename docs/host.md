@@ -1,6 +1,6 @@
 # Self-host
 
-Bind is designed to be easy to self-host, with options for customizing to your taste.
+Bind is designed to be easy to self-host.
 
 The 'lowest-maintenance' way is via [one-click](https://easyindie.app) deploys on the following panels, but you can choose what works best for you.
 
