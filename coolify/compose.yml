@@ -8,6 +8,7 @@ services:
     image: 0data/bind:latest
     environment:
       - DATA_DIRECTORY=/data
+      - BETTER_AUTH_SECRET=${SERVICE_PASSWORD_APPWRITE}
     volumes:
       - ${COOLIFY_VOLUME_APP}:/data
     healthcheck:
