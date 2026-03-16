@@ -59,5 +59,3 @@ Build a production Node.js app in `/build` that can run on a server:
 ```sh
 npm run build
 ```
-
-This project packages it for [one-click](https://easyindie.app) deploys on self-hosted panels. These panels maintain their own 'app catalogs' for one-click installs; until this is included there, it will require more than one click to setup. Instructions are similar to [oneclick-proof](https://github.com/0dataapp/oneclick-proof).
