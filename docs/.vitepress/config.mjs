@@ -21,6 +21,7 @@ export default withMermaid({
           { text: 'How it works', link: '/understand/' },
           { text: 'Make apps', link: '/integrate/' },
           { text: 'Host', link: '/host/' },
+          { text: 'Codebase', link: '/codebase/' },
         ]
       }
     ],
