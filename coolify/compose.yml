@@ -1,0 +1,19 @@
+# documentation: https://github.com/0dataapp/bind
+# slogan: Git-backed web apps.
+# logo: docs/public/identity.svg
+# port: 3000
+
+services:
+  app:
+    image: 0data/bind:latest
+    environment:
+      - DATA_DIRECTORY=/data
+    volumes:
+      - ${COOLIFY_VOLUME_APP}:/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'wget -qO- http://127.0.0.1:3000'
+      interval: 5s
+      timeout: 20s
+      retries: 10
