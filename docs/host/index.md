@@ -120,9 +120,13 @@ Docker Compose
 </dd>
 </dl>
 
-3. Select `Continue` and then, on the following `Configuration` page, click `Deploy`.
+3. Select `Continue`.
 
-4. Setup a domain under `Configuration` → `General` → `Domains` by entering something like `https://bind.[your root domain]` and clicking `Save`, or make a random one by clicking `Generate Domain`; in case of [SSL issues](https://coolify.io/docs/troubleshoot/dns-and-domains/lets-encrypt-not-working) click `Redeploy`.
+4. On the `Configuration` page, add a domain under `General` → `Domains` by entering something like `https://bind.[your root domain]` and clicking `Save`, or make a random one by clicking `Generate Domain`.
+
+5. Click `Deploy`.
+
+In case of [SSL issues](https://coolify.io/docs/troubleshoot/dns-and-domains/lets-encrypt-not-working) click `Redeploy`.
 
 ---
 
