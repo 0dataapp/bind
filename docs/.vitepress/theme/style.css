@@ -1,15 +1,15 @@
 :root {
-  --vp-c-bg: var(--zd-bg-main);
-  --vp-c-bg-alt: var(--zd-bg-main);
-  --vp-sidebar-bg-color: var(--zd-bg-main2);
+  --vp-c-bg: var(--zd-c-bg);
+  --vp-c-bg-alt: var(--zd-c-bg);
+  --vp-sidebar-bg-color: var(--zd-c-bg2);
 
   --vp-c-text-1: var(--zd-text-main);
   --vp-c-brand-1: var(--zd-text-main);
 
   --vp-home-hero-name-color: var(--zd-accent);
 
-  --vp-c-bg-soft: var(--zd-bg-alt);
-  --vp-button-alt-bg: var(--zd-bg-alt);
+  --vp-c-bg-soft: var(--zd-c-bg-alt);
+  --vp-button-alt-bg: var(--zd-c-bg-alt);
 
   --vp-button-brand-bg: var(--zd-accent);
 

@@ -1,5 +1,5 @@
 :root {
-	--background: var(--zd-bg-main);
+	--background: var(--zd-c-bg);
 	--text-color: var(--zd-text-main);
 	--link-color: var(--zd-accent);
 	--focus-cap: 400px;
@@ -32,7 +32,7 @@ wrap {
 }
 
 focus {
-	--background: var(--zd-bg-alt);
+	--background: var(--zd-c-bg-alt);
 
 	display: block;
 
