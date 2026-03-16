@@ -82,6 +82,7 @@ dl {
       width: 40%;
 
       &:nth-child(1) svg {
+        padding-left: 20px;
         max-width: 92% !important;
       }
 
