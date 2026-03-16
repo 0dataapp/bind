@@ -1,4 +1,5 @@
 :root {
+  /* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
   --vp-c-bg: var(--zd-c-bg);
   --vp-c-bg-alt: var(--zd-c-bg);
   --vp-sidebar-bg-color: var(--zd-c-bg2);
