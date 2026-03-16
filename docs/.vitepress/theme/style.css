@@ -1,18 +1,15 @@
 :root {
   /* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
   --vp-c-bg: var(--zd-c-bg);
-  --vp-c-bg-alt: var(--zd-c-bg);
-  --vp-sidebar-bg-color: var(--zd-c-bg2);
+  --vp-c-bg-alt: var(--zd-c-bg-alt);
+  --vp-c-bg-soft: var(--zd-c-bg-focus);
 
-  --vp-c-text-1: var(--zd-text-main);
-  --vp-c-brand-1: var(--zd-text-main);
+  --vp-c-text-1: var(--zd-c-text-1);
+  --vp-c-brand-1: var(--zd-c-brand-1);
 
-  --vp-home-hero-name-color: var(--zd-accent);
-
-  --vp-c-bg-soft: var(--zd-c-bg-alt);
-  --vp-button-alt-bg: var(--zd-c-bg-alt);
-
-  --vp-button-brand-bg: var(--zd-accent);
+  --vp-button-brand-bg: var(--zd-c-brand-1);
+  --vp-button-brand-hover-bg: var(--zd-c-brand-1-hover);
+  --vp-button-alt-bg: var(--zd-c-bg-focus);
 
   --vp-nav-logo-height: 60px;
 }

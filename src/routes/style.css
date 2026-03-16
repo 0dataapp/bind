@@ -1,7 +1,7 @@
 :root {
 	--background: var(--zd-c-bg);
-	--text-color: var(--zd-text-main);
-	--link-color: var(--zd-accent);
+	--text-color: var(--zd-c-text-1);
+	--link-color: var(--zd-c-brand-1);
 	--focus-cap: 400px;
 	--spacing: 20px;
 	--corner: 3px;
@@ -9,9 +9,9 @@
 	--border: var(--border-size) solid #e6e6e6;
 	font-size: 12pt;
 
-	--pico-primary-background: var(--zd-accent) !important;
-	--pico-primary-hover: var(--zd-accent2) !important;
-	--pico-primary-hover-background: var(--zd-accent2) !important;
+	--pico-primary-background: var(--zd-c-brand-1) !important;
+	--pico-primary-hover: var(--zd-c-brand-1-hover) !important;
+	--pico-primary-hover-background: var(--zd-c-brand-1-hover) !important;
 }
 
 body {
@@ -32,7 +32,7 @@ wrap {
 }
 
 focus {
-	--background: var(--zd-c-bg-alt);
+	--background: var(--zd-c-bg-focus);
 
 	display: block;
 
