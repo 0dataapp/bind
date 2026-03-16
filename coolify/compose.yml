@@ -8,7 +8,8 @@ services:
     image: 0data/bind:latest
     environment:
       - DATA_DIRECTORY=/data
-      - BETTER_AUTH_SECRET=${SERVICE_PASSWORD_APPWRITE}
+      # Coolify generated Magic Environment Variables https://coolify.io/docs/knowledge-base/docker/compose#coolify-s-magic-environment-variables
+      - BETTER_AUTH_SECRET=${SERVICE_PASSWORD_BETTER-AUTH-SECRET}
     volumes:
       - ${COOLIFY_VOLUME_APP}:/data
     healthcheck:
