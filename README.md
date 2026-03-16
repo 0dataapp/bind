@@ -2,6 +2,8 @@
 
 Git-backed web apps.
 
+https://bind.0data.app
+
 ## Architecture
 
 | layer | description |
