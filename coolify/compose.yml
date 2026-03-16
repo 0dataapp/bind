@@ -9,7 +9,7 @@ services:
     environment:
       - DATA_DIRECTORY=/data
       # Coolify generated Magic Environment Variables https://coolify.io/docs/knowledge-base/docker/compose#coolify-s-magic-environment-variables
-      - BETTER_AUTH_SECRET=${SERVICE_PASSWORD_BETTER-AUTH-SECRET}
+      - BETTER_AUTH_SECRET=${SERVICE_PASSWORD_BASECRET}
     volumes:
       - ${COOLIFY_VOLUME_APP}:/data
     healthcheck:
