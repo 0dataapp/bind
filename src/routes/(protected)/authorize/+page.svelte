@@ -3,7 +3,7 @@
 const { data } = $props();
 </script>
 
-<p>The app at <code>{ data.client_id }</code> would to like access</p>
+<p>The app at <code>{ data.client_id }</code> would to like access:</p>
 
 <table>
 <tbody>
@@ -20,7 +20,9 @@ const { data } = $props();
 </tbody>
 </table>
 
-<p>using data source</p>
+<hr>
+
+<p>Data source:</p>
 
 <form method="POST">
   <select name="_depot" required>
