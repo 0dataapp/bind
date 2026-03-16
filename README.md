@@ -1,6 +1,6 @@
 # bind
 
-Git-backed remoteStorage server.
+Git-backed web apps.
 
 ## Architecture
 
