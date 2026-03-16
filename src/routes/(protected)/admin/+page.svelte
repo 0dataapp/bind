@@ -51,14 +51,14 @@ import CreateAccount from './CreateAccount.svelte';
 @import 'gridjs/dist/theme/mermaid.css';
 
 :global(wrap.admin) {
-  --focus-cap: 700px;
+  --bind-focus-cap: 700px;
 
   :global(.gridjs-wrapper) {
-    border-radius: var(--corner);
+    border-radius: var(--bind-corner);
   }
 
   :global(th), :global(td) {
-    padding: calc(var(--spacing) / 2);
+    padding: calc(var(--bind-spacing) / 2);
   }
 }
 </style>

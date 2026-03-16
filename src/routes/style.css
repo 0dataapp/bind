@@ -1,30 +1,25 @@
 :root {
-	--background: var(--zd-c-bg);
-	--text-color: var(--zd-c-text-1);
-	--link-color: var(--zd-c-brand-1);
-	--focus-cap: 400px;
-	--spacing: 20px;
-	--corner: 3px;
-	--border-size: 2px;
-	--border: var(--border-size) solid #e6e6e6;
-	font-size: 12pt;
-
+	--pico-color: var(--zd-c-text-1) !important;
 	--pico-primary-background: var(--zd-c-brand-1) !important;
 	--pico-primary-hover: var(--zd-c-brand-1-hover) !important;
 	--pico-primary-hover-background: var(--zd-c-brand-1-hover) !important;
-}
-
-body {
-	color: var(--text-color);
+	
+	--bind-focus-cap: 400px;
+	--bind-spacing: 20px;
+	--bind-corner: var(--zd-corner);
+	--bind-border-size: 2px;
+	--bind-border: var(--bind-border-size) solid #e6e6e6;
+	
+	font-size: 12pt;
 }
 
 a {
-	--pico-color: var(--link-color);
-	--pico-underline: var(--link-color);
+	--pico-color: var(--zd-c-brand-1);
+	--pico-underline: var(--zd-c-brand-1);
 }
 
 wrap {
-	background: var(--background);
+	background: var(--zd-c-bg);
 
 	display: grid;
 	place-items: center;
@@ -32,20 +27,18 @@ wrap {
 }
 
 focus {
-	--background: var(--zd-c-bg-focus);
-
 	display: block;
 
-	max-width: var(--focus-cap);
+	max-width: var(--bind-focus-cap);
 	min-width: 300px;
-	padding: var(--spacing);
-	border-radius: var(--corner);
-		
-	background: var(--background);
+	padding: var(--bind-spacing);
+	border-radius: var(--bind-corner);
+
+	background: var(--zd-c-bg-focus);
 }
 
 pre {
-	padding: var(--spacing);
+	padding: var(--bind-spacing);
 }
 
 table {
