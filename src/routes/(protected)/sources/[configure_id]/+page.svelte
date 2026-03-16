@@ -55,6 +55,7 @@ import Svelecte from 'svelecte';
 <style>
 .Svelecte-container {
 	margin: var(--spacing) 0;
+	line-height: var(--pico-line-height);
 }
 .Svelecte-container :global(.svelecte .sv-input--text)  {
 	padding: unset !important;
