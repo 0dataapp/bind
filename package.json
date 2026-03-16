@@ -1,5 +1,5 @@
 {
-  "name": "bind",
+  "name": "Bind",
   "type": "module",
   "scripts": {
     "start": "vite dev",

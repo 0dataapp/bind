@@ -1,4 +1,4 @@
-# bind
+# Bind
 
 Git-backed web apps.
 
