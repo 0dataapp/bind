@@ -14,27 +14,57 @@
   --vp-nav-logo-height: 60px;
 }
 
+.app {
+  display: flex;
+  text-decoration: none !important;
+
+  img {
+    --size: 48px;
+    max-width: var(--size);
+    max-height: var(--size);
+  }
+
+  span {
+    font-weight: normal;
+    color: unset;
+  }
+}
+
+details hr {
+  border-top-color: #bdbdbd;
+}
+
+dl {
+  margin-left: var(--zd-spacing);
+
+  :first-child {
+    margin-top: 0;
+  }
+
+  :last-child {
+    margin-bottom: 0;
+  }
+
+  dt {
+    font-weight: bold;
+  }
+
+  dd {
+    margin: 10px 0;
+  }
+}
+
+/* vitepress: hide dark mode switch */
 .VPNavBarExtra, .VPNavBarAppearance, .VPNavScreenAppearance {
   display: none !important;
 }
 
+/* mermaid: reset label offset */
 .nodeLabel p {
   line-height: unset !important;
 }
 
-.edgeLabel foreignObject {
-  --size: 36px;
-  width: var(--size);
-  height: var(--size);
-  padding: var(--zd-spacing);
-
-  div {
-    display: block !important;
-    background: rgba(255, 255, 255, 0.9) !important;
-    border-radius: var(--zd-corner);
-  }
-}
-
+/* ways */
 .way {
   text-align: center;
 }
@@ -46,6 +76,8 @@
 
     .way {
       padding: calc(var(--zd-spacing) * 2);
+
+      /* mermaid: shrink desktop width */
 
       width: 40%;
 
@@ -60,6 +92,7 @@
   }
 }
 
+/* mermaid: compensate for initial width hard-coded */
 @media (max-width: 450px) {
   svg {
     --clip: 80px;
@@ -87,44 +120,4 @@
   .way-host svg {
     width: 120%;
   }
-}
-
-.app {
-  display: flex;
-  text-decoration: none !important;
-
-  img {
-    --size: 48px;
-    max-width: var(--size);
-    max-height: var(--size);
-  }
-
-  span {
-    font-weight: normal;
-    color: unset;
-  }
-}
-
-details hr {
-  border-top-color: #bdbdbd;
-}
-
-dl {
-  margin-left: var(--zd-spacing);
-}
-
-dl :first-child {
-  margin-top: 0;
-}
-
-dl :last-child {
-  margin-bottom: 0;
-}
-
-dl dt {
-  font-weight: bold;
-}
-
-dl dd {
-  margin: 10px 0;
 }
