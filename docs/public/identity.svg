@@ -36,11 +36,11 @@
        id="linearGradient1"
        inkscape:collect="always">
       <stop
-         style="stop-color:#000000;stop-opacity:1;"
+         style="stop-color:#272174;stop-opacity:1;"
          offset="0"
          id="stop1" />
       <stop
-         style="stop-color:#000000;stop-opacity:0;"
+         style="stop-color:#272174;stop-opacity:0;"
          offset="1"
          id="stop2" />
     </linearGradient>
@@ -171,7 +171,7 @@
            cy="-181.59999"
            r="17.6"
            id="circle3"
-           style="fill:#000000"
+           style="fill:#131037"
            inkscape:label="outer"
            transform="scale(1,-1)" />
         <circle
@@ -181,7 +181,7 @@
            fill="#fff"
            id="circle4"
            inkscape:label="inner"
-           style="fill:#000000"
+           style="fill:#131037"
            transform="scale(1,-1)" />
       </g>
     </g>
