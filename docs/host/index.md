@@ -1,8 +1,6 @@
 # Host
 
-Bind is designed to be easy to self-host.
-
-The 'lowest-maintenance' way is via [one-click](https://easyindie.app) deploys on the following panels; this also lets you install other things relevant to your community on the same server with little effort.
+Bind is designed to be easy to self-host via the following [one-click panels](https://easyindie.app); this also lets you install other things relevant to your community on the same server with little effort.
 
 Each panel maintain its own app catalog for one-click installs; if Bind is not included there, it's possible to deploy as a 'custom app'.
 
@@ -18,7 +16,7 @@ Simpler options are first.
 
 ::: details Setup
 
-0. [Install Cloudron](https://www.cloudron.io/get.html) via one-click images on one of various hosting platforms.
+0. [Install Cloudron](https://www.cloudron.io/get.html) via one-click images on numerous hosting platforms.
 
 1. Clone the project locally:
 

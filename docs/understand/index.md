@@ -24,7 +24,7 @@ flowchart LR
 
 You're one step removed, going <em>'through'</em> apps to access your stuff, and it's tricky to get things out. When the app isn't available for some reason, your data isn't either; you can just hope it comes back.
 
-Bind flips this around by letting you use data you already have, and keeping it in your hands when apps do their thing.
+Bind flips this around by letting you use data you already have, and keeping it in your hands when apps do their thing. No data silos.
 
 <div class="way-alt">
 

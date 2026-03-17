@@ -9,7 +9,7 @@ App development is much simpler with
 - no per-user costs
 - no account systems
 
-Just read and write data with the remoteStorage.js library and your web apps get:
+Just read and write data with the [remoteStorage.js library](https://remotestorage.io/rs.js/docs/why.html) and your web apps get:
 
 - automatic syncronization
 - offline-first data
@@ -23,52 +23,51 @@ You might be familiar with `localStorage` for storing and retrieving objects:
 
 ```javascript
 // store data
-let todos = [{ name: 'buy vegetables' }, { name: 'read mail' }];
+todos = [{ name: 'buy vegetables' }, { name: 'read mail' }];
 localStorage.setItem('app-data', JSON.stringify(todos));
 
 // retrieve data
-let todos = JSON.parse(localStorage.getItem('app-data'));
+todos = JSON.parse(localStorage.getItem('app-data'));
 ```
 
-To turn this into a `remoteStorage` app, we write objects to a `scope`:
+To sync this data across devices, we use `remoteStorage` and write objects to a `scope`:
 
 ```javascript
-const client = remoteStorage.scope('/todos/');
-await client.storeFile('application/json', 'data.json', JSON.stringify(todos));
+scope = remoteStorage.scope('/todos/');
+await scope.storeFile('application/json', 'data.json', JSON.stringify(todos));
 ```
 
 and read them similarly:
 
 ```javascript
-const data = await client.getFile('data.json');
-let todos = JSON.parse(data);
+todos = JSON.parse(await scope.getFile('data.json'));
 ```
 
-Now the app data will be syncronized when a personal data store is connected.
+Now the app data automatically syncs when a personal data store is connected.
 
 If you prefer separate files per object, just write to a different path for each one (they're just files):
 
 ```javascript
-let edited = { name: 'buy vegetables', completed: true };
-await client.storeFile('application/json', 't1.json', JSON.stringify(edited));
+edited = { name: 'buy vegetables', completed: true };
+await scope.storeFile('application/json', 't1.json', JSON.stringify(edited));
 ```
 
 Skip JSON boilerplate by defining a type via JSON Schema, ignore validation by passing an empty object:
 
 ```javascript
-client.declareType('todo-task', {});
+scope.declareType('todo-task', {});
 
 // store object
-await client.storeObject('todo-task', 't1', edited);
+await scope.storeObject('todo-task', 't1', edited);
 
 // retrieve object
-await client.getObject('t1');
+await scope.getObject('t1');
 ```
 
 To get all items as a list:
 
 ```javascript
-await client.getAll('');
+await scope.getAll('');
 // [{ name: 'buy vegetables', completed: true }, { name: 'read mail' }]
 ```
 
@@ -102,4 +101,4 @@ Offering storage locally on your server is also an option.
 
 ## Other integrations
 
-remoteStorage gives your Git repository a simple REST API that requires no special platform integration. Just use your Bind OAuth token to make `GET` or `PUT` requests from any browser or server and changes will sync to all apps that use the data.
+remoteStorage gives your Git repository a simple REST API that requires no special platform integration. Just use your Bind OAuth token to make `GET` or `PUT` requests from any browser or server and changes will sync to connected apps and repos.

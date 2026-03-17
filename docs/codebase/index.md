@@ -1,24 +1,24 @@
 # Codebase
 
-## Architecture
+## Building blocks
 
-Simply-put, Bind is a SvelteKit server app that runs via Node.js. The various layers are described in more detail below.
+Simply-put, Bind is a SvelteKit server app that runs via Node.js. Other layers are described in more detail below.
 
 | layer | description |
 | - | - |
 | [SvelteKit](https://svelte.dev/docs/kit) | framework, UI components, routing, fast builds and reloads with `vite` |
 | + [adapter-node](https://svelte.dev/docs/kit/adapter-node) | build as Node.js app for production |
 | + [bind-glue](https://github.com/0dataapp/bind-glue) | Express/SvelteKit middleware for WebFinger and remoteStorage.js |
-| [Better Auth](https://www.better-auth.com) | accounts, social sign in, encryption |
+| [Better Auth](https://www.better-auth.com) | accounts, social sign in, credential encryption |
 | [Pico](https://picocss.com) | styles mostly without CSS classes |
 | [Vitest](https://vitest.dev) | logic or unit tests in `*-tests.js` |
 | [Playwright](https://playwright.dev) | interface tests in `ui-tests.js` |
 
 Other dependencies:
-- [lowdb](https://github.com/typicode/lowdb/), [js-jsonq](https://github.com/me-shaon/js-jsonq): turning local JSON into a database
+- [lowdb](https://github.com/typicode/lowdb/), [js-jsonq](https://github.com/me-shaon/js-jsonq): database backed by local JSON
+- [svelecte](https://github.com/mskocik/svelecte): repo selector
 - [Simple Git](https://github.com/steveukx/git-js): git commands via Node.js
 - [grid.js](https://gridjs.io/docs/integrations/svelte): admin users table
-- [svelecte](https://github.com/mskocik/svelecte): repo selector
 - [file-type](https://github.com/sindresorhus/file-type), [mime](https://github.com/broofa/mime): guessing types
 
 ### Better Auth
@@ -41,11 +41,11 @@ Bind is currently built to use the local filesystem because it doesn't require c
 
 Better Auth is flexibile enough to support [MySQL](https://better-auth.com/docs/adapters/mysql), [SQLite](https://better-auth.com/docs/adapters/sqlite), [PostgreSQL](https://www.better-auth.com/docs/adapters/postgresql), [MongoDB](https://better-auth.com/docs/adapters/mongo), [Supabase](https://better-auth.com/docs/adapters/other-relational-databases#kysely-organization-dialects), and others. 
 
-At some point, there should be enough affordances in the codebase to make it straightforward for a host to pick what works best for their situation and simply configure it from an admin panel. Until then, here are some helpful links for anyone who wants to build something themselvels:
+At some point, there should be sufficient affordances in the codebase for a host to pick what works best for their situation and simply configure it from an admin panel. Until then, here are some helpful links for anyone who wants to build something themselves:
 
 - [Create a Database Adapter](https://better-auth.com/docs/guides/create-a-db-adapter#options-optional)
-- [Remult community adapter](https://github.com/nerdfolio/remult-better-auth)
 - [PocketBase community adapter](https://github.com/LightInn/pocketbase-better-auth)
+- [Remult community adapter](https://github.com/nerdfolio/remult-better-auth)
 
 ## Develop
 
@@ -67,7 +67,7 @@ Type `o` + `Enter` or visit <a href="http://localhost:5173" target="_blank">`htt
 
 ::: tip
 
-Set `HOST` and `PORT` in your environment variables to customize the address.
+Set `HOST` and `PORT` in your environment variables to customize this address.
 
 :::
 
@@ -143,8 +143,8 @@ This can be started with `node build/index.js` or just `node build`.
 <td>
   <ul>
     <li>owned by <code>user</code></li>
-    <li>email, social, passkey are seperate 'accounts'</li>
-    <li><code>accountId</code> stores external id</li>
+    <li>email, social are seperate 'accounts'</li>
+    <li><code>accountId</code> references a foreign id</li>
     <li><code>password</code> or <code>accessToken</code> stores a hashed credential</li>
   </ul>
 </td>
@@ -159,7 +159,7 @@ This can be started with `node build/index.js` or just `node build`.
 <td>
   <ul>
     <li>owned by <code>account</code></li>
-    <li><code>foreignId</code> stores external id of repo inside Git Forge account</li>
+    <li><code>foreignId</code> references the repo id inside a git forge account</li>
     <li><code>data</code> stores a normalized payload of the repo object as well as the original</li>
   </ul>
 </td>
@@ -175,7 +175,7 @@ This can be started with `node build/index.js` or just `node build`.
   <ul>
     <li>stores OAuth Implicit Grant connections</li>
     <li>owned by <code>user</code> weakly through <code>username</code> to avoid a lookup</li>
-    <li>might merge later into <code>session</code> or Better Auth's [OIDC Provider](https://better-auth.com/docs/plugins/oidc-provider)</li>
+    <li>might merge later into <code>session</code> or Better Auth's <a href="https://better-auth.com/docs/plugins/oidc-provider">OIDC Provider</a></li>
     <li><code>data</code> stores:
       <ul>
         <li>remoteStorage <code>scope</code></li>

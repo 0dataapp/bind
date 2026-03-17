@@ -39,9 +39,9 @@ export default withMermaid({
       provider: 'local',
     },
 
-    editLink: {
-      pattern: 'https://github.com/0dataapp/bind/docs/:path'
-    },
+    // editLink: {
+    //   pattern: 'https://github.com/0dataapp/bind/blob/master/docs/:path'
+    // },
   },
 
   head: [['link', { rel: 'icon', href: 'data:;base64,=' }]],
