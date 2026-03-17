@@ -38,6 +38,7 @@ featured-apps {
       max-width: var(--size);
       max-height: var(--size);
       margin-right: var(--zd-spacing);
+      border-radius: var(--zd-corner);
     }
 
     a {
