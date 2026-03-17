@@ -19,8 +19,7 @@ const data = _data[0].frontmatter.data;
 <app class="info custom-block" v-for="e of data">
   <a :href="`${ e.url }`" aria-hidden="true"><img :src="`${ e.icon }`" /></a>
   <article>
-    <a :href="`${ e.url }`">{{ e.name }}</a>
-    <br>
+    <p><a :href="`${ e.url }`">{{ e.name }}</a></p>
     <span>{{ e.description }}</span>
   </article>
 </app>

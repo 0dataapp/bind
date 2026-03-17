@@ -46,6 +46,9 @@ featured-apps {
     }
 
     span {
+      position: relative;
+      top: -3px;
+
       font-weight: normal;
       color: unset;
       font-size: 95%;
