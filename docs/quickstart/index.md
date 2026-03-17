@@ -14,11 +14,17 @@ const data = _data[0].frontmatter.data;
 
 ## Featured apps
 
-<ul>
-  <li v-for="e of data">
-    <a :href="`${ e.url }`">{{ e.name }}</a>: 
+<featured-apps>
+
+<app class="info custom-block" v-for="e of data">
+  <a :href="`${ e.url }`" aria-hidden="true"><img :src="`${ e.icon }`" /></a>
+  <article>
+    <a :href="`${ e.url }`">{{ e.name }}</a>
+    <br>
     <span>{{ e.description }}</span>
-  </li>
-</ul>
+  </article>
+</app>
+
+</featured-apps>
 
 Find more on the [remoteStorage website](https://remotestorage.io/apps.html).

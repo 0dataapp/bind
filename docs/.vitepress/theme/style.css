@@ -14,19 +14,38 @@
   --vp-nav-logo-height: 60px;
 }
 
-.app {
+featured-apps {
+
   display: flex;
-  text-decoration: none !important;
+  flex-wrap: wrap;
+  gap: var(--zd-spacing);
 
-  img {
-    --size: 48px;
-    max-width: var(--size);
-    max-height: var(--size);
-  }
+  app {
+    display: flex;
+    text-decoration: none !important;
+    padding: var(--zd-spacing) !important;
 
-  span {
-    font-weight: normal;
-    color: unset;
+    margin: 0 !important;
+
+    flex-basis: 45%;
+
+    img {
+      --size: 48px;
+      max-width: var(--size);
+      max-height: var(--size);
+      margin-right: var(--zd-spacing);
+    }
+
+    a {
+      text-decoration: none !important;
+    }
+
+    span {
+      font-weight: normal;
+      color: unset;
+      font-size: 95%;
+      opacity: 0.7;
+    }
   }
 }
 
