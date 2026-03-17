@@ -12,6 +12,10 @@
   --vp-button-alt-bg: var(--zd-c-bg-focus);
 
   --vp-nav-logo-height: 60px;
+
+  tr {
+    --vp-c-bg-soft: var(--zd-c-bg-alt2);
+  }
 }
 
 featured-apps {
