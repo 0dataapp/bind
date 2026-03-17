@@ -4,10 +4,6 @@ data:
     url: https://diffuse.sh
     description: cloud storage music player
     icon: https://0data.app/task-c-images/__cached/ui-assets/diffuse.sh.b51c597a634aec614c3464a06a5ec569.png
-  - name: Do Again
-    url: https://static.karl.berlin/doagain/
-    description: simple todo list
-    icon: https://0data.app/task-c-images/__cached/ui-assets/unhosted.org.a2c7f3d7a64d9eafbc4d21e970475178.png
   - name: Emoji Log
     url: https://emojilog.rosano.ca
     description: personal tracker via emoji
@@ -48,6 +44,10 @@ data:
     url: https://memo.rosano.ca
     description: brain dumping pad
     icon: https://0data.app/task-c-images/__cached/ui-assets/static.rosano.ca.683fedbd9d9e29d2fcc3d152d1b8fc7b.png
+  - name: TodoMVC
+    url: https://todomvc.0data.app
+    description: simple todo list
+    icon: https://0data.app/task-c-images/__cached/ui-assets/unhosted.org.a2c7f3d7a64d9eafbc4d21e970475178.png
   - name: Webmarks
     url: https://webmarks.5apps.com
     description: bookmarks
