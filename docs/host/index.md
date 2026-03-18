@@ -112,7 +112,7 @@ Docker Compose
 <dd>
 
 ```
-/coolify/compose.yml
+/deploy/coolify/compose.yml
 ```
 
 </dd>
