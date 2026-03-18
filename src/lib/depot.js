@@ -1,6 +1,4 @@
-import local_custody from './depot/local_custody.js';
-import github from './depot/github.js';
-import gitea_selfhosted from './depot/gitea_selfhosted.js';
+import { options } from './depot/options.js';
 
 import db from '$lib/database.js';
 import { auth } from '$lib/auth/config';
@@ -10,11 +8,7 @@ const mod = {
 	_maxBytes: 100000,
 	maxSize: () => `${ mod._maxBytes / 1000 }MB`,
 
-	options: {
-		github,
-		gitea_selfhosted,
-		local_custody,
-	},
+	options,
 
 	options2: async request => {
 		const subsources = await db.collection('account_subsource').hydrating.getItems();

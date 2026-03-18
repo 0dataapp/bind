@@ -1,46 +1,65 @@
-import { test, expect } from '@playwright/test';
-import { load } from './+page.server.js';
+import { expect } from '@playwright/test';
 import stub from '$lib/stub.js';
-import depot from '$lib/depot.js';
+import { options } from '$lib/depot/options.js';
 
-test.describe('sources', () => {
+const test = stub.signedIn('/sources');
 
-  test.beforeEach(({ page }) => page.goto('/sources'));
+test.describe('title', () => {
 
-  test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
+  test('head', async ({ page }) => expect(await page.title()).toEqual('Data sources'));
 
-  test.describe('session', () => {
+  test('h1', ({ page }) => expect(page.locator('h1')).toHaveText('Data sources'));
+  
+});
 
-    const sessionTest = test.extend({
-      account: ({ page }, use) => use(stub.account()),
+test.describe('default', () => {
+
+  test('blurb', ({ page }) => expect(page.locator('h1 + p')).toHaveText('No sources available.'));
+
+  test('link', ({ page }) => expect(page.locator('h1 + p + p')).toHaveText('See documentation for integration options.'));
+
+});
+
+test.describe('mockAllAvailable', () => {
+
+  test.beforeEach(({ page }) => page.goto('/sources?test=mockAllAvailable'));
+
+  test('blurb', ({ page }) => expect(page.locator('h1 + p')).toBeHidden());
+
+  test('link', ({ page }) => expect(page.locator('h1 + p + p')).toBeHidden());
+
+  test('h4', ({ page }) => expect(page.locator('h4')).toHaveText('Link account'));
+
+  Object.values(options).filter(e => e.meta.id !== 'local_custody').forEach((e, i) => {
+
+    test(e.meta.id, ({ page }) => expect(page.locator(`.available button:nth-child(${ i + 1 })`)).toHaveText(e.meta.name));
+  });
+
+});
+
+test.describe('mockAllLinked', () => {
+
+  test.beforeEach(({ page }) => page.goto('/sources?test=mockAllLinked'));
+
+  test('blurb', ({ page }) => expect(page.locator('h1 + p')).toBeHidden());
+
+  test('link', ({ page }) => expect(page.locator('h1 + p + p')).toBeHidden());
+
+  test('h4', ({ page }) => expect(page.locator('h4')).toHaveText('Connected'));
+
+  Object.values(options).filter(e => e.meta.id !== 'local_custody').forEach((e, i) => {
+
+    test.describe(e.meta.id, () => {
+
+      test.describe('a', () => {
+
+        test('href', ({ page }) => expect(page.locator(`li:nth-child(${ i + 1 }) a`)).toHaveAttribute('href', `/sources/${ e.meta.id }`));
+
+        test('text', ({ page }) => expect(page.locator(`li:nth-child(${ i + 1 }) a`)).toHaveText(e.meta.name));
+
+      });
+
     });
-
-    sessionTest.beforeEach(async ({ page, account }) => {
-      await page.goto('/signup');
-
-      await page.locator('#email').fill(account.email);
-      await page.locator('#password').fill(account.password);
-      await page.locator('input[type="submit"]').click();
-
-      await expect(page).toHaveURL(/\/dash/);
-
-      await page.goto('/sources');
-    });
-
-    sessionTest.describe('title', () => {
-
-      sessionTest('head', async ({ page }) => expect(await page.title()).toEqual(load.title));
-
-      sessionTest('h1', ({ page }) => expect(page.locator('h1')).toHaveText(load.title));
-      
-    });
-
-    Object.values(depot.options).forEach(e => {
-
-      sessionTest(e.meta.id, ({ page }) => expect(page.locator(`.${ e.meta.id }`)).toHaveText(e.meta.name));
-
-    });
-    
   });
 
 });
