@@ -16,7 +16,10 @@ describe('repos', () => {
 
 	describe('data', () => {
 
-		test('output', () => {
+		test('output', ({ skip }) => {
+			if (!process.env.GITEA_URL)
+				return skip();
+
 			const json = stub.repo.sample();
 			const cloneURL = `${ process.env.GITEA_URL }/${ json.full_name }.git`;
 			expect(mod.repos.data([json])).toEqual([{
@@ -39,7 +42,10 @@ describe('repos', () => {
 			}]);
 		});
 
-		test('private', () => {
+		test('private', ({ skip }) => {
+			if (!process.env.GITEA_URL)
+				return skip();
+			
 			const json = stub.repo.private();
 			expect(mod.repos.data([json])).toMatchObject([{
 				isPrivate: true,
