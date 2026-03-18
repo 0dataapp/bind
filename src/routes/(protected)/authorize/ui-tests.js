@@ -13,54 +13,50 @@ const test = stub.signedIn(`/authorize?${ new URLSearchParams({
 }) }`);
 const parsed = logic.parseScopes(scope)[0];
 
-test.describe('authorize', () => {
+test.describe('title', () => {
 
-  test.describe('title', () => {
+  test('head', async ({ page }) => expect(await page.title()).toEqual('Authorize'));
 
-    test('head', async ({ page }) => expect(await page.title()).toEqual('Authorize'));
+  test('h1', ({ page }) => expect(page.locator('h1')).toHaveText('Authorize'));
+  
+});
 
-    test('h1', ({ page }) => expect(page.locator('h1')).toHaveText('Authorize'));
+test('blurb', ({ page }) => expect(page.locator('p:nth-of-type(1)')).toHaveText(`The app at ${ client_id } would to like access:`));
+
+test('folder', ({ page }) => expect(page.locator('td:nth-child(1)')).toHaveText(parsed.name));
+
+test('permission', ({ page }) => expect(page.locator('td:nth-child(2)')).toHaveText(parsed.permissions));
+
+test.describe('source', () => {
+
+  test('label', ({ page }) => expect(page.locator('label[for="_depot"]')).toHaveText('Data source:'));
+
+  test.describe('select', () => {
+
+    test('required', ({ page }) => expect(page.locator('select')).toHaveAttribute('required', ''));
+
+    test('text', async ({ page }) => expect(await page.locator('select').evaluate(el => Array.from(el.options).map(opt => opt.textContent))).toEqual(['', 'This server']));
     
   });
+  
+});
 
-  test('blurb', ({ page }) => expect(page.locator('p:nth-of-type(1)')).toHaveText(`The app at ${ client_id } would to like access:`));
+test.describe('deny', () => {
 
-  test('folder', ({ page }) => expect(page.locator('td:nth-child(1)')).toHaveText(parsed.name));
+  test('href', ({ page }) => expect(page.locator('input[type="submit"] + a')).toHaveAttribute('href', `${ client_id }#error=access_denied`));
 
-  test('permission', ({ page }) => expect(page.locator('td:nth-child(2)')).toHaveText(parsed.permissions));
+  test('text', ({ page }) => expect(page.locator('input[type="submit"] + a')).toHaveText('Deny'));
 
-  test.describe('source', () => {
+});
 
-    test('label', ({ page }) => expect(page.locator('label[for="_depot"]')).toHaveText('Data source:'));
+test.describe('allow', () => {
 
-    test.describe('select', () => {
+  test('text', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveText('Allow'));
 
-      test('required', ({ page }) => expect(page.locator('select')).toHaveAttribute('required', ''));
-
-      test('text', async ({ page }) => expect(await page.locator('select').evaluate(el => Array.from(el.options).map(opt => opt.textContent))).toEqual(['', 'This server']));
-      
-    });
-    
-  });
-
-  test.describe('deny', () => {
-
-    test('href', ({ page }) => expect(page.locator('input[type="submit"] + a')).toHaveAttribute('href', `${ client_id }#error=access_denied`));
-
-    test('text', ({ page }) => expect(page.locator('input[type="submit"] + a')).toHaveText('Deny'));
-
-  });
-
-  test.describe('allow', () => {
-
-    test('text', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveText('Allow'));
-
-    test('click', async ({ page }) => {
-      await page.locator('select').selectOption('local_custody');
-      await page.locator('input[type="submit"]').click();
-      await expect(page).toHaveURL(/\/sample-app/);
-    });
-
+  test('click', async ({ page }) => {
+    await page.locator('select').selectOption('local_custody');
+    await page.locator('input[type="submit"]').click();
+    await expect(page).toHaveURL(/\/sample-app/);
   });
 
 });
