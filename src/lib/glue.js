@@ -135,24 +135,23 @@ const mod = {
 
 		const isFolderRequest = req.url.endsWith('/');
 
-		const scope = await getScope(handle, token);
+		const _scope = await getScope(handle, token);
 
-		if (!scope && isPublicFolder && isFolderRequest)
+		if (!_scope && isPublicFolder && isFolderRequest)
 			return res.status(401).end();
 
-		if (!scope && !isPublicFolder)
+		if (!_scope && !isPublicFolder)
 			return res.status(401).send('missing scope');
 
-		const _scope = relative === '/' ? '/' : relative.match(/^\/([^\/]+)/).pop();
+		const intent = relative === '/' ? '/' : relative.match(/^\/([^\/]+)/).pop();
+		const available = !_scope ? {
+			// if isPublicFolder, we may have no token but still scope available
+		} : mod.util.parseScopes(_scope);
 
-		const scopes = !scope ? {
-			// if isPublicFolder, we may not have a token
-		} : mod.util.parseScopes(scope);
+		if (!isPublicFolder && _scope && !Object.keys(available).includes(intent) && !Object.keys(available).includes('*'))
+			return res.status(401).send('invalid _scope');
 
-		if (!isPublicFolder && scope && !Object.keys(scopes).includes(_scope) && !Object.keys(scopes).includes('*'))
-			return res.status(401).send('invalid scope');
-
-		if (['PUT', 'DELETE'].includes(req.method) && (!scope || !(scopes[_scope] || scopes['*']).includes('w')))
+		if (['PUT', 'DELETE'].includes(req.method) && (!_scope || !(available[intent] || available['*']).includes('w')))
 			return res.status(401).send('invalid access');
 
 		if (req.method === 'PUT' && req.headers['content-range'])
