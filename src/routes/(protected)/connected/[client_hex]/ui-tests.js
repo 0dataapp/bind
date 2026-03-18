@@ -1,40 +1,30 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import stub from '$lib/stub.js';
+import util from '$lib/util.js';
 
-test.describe('connected', () => {
+const test = stub.signedIn('/connected');
 
-  test.beforeEach(({ page }) => page.goto('/connected'));
+const client_id = 'http://localhost:4173/sample-app';
+const title = `Connection for ${ util.humanLink(client_id) }`;
 
-  test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
+test.describe('[client_hex]', () => {
 
-  test.describe('session', () => {
+  test.beforeEach(async ({ page }) => {
+    await stub.authorizeApp({ page });
+    await page.locator('li a').click();
+    await expect(page).toHaveURL(new RegExp(`${ util.hex.encode(client_id) }$`));
+  });
 
-    const sessionTest = test.extend({
-      account: ({ page }, use) => use(stub.account()),
-    });
+  test.describe('title', () => {
 
-    sessionTest.beforeEach(async ({ page, account }) => {
-      await page.goto('/signup');
+    test('head', async ({ page }) => expect(await page.title()).toEqual(title));
 
-      await page.locator('#email').fill(account.email);
-      await page.locator('#password').fill(account.password);
-      await page.locator('input[type="submit"]').click();
-
-      await expect(page).toHaveURL(/\/dash/);
-
-      await page.goto('/connected');
-    });
-
-    sessionTest.describe('form', () => {
-
-      sessionTest.describe('submit', () => {
-
-        sessionTest('value', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Revoke access'));
-        
-      });
-      
-    });
+    test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(title));
     
   });
 
+  test('li', ({ page }) => expect(page.locator('li')).toHaveText('1 connections'));
+
+  test('revoke', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Revoke access'));
+  
 });

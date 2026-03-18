@@ -12,7 +12,7 @@ export async function load({ params, locals }) {
 		return redirect(307, '/connected');
 
 	return {
-		title: `Connection for ${ client_id }`,
+		title: `Connection for ${ util.humanLink(client_id) }`,
 		connections: connections.filter(e => e.data.client_id === client_id),
 	};
 };
