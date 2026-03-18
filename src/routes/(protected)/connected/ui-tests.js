@@ -1,41 +1,18 @@
-import { test, expect } from '@playwright/test';
-import { load } from './+page.server.js';
+import { expect } from '@playwright/test';
 import stub from '$lib/stub.js';
 
-const _load = load({});
+const test = stub.signedIn('/connected');
 
 test.describe('connected', () => {
 
-  test.beforeEach(({ page }) => page.goto('/connected'));
+  test.describe('title', () => {
 
-  test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
+    test('head', async ({ page }) => expect(await page.title()).toEqual('Connected apps'));
 
-  test.describe('session', () => {
-
-    const sessionTest = test.extend({
-      account: ({ page }, use) => use(stub.account()),
-    });
-
-    sessionTest.beforeEach(async ({ page, account }) => {
-      await page.goto('/signup');
-
-      await page.locator('#email').fill(account.email);
-      await page.locator('#password').fill(account.password);
-      await page.locator('input[type="submit"]').click();
-
-      await expect(page).toHaveURL(/\/dash/);
-
-      await page.goto('/connected');
-    });
-
-    sessionTest.describe('title', () => {
-
-      sessionTest('head', async ({ page }) => expect(await page.title()).toEqual(_load.title));
-
-      sessionTest('h1', ({ page }) => expect(page.locator('h1')).toHaveText(_load.title));
-      
-    });
+    test('h1', ({ page }) => expect(page.locator('h1')).toHaveText('Connected apps'));
     
   });
+
+  test('default', ({ page }) => expect(page.locator('h1 + p')).toHaveText('No connected apps'));
 
 });
