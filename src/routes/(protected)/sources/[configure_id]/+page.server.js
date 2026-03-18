@@ -6,7 +6,7 @@ import { redirect } from '@sveltejs/kit';
 import depot from '$lib/depot.js';
 import hold from '$lib/hold.js';
 
-const maxItems = 10;
+const maxItems = 5;
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ request, params }) {
