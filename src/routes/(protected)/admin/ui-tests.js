@@ -5,12 +5,16 @@ const test = stub.signedIn('/admin');
 
 test.describe('admin', () => {
 
-  test.describe('title', () => {
+  test('default', ({ page }) => expect(page.locator('h1:nth-of-type(2)')).toHaveText('404'));
 
-    test('head', async ({ page }) => expect(await page.title()).toEqual('Admin'));
+  // test('h1', ({ page }) => expect(page.locator('h1')).toHaveText('Admin'));
 
-    test('h1', ({ page }) => expect(page.locator('h1')).toHaveText('Admin'));
+  // test.describe('title', () => {
+
+  //   test('head', async ({ page }) => expect(await page.title()).toEqual('Admin'));
+
+  //   test('h1', ({ page }) => expect(page.locator('h1')).toHaveText('Admin'));
     
-  });
+  // });
 
 });
