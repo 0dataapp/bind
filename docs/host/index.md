@@ -61,7 +61,7 @@ cloudron update --image 0data/bind:cloudron --app bind
 0. [Install Caprover](https://caprover.com/docs/get-started.html) via one-click DigitalOcean droplet.
 1. Navigate to `Apps` → `Create A New App` → `One-Click Apps/Databases`
 , then search for `>> TEMPLATE <<` or scroll to the bottom.
-2. Select the `>> TEMPLATE <<` app and paste the configuration from [`caprover/compose.yml`](https://github.com/0dataapp/bind/blob/master/caprover/compose.yml).
+2. Select the `>> TEMPLATE <<` app and paste the configuration from [`deploy/caprover/compose.yml`](https://github.com/0dataapp/bind/blob/master/deploy/caprover/compose.yml).
 3. Name your app `bind` or something else, then click `Deploy`.
 
 ---

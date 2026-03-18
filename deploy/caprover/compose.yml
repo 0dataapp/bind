@@ -9,7 +9,7 @@ services:
       containerHttpPort: 3000
 caproverOneClickApp:
   instructions:
-    end: Bind is deployed and available as $$cap_appname. 
+    end: Bind is available as $$cap_appname. Next configure your domains.
   displayName: Bind
   description: Git-backed web apps.
   documentation: See documentation for details https://bind.0data.app
