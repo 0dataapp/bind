@@ -19,6 +19,32 @@ function resetRepo () {
 
 mod.folder = testFolder;
 
+describe('util', () => {
+
+	describe('_gitTreePath', () => {
+
+		test('empty', () => {
+			expect(mod.util._gitTreePath('')).toEqual('./');
+		});
+
+		test('root', () => {
+			expect(mod.util._gitTreePath('/')).toEqual('./');
+		});
+
+		test('with no slashes', () => {
+			const e = stub.ulid();
+			expect(mod.util._gitTreePath(e)).toEqual(`./${ e }`);
+		});
+
+		test('with slash after', () => {
+			const e = stub.ulid();
+			expect(mod.util._gitTreePath(`${ e }/`)).toEqual(`./${ e }`);
+		});
+
+	});
+
+});
+
 describe('filesystem', () => {
 
 	beforeAll(resetRepo);

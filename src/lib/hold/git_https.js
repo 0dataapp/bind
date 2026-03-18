@@ -39,7 +39,7 @@ const mod = {
 
 	util: {
 
-		_gitPath: _path => `.${ _path }`,
+		_gitTreePath: _path => ('./' + path.join('./', _path.replace(/(.)\/$/, '$1'))).replace('././', './'),
 
 		_clonePath: id => path.join(mod.folder, util.hash(id)),
 
@@ -119,7 +119,7 @@ const mod = {
 			const target = this._localPath(_path);
 			const _this = this;
 
-			const tree = (await mod.git(mod.util._clonePath(cloneURL)).repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', mod.util._gitPath(_path))).trim();
+			const tree = (await mod.git(mod.util._clonePath(cloneURL)).repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', `.${ _path }`)).trim();
 
 			if (!tree.length)
 				return {};
@@ -190,7 +190,7 @@ const mod = {
 					// ? (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? _path.replace(/\/$/, '') : _path)))).trim().split('\n').pop()
 					? (
 						await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['show-ref'])
-						? (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', _path.replace(/\/$/, '').replace(/^\//, './')])).trim().split('\n').pop()
+						? (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', mod.util._gitTreePath(_path)])).trim().split('\n').pop()
 						: 'empty'
 						)
 					: stat.mtime.toJSON(),
