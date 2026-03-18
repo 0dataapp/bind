@@ -60,7 +60,6 @@ describe('filesystem', () => {
 			expect(await filesystem.put({
 				target,
 				data,
-				breadcrumbs: [],
 				meta,
 			})).toBe(undefined);
 
@@ -78,14 +77,12 @@ describe('filesystem', () => {
 			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
 				return coll.concat(path.join(coll.at(-1) || '', item));
 			}, []);
-			const breadcrumbs = parents.map(e => filesystem._localPath(e));
 
 			const target = path.join(parents.at(-1), stub.basename());
 			const data = Math.random().toString();
 			await filesystem.put({
 				target,
 				data,
-				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
 			expect(fs.readFileSync(filesystem._localPath(target), 'utf8')).toEqual(data);
@@ -100,7 +97,6 @@ describe('filesystem', () => {
 			await filesystem.put({
 				target,
 				data: Math.random().toString(),
-				breadcrumbs: [],
 				meta: stub.headers('text/plain'),
 			});
 			expect(await filesystem.delete({
@@ -112,16 +108,14 @@ describe('filesystem', () => {
 
 		test('parents without items', async () => {
 			const length = Math.max(Date.now() % 5, 2);
-			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
+			const breadcrumbs = Array.from({ length }, stub.ulid).reduce((coll, item) => {
 				return coll.concat(path.join(coll.at(-1) || '', item));
 			}, []);
-			const breadcrumbs = parents.map(e => filesystem._localPath(e));
-
-			const target = path.join(parents.at(-1), stub.basename());
+			
+			const target = path.join(breadcrumbs.at(-1), stub.basename());
 			await filesystem.put({
 				target,
 				data: Math.random().toString(),
-				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
 			await filesystem.delete({
@@ -136,30 +130,27 @@ describe('filesystem', () => {
 
 		test('parents with items', async () => {
 			const length = Math.max(Date.now() % 5, 2);
-			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
+			const breadcrumbs = Array.from({ length }, stub.ulid).reduce((coll, item) => {
 				return coll.concat(path.join(coll.at(-1) || '', item));
 			}, []);
-			const breadcrumbs = parents.map(e => filesystem._localPath(e));
 
-			const target = path.join(parents.at(-1), stub.basename());
+			const target = path.join(breadcrumbs.at(-1), stub.basename());
 			await filesystem.put({
 				target,
 				data: Math.random().toString(),
-				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
 			await filesystem.put({
-				target: path.join(parents[0], stub.basename()),
+				target: path.join(breadcrumbs[0], stub.basename()),
 				data: Math.random().toString(),
-				breadcrumbs: breadcrumbs.slice(0, 1),
 				meta: stub.headers('text/plain'),
 			});
 			await mod.git(repo).commit(true);
 			
 			const meta = await filesystem.meta({
-				target: parents[0] + '/',
+				target: breadcrumbs[0] + '/',
 			});
-			expect(meta.ETag).toBe((await mod.git(repo).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', parents[0]])).trim().split('\n').pop())
+			expect(meta.ETag).toBe((await mod.git(repo).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', breadcrumbs[0]])).trim().split('\n').pop())
 			
 			await filesystem.delete({
 				target,
@@ -173,7 +164,7 @@ describe('filesystem', () => {
 			});
 
 			expect(meta.ETag).not.toBe((await filesystem.meta({
-				target: parents[0] + '/',
+				target: breadcrumbs[0] + '/',
 			})).ETag);
 		});
 
@@ -191,7 +182,6 @@ describe('filesystem', () => {
 				handle,
 				target,
 				data: Math.random().toString(),
-				breadcrumbs: [],
 				meta: stub.headers(encoding),
 			});
 			await mod.git(repo).commit(true);
@@ -212,14 +202,12 @@ describe('filesystem', () => {
 			const handle = stub.ulid();
 
 			const parent = stub.ulid();
-			const breadcrumbs = [parent].map(e => filesystem._localPath(e));
 
 			const target = path.join(parent, stub.basename());
 			await filesystem.put({
 				handle,
 				target,
 				data: Math.random().toString(),
-				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
 			await mod.git(repo).commit(true);
@@ -243,7 +231,6 @@ describe('filesystem', () => {
 			await filesystem.put({
 				target,
 				data: Math.random().toString(),
-				breadcrumbs: [],
 				meta: stub.headers('text/plain'),
 			});
 			expect(filesystem.exists({
@@ -253,13 +240,11 @@ describe('filesystem', () => {
 
 		test('folder', async () => {
 			const parent = stub.ulid();
-			const breadcrumbs = [parent].map(e => filesystem._localPath(e));
-
+			
 			const target = path.join(parent, stub.basename());
 			await filesystem.put({
 				target,
 				data: Math.random().toString(),
-				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
 			expect(filesystem.exists({
@@ -272,12 +257,10 @@ describe('filesystem', () => {
 
 		test('non-existant', async () => {
 			const parent = stub.ulid();
-			const breadcrumbs = [parent].map(e => filesystem._localPath(e));
 
 			await filesystem.put({
 				target: path.join(parent, stub.basename()),
 				data: Math.random().toString(),
-				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
 			expect(filesystem.exists({
@@ -297,7 +280,6 @@ describe('filesystem', () => {
 			await filesystem.put({
 				target,
 				data: Math.random().toString(),
-				breadcrumbs: [],
 				meta: stub.headers('text/plain'),
 			});
 			expect(filesystem.isFolder({ target })).toBe(false);
@@ -305,13 +287,11 @@ describe('filesystem', () => {
 
 		test('folder', async () => {
 			const parent = stub.ulid();
-			const breadcrumbs = [parent].map(e => filesystem._localPath(e));
 
 			const target = path.join(parent, stub.basename());
 			await filesystem.put({
 				target,
 				data: Math.random().toString(),
-				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
 			expect(filesystem.isFolder({
@@ -330,7 +310,6 @@ describe('filesystem', () => {
 			await filesystem.put({
 				target,
 				data,
-				breadcrumbs: [],
 				meta: stub.headers(contentType),
 			});
 			expect(filesystem.get({
@@ -346,7 +325,6 @@ describe('filesystem', () => {
 			await filesystem.put({
 				target,
 				data,
-				breadcrumbs: [],
 				meta: stub.headers(contentType),
 			});
 			expect(filesystem.get({
@@ -365,7 +343,6 @@ describe('filesystem', () => {
 			await filesystem.put({
 				target,
 				data: Math.random().toString(),
-				breadcrumbs: [],
 				meta: stub.headers(encoding),
 			});
 			const _target = filesystem._localPath(target);
@@ -380,13 +357,11 @@ describe('filesystem', () => {
 
 		test('folder', async () => {
 			const parent = stub.ulid();
-			const breadcrumbs = [parent].map(e => filesystem._localPath(e));
 
 			const target = path.join(parent, stub.basename());
 			await filesystem.put({
 				target,
 				data: Math.random().toString(),
-				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
 			await mod.git(repo).commit(true);
@@ -406,7 +381,6 @@ describe('hold', () => {
 		await filesystem.put({
 			target,
 			data: Math.random().toString(),
-			breadcrumbs: [],
 			meta: stub.headers('text/plain'),
 		});
 		expect(() => mod.hold.erase('')).toThrow('url blank');
