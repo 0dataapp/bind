@@ -1,49 +1,66 @@
-import { test, expect } from '@playwright/test';
-import { load } from './+page.server.js';
+import { expect } from '@playwright/test';
 import stub from '$lib/stub.js';
+import logic from './logic.js';
 
-const _load = params => load({
-  data: {
-    params: Object.assign({
-      redirect_uri: stub.origin(),
-      client_id: stub.origin(),
-      scopes: stub.scope(),
-    }, params),
-  },
-});
+const client_id = `/sample-app?${ Math.random().toString() }`;
+const folder = 'bind-sample-app';
+const scope = folder + ':r';
+const test = stub.signedIn(`/authorize?${ new URLSearchParams({
+  scope,
+  response_type: 'token',
+  client_id,
+  redirect_uri: client_id,
+}) }`);
+const parsed = logic.parseScopes(scope)[0];
 
 test.describe('authorize', () => {
 
-  test.beforeEach(({ page }) => page.goto('/authorize'));
+  test.describe('title', () => {
 
-  test('redirects to login', ({ page }) => expect(page).toHaveURL(/\/login/));
+    test('head', async ({ page }) => expect(await page.title()).toEqual('Authorize'));
 
-  test.describe('session', () => {
+    test('h1', ({ page }) => expect(page.locator('h1')).toHaveText('Authorize'));
+    
+  });
 
-    const sessionTest = test.extend({
-      account: ({ page }, use) => use(stub.account()),
-    });
+  test('blurb', ({ page }) => expect(page.locator('p:nth-of-type(1)')).toHaveText(`The app at ${ client_id } would to like access:`));
 
-    sessionTest.beforeEach(async ({ page, account }) => {
-      await page.goto('/signup');
+  test('folder', ({ page }) => expect(page.locator('td:nth-child(1)')).toHaveText(parsed.name));
 
-      await page.locator('#email').fill(account.email);
-      await page.locator('#password').fill(account.password);
-      await page.locator('input[type="submit"]').click();
+  test('permission', ({ page }) => expect(page.locator('td:nth-child(2)')).toHaveText(parsed.permissions));
 
-      await expect(page).toHaveURL(/\/dash/);
+  test.describe('source', () => {
 
-      await page.goto('/authorize');
-    });
+    test('label', ({ page }) => expect(page.locator('label[for="_depot"]')).toHaveText('Data source:'));
 
-    sessionTest.describe('title', () => {
+    test.describe('select', () => {
 
-      sessionTest('head', async ({ page }) => expect(await page.title()).toEqual(_load().title));
+      test('required', ({ page }) => expect(page.locator('select')).toHaveAttribute('required', ''));
 
-      sessionTest('h1', ({ page }) => expect(page.locator('h1')).toHaveText(_load().title));
+      test('text', async ({ page }) => expect(await page.locator('select').evaluate(el => Array.from(el.options).map(opt => opt.textContent))).toEqual(['', 'This server']));
       
     });
     
+  });
+
+  test.describe('deny', () => {
+
+    test('href', ({ page }) => expect(page.locator('input[type="submit"] + a')).toHaveAttribute('href', `${ client_id }#error=access_denied`));
+
+    test('text', ({ page }) => expect(page.locator('input[type="submit"] + a')).toHaveText('Deny'));
+
+  });
+
+  test.describe('allow', () => {
+
+    test('text', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveText('Allow'));
+
+    test('click', async ({ page }) => {
+      await page.locator('select').selectOption('local_custody');
+      await page.locator('input[type="submit"]').click();
+      await expect(page).toHaveURL(/\/sample-app/);
+    });
+
   });
 
 });

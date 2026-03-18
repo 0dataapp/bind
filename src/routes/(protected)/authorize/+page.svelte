@@ -3,7 +3,7 @@
 const { data } = $props();
 </script>
 
-<p>The app at <code>{ data.client_id }</code> would to like access:</p>
+<p>The app at <code class="client_id">{ data.client_id }</code> would to like access:</p>
 
 <table>
 <tbody>
@@ -22,10 +22,9 @@ const { data } = $props();
 
 <hr>
 
-<p>Data source:</p>
-
 <form method="POST">
-  <select name="_depot" required>
+  <label for="_depot">Data source:</label>
+  <select id="_depot" name="_depot" required>
     <option disabled selected></option>
     {#each data.depots as e }
       {#if e._subsources }
