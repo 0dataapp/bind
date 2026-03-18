@@ -31,7 +31,13 @@ featured-apps {
 
     margin: 0 !important;
 
-    flex-basis: 45%;
+    @media (min-width: 450px) {
+      flex-basis: 45%;
+    }
+
+    @media (max-width: 450px) {
+      flex-grow: 1;
+    }
 
     img {
       --size: 48px;

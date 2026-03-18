@@ -19,59 +19,77 @@ Just read and write data with the [remoteStorage.js library](https://remotestora
 
 ### Sample code
 
-You might be familiar with `localStorage` for storing and retrieving objects:
+You might be familiar with `localStorage` for storing and retrieving data:
 
 ```javascript
 // store data
-todos = [{ name: 'buy vegetables' }, { name: 'read mail' }];
-localStorage.setItem('app-data', JSON.stringify(todos));
+todos = [
+  { name: 'buy vegetables' },
+  { name: 'read mail' },
+];
+json = JSON.stringify(todos);
+localStorage.setItem('app-data', json);
 
 // retrieve data
-todos = JSON.parse(localStorage.getItem('app-data'));
+json = localStorage.getItem('app-data');
+todos = JSON.parse(json);
 ```
 
-To sync this data across devices, we use `remoteStorage` and write objects to a `scope`:
+This app's data can syncronize across multiple devices just by swapping two things.
+
+We start with `remoteStorage` and write to a `scope`:
 
 ```javascript
 scope = remoteStorage.scope('/todos/');
-await scope.storeFile('application/json', 'data.json', JSON.stringify(todos));
+await scope.storeFile('application/json', 'data.json', json);
 ```
 
-and read them similarly:
+and read similarly:
 
 ```javascript
-todos = JSON.parse(await scope.getFile('data.json'));
+json = await scope.getFile('data.json');
+todos = JSON.parse(json);
 ```
 
-Now the app data automatically syncs when a personal data store is connected.
+Pretty similar, but now the app data automatically syncs when a personal data store is connected.
 
 If you prefer separate files per object, just write to a different path for each one (they're just files):
 
 ```javascript
 edited = { name: 'buy vegetables', completed: true };
-await scope.storeFile('application/json', 't1.json', JSON.stringify(edited));
+json = JSON.stringify(edited);
+await scope.storeFile('application/json', '1.json', json);
 ```
 
-Skip JSON boilerplate by defining a type via JSON Schema, ignore validation by passing an empty object:
+Skip JSON boilerplate by declaring an empty type, optionally add JSON Schema:
 
 ```javascript
-scope.declareType('todo-task', {});
-
-// store object
-await scope.storeObject('todo-task', 't1', edited);
-
-// retrieve object
-await scope.getObject('t1');
+scope.declareType('todo-task', {
+  // JSON Schema, if you wish
+});
 ```
 
-To get all items as a list:
+That simplifies our two calls to:
+
+```javascript
+// store object
+await scope.storeObject('todo-task', '1', edited);
+
+// retrieve object
+await scope.getObject('1');
+```
+
+You can also get all items as a list:
 
 ```javascript
 await scope.getAll('');
-// [{ name: 'buy vegetables', completed: true }, { name: 'read mail' }]
+// [
+//   { name: 'buy vegetables', completed: true },
+//   { name: 'read mail' },
+// ]
 ```
 
-Read more about [multiple scopes](https://remotestorage.io/rs.js/docs/data-modules/) and [change events](https://remotestorage.io/rs.js/docs/api/baseclient/classes/BaseClient.html#change-events).
+Read more about [multiple scopes](https://remotestorage.io/rs.js/docs/data-modules/) and [responding to change events](https://remotestorage.io/rs.js/docs/api/baseclient/classes/BaseClient.html#change-events).
 
 ### Host
 
