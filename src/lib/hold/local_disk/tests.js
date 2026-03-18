@@ -98,7 +98,7 @@ describe('filesystem', () => {
 
 	});
 
-	describe('delete', () => {
+	describe('remove', () => {
 
 		test('data', () => {
 			const handle = stub.ulid();
@@ -110,7 +110,7 @@ describe('filesystem', () => {
 				breadcrumbs: [],
 				meta: stub.headers('text/plain'),
 			});
-			expect(mod.filesystem.delete({
+			expect(mod.filesystem.remove({
 				handle,
 				target,
 				breadcrumbs: [],
@@ -131,7 +131,7 @@ describe('filesystem', () => {
 				breadcrumbs: [],
 				meta: stub.headers('text/plain'),
 			});
-			mod.filesystem.delete({
+			mod.filesystem.remove({
 				handle,
 				target,
 				breadcrumbs: [],
@@ -156,7 +156,7 @@ describe('filesystem', () => {
 				breadcrumbs,
 				meta: stub.headers('text/plain'),
 			});
-			mod.filesystem.delete({
+			mod.filesystem.remove({
 				handle,
 				target,
 				breadcrumbs,
@@ -201,7 +201,7 @@ describe('filesystem', () => {
 				target: parents[0] + '/',
 			});
 			
-			mod.filesystem.delete({
+			mod.filesystem.remove({
 				handle,
 				target,
 				breadcrumbs,

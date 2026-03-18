@@ -99,7 +99,7 @@ const mod = {
 			}));
 		},
 
-		async delete ({ target: _path, breadcrumbs }) {
+		async remove ({ target: _path, breadcrumbs }) {
 			const target = this._localPath(_path);
 			fs.unlinkSync(target);
 

@@ -55,7 +55,7 @@ const mod = {
 			})));
 		},
 
-		delete ({ handle, target: _path, breadcrumbs }) {
+		remove ({ handle, target: _path, breadcrumbs }) {
 			const target = mod.util.localPath({
 				handle,
 				target: _path,

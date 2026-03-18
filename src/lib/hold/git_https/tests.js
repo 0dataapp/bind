@@ -90,7 +90,7 @@ describe('filesystem', () => {
 
 	});
 
-	describe('delete', () => {
+	describe('remove', () => {
 
 		test('data', async () => {
 			const target = stub.basename();
@@ -99,7 +99,7 @@ describe('filesystem', () => {
 				data: Math.random().toString(),
 				meta: stub.headers('text/plain'),
 			});
-			expect(await filesystem.delete({
+			expect(await filesystem.remove({
 				target,
 				breadcrumbs: [],
 			})).toBe(undefined);
@@ -118,7 +118,7 @@ describe('filesystem', () => {
 				data: Math.random().toString(),
 				meta: stub.headers('text/plain'),
 			});
-			await filesystem.delete({
+			await filesystem.remove({
 				target,
 				breadcrumbs,
 			});
@@ -152,7 +152,7 @@ describe('filesystem', () => {
 			});
 			expect(meta.ETag).toBe((await mod.git(repo).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', breadcrumbs[0]])).trim().split('\n').pop())
 			
-			await filesystem.delete({
+			await filesystem.remove({
 				target,
 				breadcrumbs,
 			});

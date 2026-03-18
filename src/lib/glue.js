@@ -228,7 +228,7 @@ const mod = {
 		meta['ETag'] = `"${ meta['ETag'] }"`;
 
 		if (req.method === 'DELETE') {
-			await hold.delete({
+			await hold.remove({
 				handle,
 				target,
 				breadcrumbs,
