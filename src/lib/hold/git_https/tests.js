@@ -130,7 +130,7 @@ describe('filesystem', () => {
 			});
 			expect(fs.existsSync(filesystem._localPath(target))).toBe(false);
 			breadcrumbs.forEach(e => {
-				expect(fs.existsSync(e)).toBe(false);
+				expect(fs.existsSync(filesystem._localPath(e))).toBe(false);
 			});
 		});
 
@@ -169,7 +169,7 @@ describe('filesystem', () => {
 
 			expect(fs.existsSync(filesystem._localPath(target))).toBe(false);
 			breadcrumbs.forEach((e, i) => {
-				expect(fs.existsSync(e)).toBe(i === 0);
+				expect(fs.existsSync(filesystem._localPath(e))).toBe(i === 0);
 			});
 
 			expect(meta.ETag).not.toBe((await filesystem.meta({
