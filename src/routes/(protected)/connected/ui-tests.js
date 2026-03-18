@@ -15,4 +15,12 @@ test.describe('connected', () => {
 
   test('default', ({ page }) => expect(page.locator('h1 + p')).toHaveText('No connected apps'));
 
+  test.describe('authorize', () => {
+
+    test.beforeEach(stub.authorizeApp);
+
+    test('li', ({ page }) => expect(page.locator('li')).toHaveText('localhost:4173/sample-app'));
+    
+  });
+
 });

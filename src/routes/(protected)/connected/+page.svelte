@@ -13,18 +13,14 @@ const groupings = util.group.asArray(data.connections, e => e.data.client_id);
 
 {:else}
 
-<ul>
+<ol>
 {#each groupings as item }
 	{@const name = logic.groupName(item.key) }
 	{@const id = item.values.at(0).data.client_id }
 	<li>
 		<a href={ `/connected/${ util.hex.encode(id) }` }>{ name }</a>
-		{#if item.key !== name }
-		<span> ({ id })</span>
-		{/if}
 	</li>
 {/each}
-
-</ul>
+</ol>
 
 {/if}

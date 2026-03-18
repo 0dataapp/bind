@@ -61,6 +61,15 @@ const mod = {
 		return extended;
 	},
 
+	authorizeApp: async ({ page }) => {
+    await page.goto('/sample-app');
+    await page.locator('a[role="button"]').click();
+    await expect(page).toHaveURL(/\/authorize/);
+    await page.locator('select').selectOption('local_custody');
+    await page.locator('input[type="submit"]').click();
+    await page.goto('/connected');
+  },
+
 };
 
 export default mod;

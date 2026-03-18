@@ -13,5 +13,15 @@ describe('groupName', () => {
 		const item = stub.origin();
 		expect(mod.groupName(item)).toBe(new URL(item).hostname);
 	});
+
+	test('removes www.', () => {
+		const item = stub.origin().replace('://', '://www.');
+		expect(mod.groupName(item)).toBe(new URL(item).hostname.replace('www.', ''));
+	});
+
+	test('includes path', () => {
+		const item = `${ stub.origin() }/${ Math.random().toString() }`;
+		expect(mod.groupName(item)).toBe(item.split('://').pop());
+	});
 	
 });
