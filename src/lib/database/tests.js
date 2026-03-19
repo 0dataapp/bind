@@ -12,7 +12,7 @@ const folder = path.join(_DATA_DIRECTORY, mod._subdirectory());
 describe('collection', () => {
 
 	afterAll(() => {
-	  fs.readdirSync(folder).forEach(e => fs.unlinkSync(path.join(folder, e)));
+		setTimeout(() => fs.readdirSync(folder).forEach(e => fs.unlinkSync(path.join(folder, e))), 100);
 	});
 
 	const _collection = e => mod.collection(e || Math.random().toString(), {

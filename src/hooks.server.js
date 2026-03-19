@@ -11,7 +11,7 @@ Object.keys(hold._wrappers).forEach(wrapperId => hold.interface(wrapperId).start
 import local_disk from '$lib/hold/local_disk.js';
 import git_https from '$lib/hold/git_https.js';
 
-import depot from '$lib/depot.js';
+import depot from '$lib/depot/auth.js';
 
 import oauth from '$lib/oauth-implicit.js';
 

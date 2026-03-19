@@ -1,5 +1,5 @@
 import { auth } from '$lib/auth/config';
-import depot from '$lib/depot.js';
+import depot from '$lib/depot/auth.js';
 
 const mod = {
 
@@ -39,7 +39,7 @@ export async function load({ url, request }) {
 		redirect_uri: params.redirect_uri,
 		client_id: params.client_id,
 		scopes: logic.parseScopes(params.scope),
-		depots: (await depot.options2(request)).filter(e => !e._subsources || e._subsources.length),
+		depots: (await depot.options(request)).filter(e => !e._subsources || e._subsources.length),
 	};
 };
 
@@ -52,7 +52,7 @@ export const actions = {
 	default: async ({ request, url }) => {
 		const formData = await request.formData();
 
-		const _depot = (await depot.options2(request)).map(e => e._subsources ? e._subsources : e).flat().filter(e => e.optionId === formData.get('_depot')).shift();
+		const _depot = (await depot.options(request)).map(e => e._subsources ? e._subsources : e).flat().filter(e => e.optionId === formData.get('_depot')).shift();
 
 		if (!_depot)
 			return {};

@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import stub from '$lib/stub.js';
-import { options } from '$lib/depot/options.js';
+import depot from '$lib/depot.js';
 
 const test = stub.signedIn('/sources');
 
@@ -30,7 +30,7 @@ test.describe('mockAllAvailable', () => {
 
   test('h4', ({ page }) => expect(page.locator('h4')).toHaveText('Link account'));
 
-  Object.values(options).filter(e => e.meta.id !== 'local_custody').forEach((e, i) => {
+  Object.values(depot.options).filter(e => e.meta.id !== 'local_custody').forEach((e, i) => {
 
     test(e.meta.id, ({ page }) => expect(page.locator(`.available button:nth-child(${ i + 1 })`)).toHaveText(e.meta.name));
   });
@@ -47,7 +47,7 @@ test.describe('mockAllLinked', () => {
 
   test('h4', ({ page }) => expect(page.locator('h4')).toHaveText('Connected'));
 
-  Object.values(options).filter(e => e.meta.id !== 'local_custody').forEach((e, i) => {
+  Object.values(depot.options).filter(e => e.meta.id !== 'local_custody').forEach((e, i) => {
 
     test.describe(e.meta.id, () => {
 
