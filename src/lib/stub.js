@@ -67,6 +67,7 @@ const mod = {
     await expect(page).toHaveURL(/\/authorize/);
     await page.locator('select').selectOption('local_custody');
     await page.locator('input[type="submit"]').click();
+    await expect(page).toHaveURL(/\/sample-app/);
     await page.goto('/connected');
   },
 
