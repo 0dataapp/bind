@@ -3,27 +3,36 @@ import { admin } from '$lib/auth/client';
 
 let { didCreate } = $props();
 
+const password = 'changeme123';
+
 const state = $state({});
 const onsubmit = async event => {
   state.error = null;
   
   const { data, error } = await admin.createUser({
     email: event.target.querySelector('[name="email"]').value,
-    password: 'changeme123',
+    password,
     name: '',
   });
 
-  if (error) {
-    return state.error = error.message;
-  }
+  if (error)
+    return state.flash = {
+      type: 'error',
+      message: error.message,
+    };
 
   didCreate(data.user);
+
+  return state.flash = {
+    type: 'success',
+    message: `Account created with password <code>${ password }</code>`,
+  };
 }
 import Flash from '$lib/component/Flash.svelte';
 </script>
 
-{#if state.error }
-  <Flash type="error" message={ state.error } />
+{#if state.flash }
+  <Flash type={ state.flash.type } message={ state.flash.message } />
 {/if}
 
 <form onsubmit={ onsubmit }>

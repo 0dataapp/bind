@@ -3,7 +3,7 @@ export let message = '';
 export let type = '';
 </script>
 
-<p><flash class={ type }>{ message }</flash></p>
+<p><flash class={ type }>{@html message }</flash></p>
 
 <style>
 flash {
