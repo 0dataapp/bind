@@ -16,6 +16,7 @@ Just read and write data with the [remoteStorage.js library](https://remotestora
 - authentication
 - personal data stores
 - interoperable bridges
+- both no-login and account access
 
 ### Sample code
 
