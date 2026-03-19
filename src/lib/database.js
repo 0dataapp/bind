@@ -1,13 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 
+import { env } from '$env/dynamic/private';
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
-
-import { env } from '$env/dynamic/private';
 
 import { ulid } from 'ulid';
 
