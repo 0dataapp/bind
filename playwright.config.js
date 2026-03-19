@@ -14,4 +14,5 @@ export default defineConfig({
 	testDir: 'src/routes',
 	testMatch: /routes(\/.*)?\/ui-tests.js/,
 	outputDir: '__playwright',
+	workers: 1,
 });
