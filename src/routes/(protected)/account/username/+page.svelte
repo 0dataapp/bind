@@ -1,5 +1,5 @@
 <script>
-import { updateUser } from '$lib/auth/client';
+import { updateUser, isUsernameAvailable } from '$lib/auth/client';
 import { invalidateAll } from '$app/navigation';
 
 const state = {
@@ -9,10 +9,20 @@ const state = {
 
 const mod = {
 
-	onsubmit: event => {
+	onsubmit: async event => {
 		event.preventDefault();
 
 		state.error = null;
+
+		const { data, error } = await isUsernameAvailable({
+			username: state.username,
+		});
+
+		if (error)
+			return state.setError(error.message)
+
+		if (!data.available)
+			return state.setError('Username not available');
 
 		updateUser({
 			username: state.username,

@@ -10,6 +10,7 @@ export const {
 
 	changePassword,
 	updateUser,
+	isUsernameAvailable,
 
 	linkSocial,
 	unlinkAccount,
