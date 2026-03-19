@@ -2,6 +2,7 @@ import { describe, test, expect, afterAll } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import mod from '../database.js';
+import util from '$lib/util.js';
 
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -178,6 +179,30 @@ describe('collection', () => {
 				expect(JSON.parse(fs.readFileSync(path.join(folder, `${ collection }.json`), 'utf8'))).toEqual({ items: [{ id, key, data: JSON.stringify(data) }] });
 			});
 
+		});
+
+	});
+
+	describe('concurrency', () => {
+
+		test('direct', async () => {
+			const coll = _collection();
+			const items = Array.from({ length: 10 }).map(e => ({
+				id: Math.random().toString(),
+			}));
+			await Promise.all(items.map(coll.__create));
+			const sort = util.sort.asc(e => e.id);
+			expect((await coll.__getItems()).sort(sort)).toMatchObject(items.sort(sort));
+		});
+
+		test('delayed', async () => {
+			const coll = _collection();
+			const items = Array.from({ length: 100 }).map(e => ({
+				id: Math.random().toString(),
+			}));
+			await Promise.all(items.map(e => new Promise((res) => setTimeout(() => res(coll.__create(e)), Math.random() * 10))));
+			const sort = util.sort.asc(e => e.id);
+			expect((await coll.__getItems()).sort(sort)).toMatchObject(items.sort(sort));
 		});
 
 	});

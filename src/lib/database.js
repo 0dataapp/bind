@@ -9,6 +9,8 @@ import { JSONFile } from 'lowdb/node';
 
 import { ulid } from 'ulid';
 
+const collections = {};
+
 const mod = {
 
 	_subdirectory: () => '__db',
@@ -20,19 +22,18 @@ const mod = {
 		const folder = path.join(env.DATA_DIRECTORY || params.folder || __dirname, mod._subdirectory());
 		fs.mkdirSync(folder, { recursive: true });
 
-		let db;
 		const _this = {};
 		return Object.assign(_this, {
 
 			_db: async () => {
-				if (db)
-					return db;
+				if (collections[collection])
+					return collections[collection];
 
-				db = new Low(new JSONFile(path.join(folder, `${ collection }.json`)), { items: [] })
+				collections[collection] = new Low(new JSONFile(path.join(folder, `${ collection }.json`)), { items: [] })
 
-				await db.read();
+				await collections[collection].read();
 
-				return db;
+				return collections[collection];
 			},
 
 			__create: async obj => {
