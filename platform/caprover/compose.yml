@@ -7,9 +7,16 @@ services:
     restart: always
     caproverExtra:
       containerHttpPort: 3000
+    environment:
+      BIND_SECRET: $$cap_bind_secret
 caproverOneClickApp:
   instructions:
     end: Bind is available as $$cap_appname. Next configure your domains.
   displayName: Bind
   description: Git-backed web apps.
   documentation: See documentation for details https://bind.0data.app
+  variables:
+    - id: $$cap_bind_secret
+      label: Secret
+      defaultValue: 'true'
+      description: 'This is used to encrypt credentials. Generate one via `openssl rand -hex 32` <code>openssl rand -hex 32</code>, or visit https://better-auth.com/docs/installation#set-environment-variables <a href="https://better-auth.com/docs/installation#set-environment-variables">'
