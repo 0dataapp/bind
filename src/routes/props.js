@@ -1,5 +1,3 @@
-const props = {
+export const props = {
 	title: 'Bind',
 };
-
-export default props;

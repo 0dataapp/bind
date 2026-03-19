@@ -1,4 +1,4 @@
-import props from './props.js';
+import { props } from './props.js';
 
 /** @type {import('./$types').LayoutLoad} */
 export function load({ route }) {

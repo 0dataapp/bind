@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import props from './props.js';
+import { props } from './props.js';
 
 test.describe('home', () => {
 
