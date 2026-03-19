@@ -18,5 +18,5 @@ caproverOneClickApp:
   variables:
     - id: $$cap_bind_secret
       label: Secret
-      defaultValue: 'true'
-      description: 'This is used to encrypt credentials. Generate one via `openssl rand -hex 32` <code>openssl rand -hex 32</code>, or visit https://better-auth.com/docs/installation#set-environment-variables <a href="https://better-auth.com/docs/installation#set-environment-variables">'
+      validRegex: /.{1,}/
+      description: "Used to encrypt credentials. Generate one via `openssl rand -hex 32`, or use Better Auth's [Generate Secret](https://better-auth.com/docs/installation#set-environment-variables) button."
