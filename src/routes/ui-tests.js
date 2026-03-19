@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { props } from './props.js';
+import { load } from './+layout.js';
 
 test.describe('home', () => {
 
@@ -7,9 +7,9 @@ test.describe('home', () => {
 
   test.describe('title', () => {
 
-    test('head', async ({ page }) => expect(await page.title()).toEqual(props.title));
+    test('head', async ({ page }) => expect(await page.title()).toEqual(load().title));
 
-    test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(props.title));
+    test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(load().title));
     
   });
 

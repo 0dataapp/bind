@@ -5,7 +5,7 @@ import '$lib/component/zero-data.css';
 import './style.css';
 
 import { page } from '$app/state';
-let { children, data } = $props();
+let { children } = $props();
 </script>
 
 <svelte:head>
@@ -26,13 +26,13 @@ let { children, data } = $props();
 
 {@render children?.()}
 
-{#if data.navigation.length }
+{#if page.data.navigation.length }
 	
 <hr>
 
 <footer>
 	<nav>
-		{#each data.navigation as section, index}
+		{#each page.data.navigation as section, index}
 			{#if index}&nbsp;·&nbsp;{/if}<a href="{section.path}">{section.title}</a>
 		{/each}
 	</nav>
