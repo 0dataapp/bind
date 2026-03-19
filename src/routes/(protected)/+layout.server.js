@@ -15,6 +15,9 @@ export async function load({ locals, url, route }) {
 	if (route?.id === '/(protected)/dash')
 		navigation.push({ path: '/account', title: 'Account' });
 	
+	if (authenticated.user.role === 'admin')
+		navigation.push({ path: '/admin', title: 'Admin' });
+	
 	navigation.push({ path: '/logout', title: 'Sign out' });
 
 	return {
