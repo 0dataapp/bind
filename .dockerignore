@@ -11,7 +11,8 @@ npm-debug.log
 
 # LOCAL
 .env*
-!.env-sample
+!.env.sample
+!.env.testing
 
 # OS
 **/*.DS_Store

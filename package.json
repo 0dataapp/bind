@@ -5,7 +5,7 @@
     "start": "vite dev",
     "build": "vite build",
     "preview": "npm run build && nodemon --watch src/lib/storage.js --exec \"node --env-file=.env build\"",
-    "env:test": "npm start -- --mode testing --port 4173",
+    "env:test": "npm start -- --mode testing",
     "test": "npm run test:ui && npm run test:unit -- --run",
     "test:ui": "playwright test",
     "test:ui:watch": "playwright test --ui",

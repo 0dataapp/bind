@@ -10,7 +10,6 @@ package-lock.json
 
 # LOCAL
 .env*
-!.env-sample
 
 # VITEPRESS
 .vitepress/dist
