@@ -56,13 +56,46 @@ import CreateAccount from './CreateAccount.svelte';
 
 :global(wrap.admin) {
   --bind-focus-cap: 700px;
+  --zd-c-bg: #e3e0d4;
+  --zd-c-bg-focus: #f4f1e3;
+}
+
+:global(wrap.admin article) {
+  padding: 0;
+  background: none;
+  
+  :global(&, *) {
+    box-shadow: none;
+  }
+
+  :global(.gridjs-container) {
+    padding: 0;
+  }
+
+  :global(.gridjs-input) {
+    background-color: var(--zd-c-bg-alt);
+  }
 
   :global(.gridjs-wrapper) {
     border-radius: var(--bind-corner);
+
+    :global(.gridjs-tbody, th, td) {
+      background: none;
+    }
+
+    :global(thead tr, tr:nth-child(2n)) {
+      background-color: var(--zd-c-bg-alt2);
+    }
+
+    :global(tbody tr) {
+      background-color: var(--zd-c-bg-alt);
+    }
+
+    :global(th), :global(td) {
+      padding: calc(var(--bind-spacing) / 2);
+    }
   }
 
-  :global(th), :global(td) {
-    padding: calc(var(--bind-spacing) / 2);
-  }
 }
+
 </style>

@@ -41,3 +41,9 @@ import Flash from '$lib/component/Flash.svelte';
     <input type="submit" value="Create account" />
   </fieldset>
 </form>
+
+<style>
+input[type="email"] {
+  --pico-background-color: var(--zd-c-bg-alt);
+}
+</style>
