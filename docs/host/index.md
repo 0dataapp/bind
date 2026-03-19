@@ -59,7 +59,7 @@ cloudron update --image 0data/bind:cloudron --app bind
 
 ::: details Setup
 
-0. [Install Caprover](https://caprover.com/docs/get-started.html) via one-click DigitalOcean droplet.
+0. [Install Caprover](https://caprover.com/docs/get-started.html) via one-click DigitalOcean droplet, or manually on any hosting platform.
 1. Navigate to `Apps` → `Create A New App` → `One-Click Apps/Databases`
 , then search for `>> TEMPLATE <<` or scroll to the bottom.
 2. Select the `>> TEMPLATE <<` app and paste the configuration from [`deploy/caprover/compose.yml`](https://github.com/0dataapp/bind/blob/master/deploy/caprover/compose.yml).
@@ -69,7 +69,20 @@ cloudron update --image 0data/bind:cloudron --app bind
 
 ::: details Updates
 
-1. Navigate to `Deployment`, enter `0data/bind:latest` into `Deploy via ImageName`, then click `Deploy`. It may take some time after 'finishing' so give it a minute.
+1. Navigate to `Deployment`, configure with the parameters below, then click `Deploy Now`.
+
+<dl>
+<dt>Method 6: Deploy via ImageName</dt>
+<dd>
+
+```
+0data/bind:latest
+```
+
+</dd>
+</dl>
+
+After 'finishing', give it a minute, to fully load and come online.
 
 :::
 
@@ -86,7 +99,7 @@ cloudron update --image 0data/bind:cloudron --app bind
 
 1. Navigate to `Projects` → choose/create a project… → `Resources` → `+ New` → `Applications` → `Git Based` → `Public Repository`.
 
-2. Configure the following parameters:
+2. Configure with the parameters below, then select `Continue`:
 
 <dl>
 <dt>Repository URL</dt>
@@ -115,22 +128,16 @@ Docker Compose
 </dd>
 </dl>
 
-3. Select `Continue`.
+3. On the `Configuration` page, add a domain under `General` → `Domains` by entering something like `https://bind.[your root domain]` and clicking `Save`, or make a random one by clicking `Generate Domain`.
 
-4. On the `Configuration` page, add a domain under `General` → `Domains` by entering something like `https://bind.[your root domain]` and clicking `Save`, or make a random one by clicking `Generate Domain`.
-
-5. Click `Deploy`.
+4. Click `Deploy`.
 
 In case of [SSL issues](https://coolify.io/docs/troubleshoot/dns-and-domains/lets-encrypt-not-working) click `Redeploy`.
-
----
-
-You may want to enable `Force HTTPS by redirecting all HTTP traffic to HTTPS`.
 
 :::
 
 ::: details Updates
 
-1. Click `Redeploy` or `Advanced` → `Force deploy (without cache)` to pull from the Git repository.
+1. Click `Redeploy`, or pull from the Git repository via `Advanced` → `Force deploy (without cache)`.
 
 :::

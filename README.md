@@ -4,9 +4,13 @@ Git-backed web apps.
 
 https://bind.0data.app
 
-## Shortcuts
+- [Quickstart](https://bind.0data.app/quickstart): Try apps with Bind
+- [How it works](https://bind.0data.app/understand): Design explainer
+- [Integrate](https://bind.0data.app/integrate): Short intro to making apps
+- [Host](https://bind.0data.app/host): Run Bind on your own server
+- [Codebase](https://bind.0data.app/codebase): Technical overview
 
-See [Codebase](https://bind.0data.app/codebase/) for a more in-depth development guide.
+## Shortcuts
 
 ### Install
 

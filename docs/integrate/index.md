@@ -51,7 +51,7 @@ json = await scope.getFile('data.json');
 todos = JSON.parse(json);
 ```
 
-Pretty similar, but now the app data automatically syncs when a personal data store is connected.
+Basically the same flow, but now the app data automatically syncs when a personal data store is connected.
 
 If you prefer separate files per object, just write to a different path for each one (they're just files):
 
