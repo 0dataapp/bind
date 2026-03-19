@@ -6,6 +6,11 @@ Each panel maintain its own app catalog for one-click installs; if Bind is not i
 
 Simpler options are first.
 
+::: warning Safety note
+
+After setup, you may want disable signups by going to `/admin/settings` on your instance.
+
+:::
 ### [Cloudron](https://cloudron.io)
 
 - automatic updates
@@ -30,10 +35,6 @@ git clone https://github.com/0dataapp/bind
 cd bind
 cloudron install --image 0data/bind:cloudron --location bind
 ```
-
----
-
-Once you sign up for an account, you may want disable signups by setting `DISABLE_SIGNUPS` to `true` in `/app/data/.env` and restarting the app.
 
 :::
 
@@ -63,10 +64,6 @@ cloudron update --image 0data/bind:cloudron --app bind
 , then search for `>> TEMPLATE <<` or scroll to the bottom.
 2. Select the `>> TEMPLATE <<` app and paste the configuration from [`deploy/caprover/compose.yml`](https://github.com/0dataapp/bind/blob/master/deploy/caprover/compose.yml).
 3. Name your app `bind` or something else, then click `Deploy`.
-
----
-
-Once you sign up for an account, you may want disable signups by adding `DISABLE_SIGNUPS=true` in `App Configs` →  `Environment Variables`.
 
 :::
 
@@ -128,9 +125,7 @@ In case of [SSL issues](https://coolify.io/docs/troubleshoot/dns-and-domains/let
 
 ---
 
-Once you sign up for an account, you may want disable signups by navigating to `Environment Variables` and set `DISABLE_SIGNUPS` to `true`.
-
-You may also want to enable `Force HTTPS by redirecting all HTTP traffic to HTTPS`.
+You may want to enable `Force HTTPS by redirecting all HTTP traffic to HTTPS`.
 
 :::
 

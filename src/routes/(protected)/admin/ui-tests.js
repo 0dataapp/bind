@@ -17,4 +17,12 @@ test.describe('mockAdmin', () => {
     
   });
 
+  test.describe('settings', () => {
+
+    test('href', ({ page }) => expect(page.locator('a.settings')).toHaveAttribute('href', '/admin/settings'));
+    
+    test('text', ({ page }) => expect(page.locator('a.settings')).toHaveText('Settings'));
+    
+  });
+
 });

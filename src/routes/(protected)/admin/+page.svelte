@@ -41,6 +41,10 @@ const options = {
 import CreateAccount from './CreateAccount.svelte';
 </script>
 
+<a class="settings" href="/admin/settings">Settings</a>
+
+<hr>
+
 <Grid bind:this={ grid } { ...options } />
 
 <CreateAccount didCreate={ e => grid.instance.updateConfig({

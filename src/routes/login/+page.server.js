@@ -1,11 +1,11 @@
 import { redirect } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
 import props from './props.js';
+import db from '$lib/database.js';
 
 /** @type {import('./$types').PageServerLoad} */
-export function load({ locals }) {
+export async function load({ locals }) {
 	return locals.authenticated ? redirect(307, '/dash') : {
 		...props,
-		DISABLE_SIGNUPS: env.DISABLE_SIGNUPS,
+		disable_signups: await db.collection('admin_settings').hydrating.getItems().then(e => e.filter(e => e.key === 'disable_signups').map(e => e.value).shift()),
 	};
 };

@@ -26,7 +26,7 @@ import AccountForm from '$lib/component/AccountForm.svelte';
 
 <AccountForm { ...propsProps } />
 
-{#if !data.DISABLE_SIGNUPS }
+{#if !data.disable_signups }
 
 <a class="signup" href="/signup">Create account</a>
 	
