@@ -35,7 +35,7 @@ export const actions = {
 		return {
 			flash: {
 				type: 'success',
-				message: 'Settings updated'
+				message: 'Settings updated',
 			},
 		};
 	},
