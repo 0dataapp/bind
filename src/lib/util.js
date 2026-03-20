@@ -20,6 +20,13 @@ const mod = {
 		},
 	},
 
+	breadcrumbs: (array, delimiter = '/') => array.reduce((coll, item) => {
+		if (coll.at(-1))
+			item = `${ coll.at(-1) || '' }${ delimiter }${ item }`;
+
+		return coll.concat(item);
+	}, []),
+
 	humanLink: e => {
 		try {
 			const url = new URL(e);

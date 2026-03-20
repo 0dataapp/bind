@@ -1,3 +1,5 @@
+import util from '$lib/util';
+
 const mod = {
 
 	util: {
@@ -163,12 +165,7 @@ const mod = {
 			target,
 		});
 
-		const _breadcrumbs = target.split('/').slice(1).reduce((coll, item) => {
-			if (coll.at(-1))
-				item = `${ coll.at(-1) || '' }/${ item }`;
-
-			return coll.concat(item);
-		}, []);
+		const _breadcrumbs = util.breadcrumbs(target.split('/').slice(1));
 
 		if (req.method === 'PUT' && await Promise.all(_breadcrumbs.slice(1).map(async target => {
 			const exists = await hold.exists({
