@@ -1,4 +1,5 @@
 import { redirect } from '@sveltejs/kit';
+import util from '$lib/util.js';
 
 /** @type {import('./$types').LayoutServerLoad} */
 export async function load({ locals, url, route }) {
@@ -23,6 +24,7 @@ export async function load({ locals, url, route }) {
 	return {
 		username: authenticated.user.username,
 		navigation,
+		classes: !route.id ? '' : util.breadcrumbs(route.id.split('/').filter(e => !!e && !e.includes('(')).map(util.slugify), '-').join(' '),
 	};
 };
 

@@ -27,6 +27,8 @@ const mod = {
 		return coll.concat(item);
 	}, []),
 
+	slugify: e => e.replaceAll(/[\W ]/g, ''),
+
 	humanLink: e => {
 		try {
 			const url = new URL(e);

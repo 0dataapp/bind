@@ -18,7 +18,7 @@ let { children } = $props();
 	<meta name="referrer" content="no-referrer" />
 </svelte:head>
 
-<wrap class={ page.route.id?.split('/').pop() || 'home' }>
+<wrap class={ page.data.classes }>
 
 <focus class="container-fluid">
 
