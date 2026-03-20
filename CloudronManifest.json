@@ -9,5 +9,22 @@
     "localstorage": {}
   },
   "icon": "file://docs/public/identity.svg",
-  "manifestVersion": 2
+  "manifestVersion": 2,
+  "id": "app.0data.bind",
+  "author": "Rosano",
+  "contactEmail": "manifest.cloudron.io@xeari.com",
+  "iconUrl": "https://bind.0data.app/identity.svg",
+  "packagerName": "Zero Data App",
+  "packagerUrl": "https://0data.app",
+  "minBoxVersion": "9.1.0",
+  "description": "Git-backed web apps.",
+  "changelog": "file://CHANGELOG.md",
+  "postInstallMessage": "Create your administrative account to get started.",
+  "tags": [
+    "data",
+    "files"
+  ],
+  "mediaLinks": [
+    "https://static.rosano.ca/0data/bind/screenshot.png"
+  ]
 }
