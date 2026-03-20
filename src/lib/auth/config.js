@@ -107,18 +107,16 @@ export const auth = betterAuth({
             headers: ctx.headers,
           });
 
-          const callback = {
-            github: () => {
-              ctx.body
-            },
-          }[ctx.body.providerId];
-
-          if (callback)
-            await depot.endpoint(ctx.body.providerId).invalidate({
+          const params = {
+            github: {
               clientId: process.env.GITHUB_CLIENT_ID,
               clientSecret: process.env.GITHUB_CLIENT_SECRET,
               accessToken,
-            });
+            },
+          }[ctx.body.providerId];
+
+          if (params)
+            await depot.endpoint(ctx.body.providerId).invalidate(params);
         },
       }[ctx.path]].filter(e => !!e).map(e => e()));
 
