@@ -15,8 +15,8 @@ test('setup', async ({ page }) => {
 
   await expect(page).toHaveURL(/\/dash/);
 
-  account.address = await page.locator('.address').textContent();
-
   await page.context().storageState({ path: STORAGE_STATE });
-  fs.writeFileSync(process.env.ACCOUNT_DATA, JSON.stringify(account));
+  fs.writeFileSync(process.env.ACCOUNT_DATA, JSON.stringify(Object.assign(account, {
+    address: await page.locator('.address').textContent(),
+  })));
 });
