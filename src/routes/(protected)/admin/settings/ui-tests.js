@@ -1,81 +1,85 @@
-import { expect } from '@playwright/test';
-import stub from '$lib/stub.js';
+import { test, expect } from '@playwright/test';
 
 import fs from 'fs';
 import path from 'path';
 
-const test = stub.signedIn('/admin/settings');
+test.describe('settings', () => {
 
-test('default', ({ page }) => expect(page.locator('h1:nth-of-type(2)')).toHaveText('404'));
-
-test.describe('mockAdmin', () => {
-
-  test.beforeEach(({ page }) => page.goto('/admin/settings?test=mockAdmin'));
-
-  test.describe('title', () => {
-
-    test('head', async ({ page }) => expect(await page.title()).toEqual('Settings'));
-
-    test('h1', ({ page }) => expect(page.locator('h1')).toHaveText('Settings'));
-    
+  test('default', async ({ page }) => {
+    await page.goto('/admin/settings');
+    expect(page.locator('h1:nth-of-type(2)')).toHaveText('404');
   });
 
-  test.describe('disable_signups', () => {
+  test.describe('mockAdmin', () => {
 
-    // test.beforeAll(async () => {
-    //   const dirPath = path.join(process.cwd(), '__playwright/__db');
-    //   if (fs.existsSync(dirPath))
-    //     fs.rmSync(dirPath, { recursive: true, force: true });
-    // });
+    test.beforeEach(({ page }) => page.goto('/admin/settings?test=mockAdmin'));
 
-    test('label', ({ page }) => expect(page.locator('label[for="disable_signups"]')).toHaveText('Disable signups'));
+    test.describe('title', () => {
 
-    test('input', ({ page }) => expect(page.locator('input[type="checkbox"]')).toHaveAttribute('name', 'disable_signups'));
+      test('head', async ({ page }) => expect(await page.title()).toEqual('Settings'));
 
-    // test('check', async ({ page }) => {
-    //   const isChecked = await page.locator('#disable_signups').isChecked();
+      test('h1', ({ page }) => expect(page.locator('h1')).toHaveText('Settings'));
+      
+    });
 
-    //   if (!isChecked)
-    //     await page.locator('#disable_signups').check();
+    test.describe('disable_signups', () => {
 
-    //   await page.locator('input[type="submit"]').click();
+      // test.beforeAll(async () => {
+      //   const dirPath = path.join(process.cwd(), '__playwright/__db');
+      //   if (fs.existsSync(dirPath))
+      //     fs.rmSync(dirPath, { recursive: true, force: true });
+      // });
 
-    //   await expect(page.locator('flash.success')).toBeVisible();
-    //   expect(page.locator('flash.success')).toHaveText('Settings updated');
-    //   await expect(page.locator('#disable_signups')).toBeChecked();
+      test('label', ({ page }) => expect(page.locator('label[for="disable_signups"]')).toHaveText('Disable signups'));
 
-    //   await page.goto('/logout');
+      test('input', ({ page }) => expect(page.locator('input[type="checkbox"]')).toHaveAttribute('name', 'disable_signups'));
 
-    //   await page.goto('/login');
-    //   expect(await page.locator('a.signup')).toBeHidden();
+      // test('check', async ({ page }) => {
+      //   const isChecked = await page.locator('#disable_signups').isChecked();
 
-    //   await page.goto('/signup');
-    //   await expect(page).toHaveURL(/\/login/);
-    // });
+      //   if (!isChecked)
+      //     await page.locator('#disable_signups').check();
 
-    // test('uncheck', async ({ page }) => {
-    //   const isChecked = await page.locator('#disable_signups').isChecked();
+      //   await page.locator('input[type="submit"]').click();
 
-    //   if (isChecked)
-    //     await page.locator('#disable_signups').uncheck();
+      //   await expect(page.locator('flash.success')).toBeVisible();
+      //   expect(page.locator('flash.success')).toHaveText('Settings updated');
+      //   await expect(page.locator('#disable_signups')).toBeChecked();
 
-    //   await page.locator('input[type="submit"]').click();
+      //   await page.goto('/logout');
 
-    //   await expect(page.locator('flash.success')).toBeVisible();
-    //   expect(page.locator('flash.success')).toHaveText('Settings updated');
-    //   await expect(page.locator('#disable_signups')).not.toBeChecked();
+      //   await page.goto('/login');
+      //   expect(await page.locator('a.signup')).toBeHidden();
 
-    //   await page.goto('/logout');
+      //   await page.goto('/signup');
+      //   await expect(page).toHaveURL(/\/login/);
+      // });
 
-    //   await page.goto('/login');
-    //   expect(await page.locator('a.signup')).toBeVisible();
+      // test('uncheck', async ({ page }) => {
+      //   const isChecked = await page.locator('#disable_signups').isChecked();
 
-    //   await page.goto('/signup');
-    //   await expect(page.locator('h1')).toHaveText('Create account');
-    // });
-    
+      //   if (isChecked)
+      //     await page.locator('#disable_signups').uncheck();
+
+      //   await page.locator('input[type="submit"]').click();
+
+      //   await expect(page.locator('flash.success')).toBeVisible();
+      //   expect(page.locator('flash.success')).toHaveText('Settings updated');
+      //   await expect(page.locator('#disable_signups')).not.toBeChecked();
+
+      //   await page.goto('/logout');
+
+      //   await page.goto('/login');
+      //   expect(await page.locator('a.signup')).toBeVisible();
+
+      //   await page.goto('/signup');
+      //   await expect(page.locator('h1')).toHaveText('Create account');
+      // });
+      
+    });
+
+    test('continue', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Continue'));
+
   });
-
-  test('continue', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Continue'));
 
 });

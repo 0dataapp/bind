@@ -1,7 +1,7 @@
 <script>
 /** @type {import('./$types').PageProps} */
 const { data } = $props();
-const account = `${ data.username }@${ data.origin }`;
+const address = `${ data.username }@${ data.origin }`;
 
 import CopyButton from '$lib/component/CopyButton.svelte';
 </script>
@@ -10,8 +10,8 @@ import CopyButton from '$lib/component/CopyButton.svelte';
 
 <form>
   <fieldset role="group">
-    <pre class="account">{ account }</pre>
-    <CopyButton text={ account } />
+    <pre class="address">{ address }</pre>
+    <CopyButton text={ address } />
   </fieldset>
 </form>
 

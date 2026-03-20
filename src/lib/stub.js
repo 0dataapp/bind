@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import fs from 'fs';
 
 const mod = {
 
@@ -29,36 +30,16 @@ const mod = {
 
 	scope: () => `${ mod.slug() }:rw`,
 
-	signedIn (startPage) {
-		const extended = test.extend({
-			account: ({ page }, use) => use(mod.account()),
-		});
+	signedIn2: () => test.extend({
+		account: ({}, use) => use(JSON.parse(fs.readFileSync(process.env.ACCOUNT_DATA, 'utf-8'))),
+	}),
 
-		extended.beforeEach(async ({ page, account }) => {
-			if (startPage && startPage !== '/logout') {
-				await page.goto(startPage);
-				await expect(page).toHaveURL(/\/login/);
-			}
-
-			await page.goto('/signup');
-
-			await page.locator('#email').fill(account.email);
-			await page.locator('#password').fill(account.password);
-			await page.locator('input[type="submit"]').click();
-
-			await expect(page).toHaveURL(/\/dash/);
-
-			if (startPage)
-				await page.goto(startPage);
-		});
-
-		if (startPage && startPage !== '/dash')
-			extended('dash', ({ page }) => expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard'));
+	signedIn3: startPage => ({ page }) => {
+		if (startPage !== '/dash')
+			expect(page.locator('a[href="/dash"]')).toHaveText('Dashboard');
 
 		if (startPage !== '/logout')
-			extended('logout', ({ page }) => expect(page.locator('a[href="/logout"]')).toHaveText('Sign out'));
-
-		return extended;
+			expect(page.locator('a[href="/logout"]')).toHaveText('Sign out');
 	},
 
 	authorizeApp: async ({ page }) => {

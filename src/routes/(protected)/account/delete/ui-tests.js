@@ -1,76 +1,77 @@
-import { expect } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import props from './props.js';
 import stub from '$lib/stub.js';
+const signedIn2 = stub.signedIn2();
 
-const test = stub.signedIn('/account/delete');
+test.describe('delete', () => {
 
-test.describe('title', () => {
+  test.beforeEach(({ page }) => page.goto('/account/delete'));
 
-	test('head', async ({ page }) => expect(await page.title()).toEqual(props.title));
+  test.describe('title', () => {
 
-	test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(props.title));
-	
-});
+  	test('head', async ({ page }) => expect(await page.title()).toEqual(props.title));
 
-test.describe('form', () => {
+  	test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(props.title));
+  	
+  });
 
-	test.describe('password', () => {
+  test.describe('form', () => {
 
-		test('label', ({ page }) => expect(page.locator('label[for="password"]')).toHaveText('Password'));
+  	test.describe('password', () => {
 
-		test.describe('input', () => {
+  		test('label', ({ page }) => expect(page.locator('label[for="password"]')).toHaveText('Password'));
 
-			test('type', ({ page }) => expect(page.locator('#password')).toHaveAttribute('type', 'password'));
+  		test.describe('input', () => {
 
-			test('placeholder', ({ page }) => expect(page.locator('#password')).toHaveAttribute('placeholder', '…'));
+  			test('type', ({ page }) => expect(page.locator('#password')).toHaveAttribute('type', 'password'));
 
-			test('required', ({ page }) => expect(page.locator('#password')).toHaveAttribute('required', ''));
+  			test('placeholder', ({ page }) => expect(page.locator('#password')).toHaveAttribute('placeholder', '…'));
 
-		});
-		
-	});
+  			test('required', ({ page }) => expect(page.locator('#password')).toHaveAttribute('required', ''));
 
-	test.describe('confirm', () => {
+  		});
+  		
+  	});
 
-		test('label', ({ page }) => expect(page.locator('label[for="confirm"]')).toHaveText('Confirmation (type CONFIRM)'));
+  	test.describe('confirm', () => {
 
-		test.describe('input', () => {
+  		test('label', ({ page }) => expect(page.locator('label[for="confirm"]')).toHaveText('Confirmation (type CONFIRM)'));
 
-			test('type', ({ page }) => expect(page.locator('#confirm')).toHaveAttribute('type', 'text'));
+  		test.describe('input', () => {
 
-			test('placeholder', ({ page }) => expect(page.locator('#confirm')).toHaveAttribute('placeholder', '…'));
+  			test('type', ({ page }) => expect(page.locator('#confirm')).toHaveAttribute('type', 'text'));
 
-			test('required', ({ page }) => expect(page.locator('#confirm')).toHaveAttribute('required', ''));
+  			test('placeholder', ({ page }) => expect(page.locator('#confirm')).toHaveAttribute('placeholder', '…'));
 
-		});
-		
-	});
+  			test('required', ({ page }) => expect(page.locator('#confirm')).toHaveAttribute('required', ''));
 
-	test.describe('submit', () => {
+  		});
+  		
+  	});
 
-		test('value', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Delete my data'));
+  	test.describe('submit', () => {
 
-		test.describe('error', () => {
+  		test('value', ({ page }) => expect(page.locator('input[type="submit"]')).toHaveAttribute('value', 'Delete my data'));
 
-			test('shows error', async ({ page, account }) => {
-				await page.locator('#password').fill(account.password);
-				await page.locator('#confirm').fill(stub.password());
-				await page.locator('input[type="submit"]').click();
+  		signedIn2('error', async ({ page, account }) => {
+  			await page.locator('#password').fill(account.password);
+  			await page.locator('#confirm').fill(stub.password());
+  			await page.locator('input[type="submit"]').click();
 
-				await expect(page.locator('flash.error')).toBeVisible();
-				expect(page.locator('flash.error')).toHaveText('Confirmation incorrect');
-			});
-			
-		});
+  			await expect(page.locator('flash.error')).toBeVisible();
+  			expect(page.locator('flash.error')).toHaveText('Confirmation incorrect');
+  		});
 
-		test('success', async ({ page, account }) => {
-			await page.locator('#password').fill(account.password);
-			await page.locator('#confirm').fill('CONFIRM');
-			await page.locator('input[type="submit"]').click();
+  		signedIn2('success', async ({ page, account }) => {
+  			await page.locator('#password').fill(account.password);
+  			await page.locator('#confirm').fill('CONFIRM');
+  			await page.locator('input[type="submit"]').click();
 
-			await expect(page).toHaveURL(/\//);
-		});
-		
-	});
-	
+  			await expect(page).toHaveURL(/\//);
+  		});
+  		
+  	});
+  	
+  });
+
 });

@@ -1,22 +1,19 @@
 import { test, expect } from '@playwright/test';
-import stub from '$lib/stub.js';
 
-test('redirects to home', async ({ page }) => {
-	await page.goto('/logout');
+test.describe('logout', () => {
 
-	expect(page).toHaveURL('/')
-});
+	test('redirects to home', async ({ page }) => {
+		await page.goto('/logout');
 
-test.describe('signedIn', () => {
+		expect(page).toHaveURL('/')
+	});
 
-	const signedIn = stub.signedIn();
-
-	signedIn('logs out', async ({ page }) => {
+	test('logs out', async ({ page }) => {
 		await page.goto('/logout');
 
 		await page.goto('/dash');
 
 		expect(page).toHaveURL(/\/login/);
 	});
-	
+
 });
