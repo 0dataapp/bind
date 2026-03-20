@@ -56,8 +56,11 @@ import CreateAccount from './CreateAccount.svelte';
 
 :global(wrap.admin) {
   --bind-focus-cap: 700px;
-  --zd-c-bg: #e3e0d4;
-  --zd-c-bg-focus: #f4f1e3;
+  background: var(--zd-c-bg-focus);
+
+  :global(focus) {
+    background: var(--zd-c-bg);
+  }
 }
 
 :global(wrap.admin article) {
