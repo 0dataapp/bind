@@ -22,3 +22,6 @@ build
 # ignore root pages in (protected) which are not authwalled
 src/routes/(protected)/+page.*
 src/routes/(protected)/+server.*
+
+# CLOUDRON
+CloudronVersions.json
