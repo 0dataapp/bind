@@ -13,6 +13,8 @@ import { env } from '$env/dynamic/private';
 import oauth from '$lib/oauth-implicit.js';
 import local_disk from '$lib/hold/local_disk.js';
 import depot from '$lib/depot.js';
+import { state } from '$lib/welcome.svelte.js';
+import db from '$lib/database.js';
 
 export const auth = betterAuth({
   secret: building ? 'BUILD_SECRET_ONLY' : env.BIND_SECRET,
@@ -123,6 +125,25 @@ export const auth = betterAuth({
       return res.shift() || {
         context: ctx,
       };
+    }),
+
+    after: createAuthMiddleware(async (ctx) => {
+      if (!ctx.path.startsWith('/sign-up'))
+        return
+
+      // null means not loaded
+      if (state.storedUsers !== 0)
+        return
+
+      const newSession = ctx.context.newSession;
+      if (!newSession)
+        return
+
+      state.storedUsers = 1;
+
+      await db.collection('user').__update(newSession.user.id, {
+        role: 'admin',
+      });
     }),
   },
 

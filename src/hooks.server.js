@@ -17,10 +17,17 @@ import oauth from '$lib/oauth-implicit.js';
 
 import { sequence } from '@sveltejs/kit/hooks';
 
+import { state } from '$lib/welcome.svelte.js';
+import { redirect } from '@sveltejs/kit';
+
 const prefix = '/storage';
 export const handle = sequence(
 
   ({ event, resolve }) => svelteKitHandler({ event, resolve, auth, building }),
+  
+  async ({ event, resolve }) => {
+    return !state.storedUsers && !event.request.url.match('/welcome') ? redirect(301, '/welcome') : resolve(event);
+  },
   
   async ({ event, resolve }) => {
     event.locals.authenticated = await auth.api.getSession({
