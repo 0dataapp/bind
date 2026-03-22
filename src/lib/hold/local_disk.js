@@ -55,6 +55,21 @@ const mod = {
 			})));
 		},
 
+		get (params) {
+			return fs.readFileSync(mod.util.localPath(params), util.encoding(params.contentType));
+		},
+
+		meta (params) {
+			const target = mod.util.localPath(params);
+
+			if (!fs.existsSync(target) || !fs.existsSync(this._metaPath(target)))
+				return {
+					ETag: 'empty',
+				};
+
+			return JSON.parse(fs.readFileSync(this._metaPath(target), 'utf8'));
+		},
+
 		remove ({ handle, target: _path, breadcrumbs }) {
 			const target = mod.util.localPath({
 				handle,
@@ -109,21 +124,6 @@ const mod = {
 
 		isFolder (params) {
 			return fs.statSync(mod.util.localPath(params)).isDirectory();
-		},
-
-		get (params) {
-			return fs.readFileSync(mod.util.localPath(params), util.encoding(params.contentType));
-		},
-
-		meta (params) {
-			const target = mod.util.localPath(params);
-
-			if (!fs.existsSync(target) || !fs.existsSync(this._metaPath(target)))
-				return {
-					ETag: 'empty',
-				};
-
-			return JSON.parse(fs.readFileSync(this._metaPath(target), 'utf8'));
 		},
 
 	},

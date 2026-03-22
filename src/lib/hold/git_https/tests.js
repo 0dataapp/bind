@@ -90,6 +90,77 @@ describe('filesystem', () => {
 
 	});
 
+	describe('get', () => {
+
+		test('text', async () => {
+			const target = stub.basename();
+			const data = Math.random().toString();
+			const contentType = 'text/plain';
+			await filesystem.put({
+				target,
+				data,
+				meta: stub.headers(contentType),
+			});
+			expect(filesystem.get({
+				target,
+				contentType,
+			})).toBe(data);
+		});
+
+		test('buffer', async () => {
+			const target = stub.basename();
+			const data = Buffer.from(Math.random().toString());
+			const contentType = 'application/octet-stream';
+			await filesystem.put({
+				target,
+				data,
+				meta: stub.headers(contentType),
+			});
+			expect(filesystem.get({
+				target,
+				contentType,
+			})).toEqual(data);
+		});
+
+	});
+
+	describe('meta', () => {
+
+		test('file', async () => {
+			const target = stub.basename();
+			const encoding = 'text/plain';
+			await filesystem.put({
+				target,
+				data: Math.random().toString(),
+				meta: stub.headers(encoding),
+			});
+			const _target = filesystem._localPath(target);
+			const stat = fs.statSync(_target);
+			expect(await filesystem.meta({ target })).toEqual({
+				'Content-Length': stat.size,
+				'Content-Type': encoding,
+				ETag: stat.mtime.toJSON(),
+				'Last-Modified': stat.mtime.toUTCString(),
+			});
+		});
+
+		test('folder', async () => {
+			const parent = stub.ulid();
+
+			const target = path.join(parent, stub.basename());
+			await filesystem.put({
+				target,
+				data: Math.random().toString(),
+				meta: stub.headers('text/plain'),
+			});
+			await mod.git(repo).commit(true);
+			expect(await filesystem.meta({ target: parent + '/' })).toEqual({
+				ETag: (await mod.git(repo).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', parent])).trim().split('\n').pop(),
+			})
+		});
+
+	});
+
 	describe('remove', () => {
 
 		test('data', async () => {
@@ -297,77 +368,6 @@ describe('filesystem', () => {
 			expect(filesystem.isFolder({
 				target: parent,
 			})).toBe(true);
-		});
-
-	});
-
-	describe('get', () => {
-
-		test('text', async () => {
-			const target = stub.basename();
-			const data = Math.random().toString();
-			const contentType = 'text/plain';
-			await filesystem.put({
-				target,
-				data,
-				meta: stub.headers(contentType),
-			});
-			expect(filesystem.get({
-				target,
-				contentType,
-			})).toBe(data);
-		});
-
-		test('buffer', async () => {
-			const target = stub.basename();
-			const data = Buffer.from(Math.random().toString());
-			const contentType = 'application/octet-stream';
-			await filesystem.put({
-				target,
-				data,
-				meta: stub.headers(contentType),
-			});
-			expect(filesystem.get({
-				target,
-				contentType,
-			})).toEqual(data);
-		});
-
-	});
-
-	describe('meta', () => {
-
-		test('file', async () => {
-			const target = stub.basename();
-			const encoding = 'text/plain';
-			await filesystem.put({
-				target,
-				data: Math.random().toString(),
-				meta: stub.headers(encoding),
-			});
-			const _target = filesystem._localPath(target);
-			const stat = fs.statSync(_target);
-			expect(await filesystem.meta({ target })).toEqual({
-				'Content-Length': stat.size,
-				'Content-Type': encoding,
-				ETag: stat.mtime.toJSON(),
-				'Last-Modified': stat.mtime.toUTCString(),
-			});
-		});
-
-		test('folder', async () => {
-			const parent = stub.ulid();
-
-			const target = path.join(parent, stub.basename());
-			await filesystem.put({
-				target,
-				data: Math.random().toString(),
-				meta: stub.headers('text/plain'),
-			});
-			await mod.git(repo).commit(true);
-			expect(await filesystem.meta({ target: parent + '/' })).toEqual({
-				ETag: (await mod.git(repo).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', parent])).trim().split('\n').pop(),
-			})
 		});
 
 	});

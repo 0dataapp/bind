@@ -98,6 +98,99 @@ describe('filesystem', () => {
 
 	});
 
+	describe('get', () => {
+
+		test('text', () => {
+			const handle = stub.ulid();
+			const target = stub.basename();
+			const data = Math.random().toString();
+			const contentType = 'text/plain';
+			mod.filesystem.put({
+				handle,
+				target,
+				data,
+				breadcrumbs: [],
+				meta: stub.headers(contentType),
+			});
+			expect(mod.filesystem.get({
+				handle,
+				target,
+				contentType,
+			})).toBe(data);
+		});
+
+		test('buffer', () => {
+			const handle = stub.ulid();
+			const target = stub.basename();
+			const data = Buffer.from(Math.random().toString());
+			const contentType = 'application/octet-stream';
+			mod.filesystem.put({
+				handle,
+				target,
+				data,
+				breadcrumbs: [],
+				meta: stub.headers(contentType),
+			});
+			expect(mod.filesystem.get({
+				handle,
+				target,
+				contentType,
+			})).toEqual(data);
+		});
+
+	});
+
+	describe('meta', () => {
+
+		test('file', () => {
+			const handle = stub.ulid();
+			const target = stub.basename();
+			const encoding = 'text/plain';
+			mod.filesystem.put({
+				handle,
+				target,
+				data: Math.random().toString(),
+				breadcrumbs: [],
+				meta: stub.headers(encoding),
+			});
+			const _target = mod.util.localPath({
+				handle,
+				target,
+			});
+			const stat = fs.statSync(_target);
+			expect(mod.filesystem.meta({
+				handle,
+				target,
+			})).toEqual({
+				'Content-Length': stat.size,
+				'Content-Type': encoding,
+				ETag: stat.mtime.toJSON(),
+				'Last-Modified': stat.mtime.toUTCString(),
+			});
+		});
+
+		test('folder', () => {
+			const handle = stub.ulid();
+
+			const parent = stub.ulid();
+			const breadcrumbs = [parent];
+
+			const target = path.join(parent, stub.basename());
+			mod.filesystem.put({
+				handle,
+				target,
+				data: Math.random().toString(),
+				breadcrumbs,
+				meta: stub.headers('text/plain'),
+			});
+			expect(mod.filesystem.meta({
+				handle,
+				target: parent + '/',
+			}).ETag.slice(0, -5)).toEqual(fs.statSync(mod.util.localPath({ handle, target: breadcrumbs[0] })).mtime.toJSON().slice(0, -5));
+		});
+
+	});
+
 	describe('remove', () => {
 
 		test('data', () => {
@@ -382,99 +475,6 @@ describe('filesystem', () => {
 				handle,
 				target: parent,
 			})).toBe(true);
-		});
-
-	});
-
-	describe('get', () => {
-
-		test('text', () => {
-			const handle = stub.ulid();
-			const target = stub.basename();
-			const data = Math.random().toString();
-			const contentType = 'text/plain';
-			mod.filesystem.put({
-				handle,
-				target,
-				data,
-				breadcrumbs: [],
-				meta: stub.headers(contentType),
-			});
-			expect(mod.filesystem.get({
-				handle,
-				target,
-				contentType,
-			})).toBe(data);
-		});
-
-		test('buffer', () => {
-			const handle = stub.ulid();
-			const target = stub.basename();
-			const data = Buffer.from(Math.random().toString());
-			const contentType = 'application/octet-stream';
-			mod.filesystem.put({
-				handle,
-				target,
-				data,
-				breadcrumbs: [],
-				meta: stub.headers(contentType),
-			});
-			expect(mod.filesystem.get({
-				handle,
-				target,
-				contentType,
-			})).toEqual(data);
-		});
-
-	});
-
-	describe('meta', () => {
-
-		test('file', () => {
-			const handle = stub.ulid();
-			const target = stub.basename();
-			const encoding = 'text/plain';
-			mod.filesystem.put({
-				handle,
-				target,
-				data: Math.random().toString(),
-				breadcrumbs: [],
-				meta: stub.headers(encoding),
-			});
-			const _target = mod.util.localPath({
-				handle,
-				target,
-			});
-			const stat = fs.statSync(_target);
-			expect(mod.filesystem.meta({
-				handle,
-				target,
-			})).toEqual({
-				'Content-Length': stat.size,
-				'Content-Type': encoding,
-				ETag: stat.mtime.toJSON(),
-				'Last-Modified': stat.mtime.toUTCString(),
-			});
-		});
-
-		test('folder', () => {
-			const handle = stub.ulid();
-
-			const parent = stub.ulid();
-			const breadcrumbs = [parent];
-
-			const target = path.join(parent, stub.basename());
-			mod.filesystem.put({
-				handle,
-				target,
-				data: Math.random().toString(),
-				breadcrumbs,
-				meta: stub.headers('text/plain'),
-			});
-			expect(mod.filesystem.meta({
-				handle,
-				target: parent + '/',
-			}).ETag.slice(0, -5)).toEqual(fs.statSync(mod.util.localPath({ handle, target: breadcrumbs[0] })).mtime.toJSON().slice(0, -5));
 		});
 
 	});
