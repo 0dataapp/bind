@@ -10,7 +10,7 @@ flash {
 	--color: #0f80ff;
 
 	display: block;
-	padding: var(--bind-spacing);
+	padding: var(--bind-pad);
 	color: var(--color);
 	border: 1px solid var(--color);
 	background-color: color-mix(in srgb, transparent, var(--color) 5%);

@@ -54,6 +54,6 @@ const { data } = $props();
 
 <style>
 .available button {
-	margin-right: var(--bind-spacing);
+	margin-right: var(--bind-pad);
 }
 </style>

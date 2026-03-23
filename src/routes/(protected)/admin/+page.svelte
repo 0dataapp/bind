@@ -95,7 +95,7 @@ import CreateAccount from './CreateAccount.svelte';
     }
 
     :global(th), :global(td) {
-      padding: calc(var(--bind-spacing) / 2);
+      padding: calc(var(--bind-pad) / 2);
     }
   }
 

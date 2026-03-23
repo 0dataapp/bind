@@ -5,7 +5,7 @@
 	--pico-primary-hover-background: var(--zd-c-brand-1-hover) !important;
 	
 	--bind-focus-cap: 400px;
-	--bind-spacing: 20px;
+	--bind-pad: 20px;
 	--bind-corner: var(--zd-corner);
 	--bind-border-size: 2px;
 	--bind-border: var(--bind-border-size) solid #e6e6e6;
@@ -31,14 +31,14 @@ focus {
 
 	max-width: var(--bind-focus-cap);
 	min-width: 300px;
-	padding: var(--bind-spacing);
+	padding: var(--bind-pad);
 	border-radius: var(--bind-corner);
 
 	background: var(--zd-c-bg-focus);
 }
 
 pre {
-	padding: var(--bind-spacing);
+	padding: var(--bind-pad);
 }
 
 table {
