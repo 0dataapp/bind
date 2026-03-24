@@ -1,5 +1,8 @@
 import crypto from 'crypto';
 import path from 'path';
+import { fileTypeFromBuffer } from 'file-type';
+import mime from 'mime';
+
 
 const mod = {
 
@@ -13,6 +16,37 @@ const mod = {
 	isJunk: e => [
 		'.DS_Store',
 	].includes(path.basename(e)),
+
+	_guessJSON (e) {
+		if (!['{', '['].includes(e.trim()[0]))
+			return false;
+
+		try {
+			return JSON.parse(e);
+		} catch (e) {
+			return false
+		}
+	},
+	_guessHTML: e => e.startsWith('<!DOCTYPE html>'),
+	async _guessType (data, basename) {
+		let type;
+
+		if (type = mime.getType(basename))
+			return type;
+
+		if (type = await fileTypeFromBuffer(data))
+			return type.mime;
+
+		const string = data.toString();
+
+		if (mod._guessJSON(string))
+			return 'application/json';
+		
+		if (mod._guessHTML(string))
+			return 'text/html';
+		
+		return 'text/plain';
+	},
 
 };
 

@@ -10,9 +10,6 @@ import util from './util.js';
 
 import { simpleGit, CleanOptions } from 'simple-git';
 
-import { fileTypeFromBuffer } from 'file-type';
-import mime from 'mime';
-
 const pollSeconds = 5;
 
 import Queue from 'queue';
@@ -105,37 +102,7 @@ const mod = {
 
 		async meta ({ target: _path }) {
 			const target = this._localPath(_path);
-			
 			const stat = fs.statSync(target);
-
-			async function guessType (data, __path) {
-				function guessJSON (e) {
-					if (!['{', '['].includes(e.trim()[0]))
-						return false;
-
-					try {
-						return JSON.parse(e);
-					} catch (e) {
-						return false
-					}
-				};
-				const guessHTML = e => e.startsWith('<!DOCTYPE html>');
-
-				const type = await fileTypeFromBuffer(data);
-				if (type)
-					return type.mime;
-
-				const string = data.toString();
-
-				if (guessJSON(string))
-					return 'application/json';
-				
-				if (guessHTML(string))
-					return 'text/html';
-				
-				return mime.getType(__path) || 'text/plain';
-			};
-			
 			const isFolder = stat.isDirectory();
 
 			const meta = {
@@ -154,7 +121,7 @@ const mod = {
 
 			return Object.assign(meta, {
 				'Content-Length': stat.size,
-				'Content-Type': await guessType(fs.readFileSync(target), target),
+				'Content-Type': await util._guessType(fs.readFileSync(target), target),
 				'Last-Modified': stat.mtime.toUTCString(),
 			});
 		},
