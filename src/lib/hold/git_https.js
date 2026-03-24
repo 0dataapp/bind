@@ -136,7 +136,7 @@ const mod = {
 				return mime.getType(__path) || 'text/plain';
 			};
 			
-			const isFolder = fs.statSync(target).isDirectory();
+			const isFolder = stat.isDirectory();
 
 			const meta = {
 				ETag: isFolder
