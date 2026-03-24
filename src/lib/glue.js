@@ -183,10 +183,12 @@ const mod = {
 		})).then(e => e.filter(e => e.exists && (`/${ e.target }` === target ? e.isFolder : !e.isFolder)).length))
 			return res.status(409).end();
 
-		const meta = await hold.meta({
+		const meta = exists ? await hold.meta({
 			handle,
 			target,
-		});
+		}) : {
+			ETag: 'empty',
+		};;
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
 			!exists && req.headers['if-match']

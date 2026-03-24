@@ -106,11 +106,6 @@ const mod = {
 		async meta ({ target: _path }) {
 			const target = this._localPath(_path);
 			
-			if (!fs.existsSync(target))
-				return {
-					ETag: 'empty',
-				};
-
 			const stat = fs.statSync(target);
 
 			async function guessType (data, __path) {

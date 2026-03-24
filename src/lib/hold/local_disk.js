@@ -62,11 +62,6 @@ const mod = {
 		meta (params) {
 			const target = mod.util.localPath(params);
 
-			if (!fs.existsSync(target) || !fs.existsSync(this._metaPath(target)))
-				return {
-					ETag: 'empty',
-				};
-
 			return JSON.parse(fs.readFileSync(this._metaPath(target), 'utf8'));
 		},
 
@@ -119,7 +114,9 @@ const mod = {
 		},
 
 		exists (params) {
-			return fs.existsSync(mod.util.localPath(params));
+			const target = mod.util.localPath(params);
+
+			return fs.existsSync(target) && fs.existsSync(this._metaPath(target));
 		},
 
 		isFolder (params) {
