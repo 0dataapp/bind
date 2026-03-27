@@ -49,12 +49,9 @@ export const handle = sequence(
     if (token) {
       const [handle, publicFolder] = glue.util.parsePathname(pathname.slice(prefix.length));
       
-      if (!publicFolder) {
-        const authorization = await oauth.authorization(handle, token);
-
-        if (authorization && authorization.data.depotId !== 'local_custody') {
-          hold = git_https.filesystem(await depot.depotURL(authorization.data.depotId));
-        }
+      const authorization = await oauth.authorization(handle, token);
+      if (authorization && authorization.data.depotId !== 'local_custody') {
+        hold = git_https.filesystem(await depot.depotURL(authorization.data.depotId));
       }
     }
     
