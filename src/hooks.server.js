@@ -38,14 +38,14 @@ export const handle = sequence(
   
   glue.util.sveltekit(glue.cors()),
 	
-  async params => {
-    const { pathname } = new URL(params.event.request.url);
+  async ({ event, resolve }) => {
+    const { pathname } = new URL(event.request.url);
     if (!pathname.startsWith(prefix))
-      return params.resolve(params.event);
+      return resolve(event);
 
     let hold = local_disk.filesystem;
 
-    const token = glue.util.parseToken(params.event.request.headers.get('authorization'))
+    const token = glue.util.parseToken(event.request.headers.get('authorization'))
     if (token) {
       const [handle, publicFolder] = glue.util.parsePathname(pathname.slice(prefix.length));
       
@@ -58,7 +58,7 @@ export const handle = sequence(
     return glue.util.sveltekit(glue.remotestorage({
       getScope: oauth.getScope,
       hold,
-    }), prefix)(params)
+    }), prefix)({ event, resolve })
   },
   
   glue.util.sveltekit(glue.webfinger({
