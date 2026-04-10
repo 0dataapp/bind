@@ -8,7 +8,7 @@ Simpler options are first.
 
 ::: warning Safety note
 
-After setup, you may want disable signups by going to `/admin/settings` on your instance.
+Create your admin account immediately after installation. You may also want disable signups by going to `/admin/settings` on your instance.
 
 :::
 ### [Cloudron](https://cloudron.io)
@@ -23,28 +23,19 @@ After setup, you may want disable signups by going to `/admin/settings` on your 
 
 0. [Install Cloudron](https://www.cloudron.io/get.html) via one-click images on numerous hosting platforms.
 
-1. Clone the project locally:
+1. Navigate to `App Store` → `Add custom app` → `Community app` and paste the following URL:
 
 ```
-git clone https://github.com/0dataapp/bind
+https://bind.0data.app/CloudronVersions.json
 ```
 
-2. From the project directory, run the `install` command via the [Cloudron CLI](https://docs.cloudron.io/packaging/cli/):
-
-```
-cd bind
-cloudron install --image 0data/bind:cloudron --location bind
-```
+2. Tap `Install Bind`, set your location to `bind` or something else, and then click `Install Bind`.
 
 :::
 
 ::: details Updates
 
-1. From the project directory, run the `update` command via the [Cloudron CLI](https://docs.cloudron.io/packaging/cli/):
-
-```
-cloudron update --image 0data/bind:cloudron --app bind
-```
+Community apps are updated automatically.
 
 :::
 
