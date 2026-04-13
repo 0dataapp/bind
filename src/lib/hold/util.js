@@ -28,16 +28,16 @@ const mod = {
 		}
 	},
 	_guessHTML: e => e.startsWith('<!DOCTYPE html>'),
-	async _guessType (data, basename) {
+	async _guessType (buffer, basename) {
 		let type;
 
 		if (type = mime.getType(basename))
 			return type;
 
-		if (type = await fileTypeFromBuffer(data))
+		if (type = await fileTypeFromBuffer(buffer))
 			return type.mime;
 
-		const string = data.toString();
+		const string = buffer.toString();
 
 		if (mod._guessJSON(string))
 			return 'application/json';
