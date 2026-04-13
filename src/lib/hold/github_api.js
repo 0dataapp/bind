@@ -17,6 +17,7 @@ const mod = {
 			  body: JSON.stringify({
 			    message: 'sync',
 			    content,
+			    // required to update, populated if exists via glue.remotestorage
 			    sha: meta.ETag,
 			  }),
 			});
