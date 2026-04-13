@@ -29,37 +29,18 @@ describe('filesystem', () => {
 				meta,
 			})).toBe(undefined);
 
-			const stat = fs.statSync(mod.util.localPath({
-				handle,
-				target,
-			}));
-			expect(meta).toEqual(Object.assign(stub.headers(encoding), {
-				ETag: stat.mtime.toJSON(),
-				'Content-Length': stat.size,
-				'Last-Modified': stat.mtime.toUTCString(),
-			}));
-			expect(fs.readFileSync(mod.util.localPath({
-				handle,
-				target,
-			}), 'utf8')).toEqual(data);
-		});
-
-		test('meta', () => {
-			const handle = stub.ulid();
-			const target = stub.basename();
-			const encoding = 'text/plain';
-			mod.filesystem.put({
-				handle,
-				target,
-				data: Math.random().toString(),
-				breadcrumbs: [],
-				meta: stub.headers(encoding),
-			});
 			const _target = mod.util.localPath({
 				handle,
 				target,
 			});
 			const stat = fs.statSync(_target);
+			
+			expect(meta).toEqual(Object.assign(stub.headers(encoding), {
+				ETag: stat.mtime.toJSON(),
+				'Content-Length': stat.size,
+				'Last-Modified': stat.mtime.toUTCString(),
+			}));
+			expect(fs.readFileSync(_target, 'utf8')).toEqual(data);
 			expect(JSON.parse(fs.readFileSync(mod.filesystem._metaPath(_target), 'utf8'))).toEqual({
 				'Content-Length': stat.size,
 				'Content-Type': encoding,
