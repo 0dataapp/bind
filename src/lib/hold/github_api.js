@@ -47,6 +47,34 @@ const mod = {
 			const encoding = util.encoding(contentType);
 			return encoding ? buffer.toString(encoding) : buffer;
 		},
+
+		async meta ({ target: _path, isFolderRequest }) {
+			if (isFolderRequest)
+				return {
+					ETag: (await this._content(path.dirname(_path))).filter(e => e.type === 'dir' && e.path === path.basename(_path)).shift().sha,
+				};
+
+			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({
+				path: _path,
+				per_page: 1,
+			}) }`, {
+				method: 'GET',
+			  headers: {
+			    'Authorization': `token ${ token }`,
+			    'Content-Type': 'application/json',
+			  },
+			});
+			const commits = await response.json();
+			const date = new Date(commits[0].commit.author.date);
+			const { size, content } = await this._content(_path);
+			const buffer = Buffer.from(content, 'base64');
+			return {
+				ETag: date.toJSON(),
+				'Content-Length': size,
+				'Content-Type': await util._guessType(buffer, _path),
+				'Last-Modified': date.toUTCString(),
+			};
+		},
 };
 
 export default mod;

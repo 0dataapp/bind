@@ -80,4 +80,54 @@ describe('filesystem', () => {
 		});
 
 	});
+
+	describe('meta', () => {
+
+		test('file', async () => {
+			const target = stub.basename();
+			const size = parseInt(Math.random().toString().slice(-2));
+			const date = new Date();
+			nock('https://api.github.com')
+			  .get(`/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({
+				path: target,
+				per_page: 1,
+			}) }`)
+			  .reply(200, [{
+			  	commit: {
+			  		author: { date: date.toJSON() },
+			  	},
+			  }]);
+			nock('https://api.github.com')
+			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .reply(200, {
+				  size,
+				  content: Buffer.from(Math.random().toString()).toString('base64'),
+				});
+			expect(await filesystem.meta({
+				target,
+			})).toEqual({
+				'Content-Length': size,
+				'Content-Type': 'text/plain',
+				ETag: date.toJSON(),
+				'Last-Modified': date.toUTCString(),
+			});
+		});
+
+		test('folder', async () => {
+			const parent = stub.ulid();
+			const target = path.join(parent, stub.basename());
+			const sha = stub.ulid();
+			nock('https://api.github.com')
+			  .get(`/repos/${ owner }/${ repo }/contents/`)
+			  .reply(200, [{
+		  	path: parent,
+			  sha,
+			  type: 'dir',
+			}]);
+			expect(await filesystem.meta({ target: parent, isFolderRequest: true })).toEqual({
+				ETag: sha,
+			});
+		});
+
+	});
 });
