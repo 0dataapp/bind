@@ -35,6 +35,7 @@ const mod = {
 			  headers: {
 			    'Authorization': `token ${ token }`,
 			    'Content-Type': 'application/json',
+			    'Accept': 'application/vnd.github.object+json',
 			  },
 			});
 
@@ -51,7 +52,7 @@ const mod = {
 		async meta ({ target: _path, isFolderRequest }) {
 			if (isFolderRequest)
 				return {
-					ETag: (await this._content(path.dirname(_path))).filter(e => e.type === 'dir' && e.path === path.basename(_path)).shift().sha,
+					ETag: (await this._content(_path)).sha,
 				};
 
 			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({

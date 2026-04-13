@@ -111,17 +111,14 @@ describe('filesystem', () => {
 		});
 
 		test('folder', async () => {
-			const parent = stub.ulid();
-			const target = path.join(parent, stub.basename());
+			const target = stub.ulid();
 			const sha = stub.ulid();
 			nock('https://api.github.com')
-			  .get(`/repos/${ owner }/${ repo }/contents/`)
-			  .reply(200, [{
-		  	path: parent,
-			  sha,
-			  type: 'dir',
-			}]);
-			expect(await filesystem.meta({ target: parent, isFolderRequest: true })).toEqual({
+			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .reply(200, {
+			  	sha,
+			  });
+			expect(await filesystem.meta({ target, isFolderRequest: true })).toEqual({
 				ETag: sha,
 			});
 		});
