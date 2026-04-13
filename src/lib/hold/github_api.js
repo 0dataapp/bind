@@ -1,3 +1,6 @@
+import util from './util.js';
+import path from 'path';
+
 const mod = {
 
 	filesystem: ({ owner, repo, token }) => ({
@@ -26,6 +29,24 @@ const mod = {
 			});
 		},
 
+		async _content (target) {
+			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents/${ target }`, {
+				method: 'GET',
+			  headers: {
+			    'Authorization': `token ${ token }`,
+			    'Content-Type': 'application/json',
+			  },
+			});
+
+			return response.json();
+		},
+
+		async get ({ target, contentType }) {
+			const { content } = await this._content(target);
+			const buffer = Buffer.from(content, 'base64');
+			const encoding = util.encoding(contentType);
+			return encoding ? buffer.toString(encoding) : buffer;
+		},
 };
 
 export default mod;

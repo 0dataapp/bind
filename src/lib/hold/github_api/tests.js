@@ -49,4 +49,35 @@ describe('filesystem', () => {
 
 	});
 
+	describe('get', () => {
+
+		test('text', async () => {
+			const target = stub.basename();
+			const data = Math.random().toString();
+			nock('https://api.github.com')
+			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .reply(200, {
+					content: Buffer.from(data).toString('base64'),
+				});
+			expect(await filesystem.get({
+				target,
+				contentType: 'text/plain',
+			})).toBe(data);
+		});
+
+		test('buffer', async () => {
+			const target = stub.basename();
+			const data = Buffer.from(Math.random().toString());
+			nock('https://api.github.com')
+			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .reply(200, {
+					content: data.toString('base64'),
+				});
+			expect(await filesystem.get({
+				target,
+				contentType: 'application/octet-stream',
+			})).toEqual(data);
+		});
+
+	});
 });
