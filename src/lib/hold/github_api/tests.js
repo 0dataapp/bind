@@ -15,8 +15,8 @@ describe('filesystem', () => {
 		test('string', async () => {
 			const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
 			const data = Math.random().toString();
-			const encoding = 'text/plain';
-			const meta = stub.headers(encoding);
+			const contentType = 'text/plain';
+			const meta = stub.headers(contentType);
 
 			const size = parseInt(Math.random().toString().slice(-2));
 			const date = new Date().toJSON();
@@ -35,7 +35,7 @@ describe('filesystem', () => {
 				meta,
 			})).toBe(undefined);
 
-			expect(meta).toEqual(Object.assign(stub.headers(encoding), {
+			expect(meta).toEqual(Object.assign(stub.headers(contentType), {
 				ETag: date,
 				'Content-Length': size,
 				'Last-Modified': new Date(date).toUTCString(),

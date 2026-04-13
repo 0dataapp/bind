@@ -18,8 +18,8 @@ describe('filesystem', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
 			const data = Math.random().toString();
-			const encoding = 'text/plain';
-			const meta = stub.headers(encoding);
+			const contentType = 'text/plain';
+			const meta = stub.headers(contentType);
 
 			expect(mod.filesystem.put({
 				handle,
@@ -35,7 +35,7 @@ describe('filesystem', () => {
 			});
 			const stat = fs.statSync(_target);
 			
-			expect(meta).toEqual(Object.assign(stub.headers(encoding), {
+			expect(meta).toEqual(Object.assign(stub.headers(contentType), {
 				ETag: stat.mtime.toJSON(),
 				'Content-Length': stat.size,
 				'Last-Modified': stat.mtime.toUTCString(),
@@ -43,7 +43,7 @@ describe('filesystem', () => {
 			expect(fs.readFileSync(_target, 'utf8')).toEqual(data);
 			expect(JSON.parse(fs.readFileSync(mod.filesystem._metaPath(_target), 'utf8'))).toEqual({
 				'Content-Length': stat.size,
-				'Content-Type': encoding,
+				'Content-Type': contentType,
 				ETag: stat.mtime.toJSON(),
 				'Last-Modified': stat.mtime.toUTCString(),
 			});
@@ -120,13 +120,13 @@ describe('filesystem', () => {
 		test('file', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
-			const encoding = 'text/plain';
+			const contentType = 'text/plain';
 			mod.filesystem.put({
 				handle,
 				target,
 				data: Math.random().toString(),
 				breadcrumbs: [],
-				meta: stub.headers(encoding),
+				meta: stub.headers(contentType),
 			});
 			const _target = mod.util.localPath({
 				handle,
@@ -138,7 +138,7 @@ describe('filesystem', () => {
 				target,
 			})).toEqual({
 				'Content-Length': stat.size,
-				'Content-Type': encoding,
+				'Content-Type': contentType,
 				ETag: stat.mtime.toJSON(),
 				'Last-Modified': stat.mtime.toUTCString(),
 			});
@@ -268,13 +268,13 @@ describe('filesystem', () => {
 		test('file', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
-			const encoding = 'text/plain';
+			const contentType = 'text/plain';
 			mod.filesystem.put({
 				handle,
 				target,
 				data: Math.random().toString(),
 				breadcrumbs: [],
-				meta: stub.headers(encoding),
+				meta: stub.headers(contentType),
 			});
 			const _target = mod.util.localPath({
 				handle,
