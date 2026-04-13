@@ -113,7 +113,11 @@ describe('filesystem', () => {
 		test('folder', async () => {
 			const target = stub.ulid();
 			const sha = stub.ulid();
-			nock('https://api.github.com')
+			nock('https://api.github.com', {
+				reqheaders: {
+					'Accept': 'application/vnd.github.object+json',
+				},
+			})
 			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
 			  .reply(200, {
 			  	sha,
