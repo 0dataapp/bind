@@ -46,7 +46,7 @@ describe('filesystem', () => {
 
 	describe('get', () => {
 
-		test('text', async () => {
+		test('string', async () => {
 			const target = stub.basename();
 			const data = Math.random().toString();
 			nock('https://api.github.com')
