@@ -18,14 +18,15 @@ describe('filesystem', () => {
 			const contentType = 'text/plain';
 			const meta = stub.headers(contentType);
 
+			const sha = stub.ulid();
 			const size = parseInt(Math.random().toString().slice(-2));
-			const date = new Date().toJSON();
+			const date = new Date();
 			nock('https://api.github.com')
 			  .put(`/repos/${ owner }/${ repo }/contents/${ target }`)
 			  .reply(201, {
-			    content: { size },
+			    content: { sha, size },
 			    commit: {
-			      committer: { date },
+			      committer: { date: date.toJSON() },
 			    },
 			  });
 			
@@ -36,9 +37,44 @@ describe('filesystem', () => {
 			})).toBe(undefined);
 
 			expect(meta).toEqual(Object.assign(stub.headers(contentType), {
-				ETag: date,
+				ETag: sha,
 				'Content-Length': size,
-				'Last-Modified': new Date(date).toUTCString(),
+				'Last-Modified': date.toUTCString(),
+			}));
+		});
+
+		test('ETag', async () => {
+			const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
+			const data = Math.random().toString();
+			const contentType = 'text/plain';
+			const ETag = stub.ulid();
+			const meta = Object.assign(stub.headers(contentType), { ETag });
+
+			const sha = stub.ulid();
+			const size = parseInt(Math.random().toString().slice(-2));
+			const date = new Date();
+			nock('https://api.github.com')
+			  .put(`/repos/${ owner }/${ repo }/contents/${ target }`, body => {
+			  	expect(body.sha).toBe(ETag);
+			  	return true;
+			  })
+			  .reply(201, {
+			    content: { sha, size },
+			    commit: {
+			      committer: { date: date.toJSON() },
+			    },
+			  });
+			
+			expect(await filesystem.put({
+				target,
+				data,
+				meta,
+			})).toBe(undefined);
+
+			expect(meta).toEqual(Object.assign(stub.headers(contentType), {
+				ETag: sha,
+				'Content-Length': size,
+				'Last-Modified': date.toUTCString(),
 			}));
 		});
 

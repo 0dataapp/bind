@@ -17,13 +17,14 @@ const mod = {
 			  body: JSON.stringify({
 			    message: 'sync',
 			    content,
+			    sha: meta.ETag,
 			  }),
 			});
 
 			const json = await response.json();
 
 			Object.assign(meta, {
-				ETag: json.commit.committer.date,
+				ETag: json.content.sha,
 				'Content-Length': json.content.size,
 				'Last-Modified': new Date(json.commit.committer.date).toUTCString(),
 			});
