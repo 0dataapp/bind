@@ -51,7 +51,7 @@ describe('filesystem', () => {
 
 	describe('put', () => {
 
-		test('data', async () => {
+		test('string', async () => {
 			const target = stub.basename();
 			const data = Math.random().toString();
 			const encoding = 'text/plain';
@@ -158,7 +158,7 @@ describe('filesystem', () => {
 
 	describe('remove', () => {
 
-		test('data', async () => {
+		test('without parents', async () => {
 			const target = stub.basename();
 			await filesystem.put({
 				target,

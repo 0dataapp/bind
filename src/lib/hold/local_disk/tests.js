@@ -14,7 +14,7 @@ describe('filesystem', () => {
 
 	describe('put', () => {
 
-		test('data', () => {
+		test('string', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
 			const data = Math.random().toString();
@@ -94,7 +94,7 @@ describe('filesystem', () => {
 
 	describe('get', () => {
 
-		test('text', () => {
+		test('string', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
 			const data = Math.random().toString();
@@ -187,7 +187,7 @@ describe('filesystem', () => {
 
 	describe('remove', () => {
 
-		test('data', () => {
+		test('without parents', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
 			mod.filesystem.put({
@@ -206,23 +206,6 @@ describe('filesystem', () => {
 				handle,
 				target,
 			}))).toBe(false);
-		});
-
-		test('meta', () => {
-			const handle = stub.ulid();
-			const target = stub.basename();
-			mod.filesystem.put({
-				handle,
-				target,
-				data: Math.random().toString(),
-				breadcrumbs: [],
-				meta: stub.headers('text/plain'),
-			});
-			mod.filesystem.remove({
-				handle,
-				target,
-				breadcrumbs: [],
-			});
 			expect(fs.existsSync(mod.filesystem._metaPath(target))).toBe(false);
 		});
 
