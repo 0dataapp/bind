@@ -66,10 +66,10 @@ const mod = {
 			});
 			const commits = await response.json();
 			const date = new Date(commits[0].commit.author.date);
-			const { size, content } = await this._content(_path);
+			const { size, content, sha } = await this._content(_path);
 			const buffer = Buffer.from(content, 'base64');
 			return {
-				ETag: date.toJSON(),
+				ETag: sha,
 				'Content-Length': size,
 				'Content-Type': await util._guessType(buffer, _path),
 				'Last-Modified': date.toUTCString(),

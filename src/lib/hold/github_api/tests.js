@@ -82,6 +82,7 @@ describe('filesystem', () => {
 			const target = stub.basename();
 			const size = parseInt(Math.random().toString().slice(-2));
 			const date = new Date();
+			const sha = stub.ulid();
 			nock('https://api.github.com')
 			  .get(`/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({
 				path: target,
@@ -97,13 +98,14 @@ describe('filesystem', () => {
 			  .reply(200, {
 				  size,
 				  content: stub.buffer().toString('base64'),
+				  sha,
 				});
 			expect(await filesystem.meta({
 				target,
 			})).toEqual({
 				'Content-Length': size,
 				'Content-Type': 'text/plain',
-				ETag: date.toJSON(),
+				ETag: sha,
 				'Last-Modified': date.toUTCString(),
 			});
 		});
