@@ -34,13 +34,46 @@ describe('filesystem', () => {
 				target,
 			});
 			const stat = fs.statSync(_target);
-			
 			expect(meta).toEqual(Object.assign(stub.headers(contentType), {
 				ETag: stat.mtime.toJSON(),
 				'Content-Length': stat.size,
 				'Last-Modified': stat.mtime.toUTCString(),
 			}));
 			expect(fs.readFileSync(_target, 'utf8')).toEqual(data);
+			expect(JSON.parse(fs.readFileSync(mod.filesystem._metaPath(_target), 'utf8'))).toEqual({
+				'Content-Length': stat.size,
+				'Content-Type': contentType,
+				ETag: stat.mtime.toJSON(),
+				'Last-Modified': stat.mtime.toUTCString(),
+			});
+		});
+
+		test('buffer', () => {
+			const handle = stub.ulid();
+			const target = stub.basename();
+			const data = stub.buffer();
+			const contentType = 'application/octet-stream';
+			const meta = stub.headers(contentType);
+
+			expect(mod.filesystem.put({
+				handle,
+				target,
+				data,
+				breadcrumbs: [],
+				meta,
+			})).toBe(undefined);
+
+			const _target = mod.util.localPath({
+				handle,
+				target,
+			});
+			const stat = fs.statSync(_target);
+			expect(meta).toEqual(Object.assign(stub.headers(contentType), {
+				ETag: stat.mtime.toJSON(),
+				'Content-Length': stat.size,
+				'Last-Modified': stat.mtime.toUTCString(),
+			}));
+			expect(fs.readFileSync(_target)).toEqual(data);
 			expect(JSON.parse(fs.readFileSync(mod.filesystem._metaPath(_target), 'utf8'))).toEqual({
 				'Content-Length': stat.size,
 				'Content-Type': contentType,

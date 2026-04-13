@@ -72,6 +72,28 @@ describe('filesystem', () => {
 			expect(fs.readFileSync(filesystem._localPath(target), 'utf8')).toEqual(data);
 		});
 
+		test('buffer', async () => {
+			const target = stub.ulid();
+			const data = stub.buffer();
+			const contentType = 'application/octet-stream';
+			const meta = stub.headers(contentType);
+			
+			expect(await filesystem.put({
+				target,
+				data,
+				meta,
+			})).toBe(undefined);
+
+			const _target = filesystem._localPath(target);
+			const stat = fs.statSync(_target);
+			expect(meta).toEqual(Object.assign(stub.headers(contentType), {
+				ETag: stat.mtime.toJSON(),
+				'Content-Length': stat.size,
+				'Last-Modified': stat.mtime.toUTCString(),
+			}));
+			expect(fs.readFileSync(_target)).toEqual(data);
+		});
+
 		test('subfolders', async () => {
 			const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
 			const data = Math.random().toString();
