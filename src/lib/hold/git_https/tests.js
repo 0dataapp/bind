@@ -104,7 +104,7 @@ describe('filesystem', () => {
 
 		test('buffer', async () => {
 			const target = stub.basename();
-			const data = Buffer.from(Math.random().toString());
+			const data = stub.buffer();
 			const contentType = 'application/octet-stream';
 			await filesystem.put({
 				target,

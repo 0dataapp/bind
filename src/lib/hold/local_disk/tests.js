@@ -97,7 +97,7 @@ describe('filesystem', () => {
 		test('buffer', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
-			const data = Buffer.from(Math.random().toString());
+			const data = stub.buffer();
 			const contentType = 'application/octet-stream';
 			mod.filesystem.put({
 				handle,

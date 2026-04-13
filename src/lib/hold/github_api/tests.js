@@ -62,7 +62,7 @@ describe('filesystem', () => {
 
 		test('buffer', async () => {
 			const target = stub.basename();
-			const data = Buffer.from(Math.random().toString());
+			const data = stub.buffer();
 			nock('https://api.github.com')
 			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
 			  .reply(200, {
@@ -96,7 +96,7 @@ describe('filesystem', () => {
 			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
 			  .reply(200, {
 				  size,
-				  content: Buffer.from(Math.random().toString()).toString('base64'),
+				  content: stub.buffer().toString('base64'),
 				});
 			expect(await filesystem.meta({
 				target,
