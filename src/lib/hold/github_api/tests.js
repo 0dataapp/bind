@@ -13,12 +13,7 @@ describe('filesystem', () => {
 	describe('put', () => {
 
 		test('string', async () => {
-			const length = Math.max(Date.now() % 5, 2);
-			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
-				return coll.concat(path.join(coll.at(-1) || '', item));
-			}, []);
-			const target = path.join(parents.at(-1), stub.basename());
-
+			const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
 			const data = Math.random().toString();
 			const encoding = 'text/plain';
 			const meta = stub.headers(encoding);

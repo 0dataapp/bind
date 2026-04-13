@@ -70,14 +70,8 @@ describe('filesystem', () => {
 
 		test('subfolders', () => {
 			const handle = stub.ulid();
-
-			const length = Math.max(Date.now() % 5, 2);
-			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
-				return coll.concat(path.join(coll.at(-1) || '', item));
-			}, []);
-			const breadcrumbs = parents;
-
-			const target = path.join(parents.at(-1), stub.basename());
+			const breadcrumbs = stub.breadcrumbs();
+			const target = path.join(breadcrumbs.at(-1), stub.basename());
 			const data = Math.random().toString();
 			mod.filesystem.put({
 				handle,
@@ -234,14 +228,8 @@ describe('filesystem', () => {
 
 		test('parents without items', () => {
 			const handle = stub.ulid();
-
-			const length = Math.max(Date.now() % 5, 2);
-			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
-				return coll.concat(path.join(coll.at(-1) || '', item));
-			}, []);
-			const breadcrumbs = parents;
-
-			const target = path.join(parents.at(-1), stub.basename());
+			const breadcrumbs = stub.breadcrumbs();
+			const target = path.join(breadcrumbs.at(-1), stub.basename());
 			mod.filesystem.put({
 				handle,
 				target,
@@ -266,14 +254,9 @@ describe('filesystem', () => {
 
 		test('parents with items', () => {
 			const handle = stub.ulid();
-
-			const length = Math.max(Date.now() % 5, 2);
-			const parents = Array.from({ length }, stub.ulid).reduce((coll, item) => {
-				return coll.concat(path.join(coll.at(-1) || '', item));
-			}, []);
-			const breadcrumbs = parents;
-
-			const target = path.join(parents.at(-1), stub.basename());
+			const breadcrumbs = stub.breadcrumbs();
+			const target = path.join(breadcrumbs.at(-1), stub.basename());
+			
 			mod.filesystem.put({
 				handle,
 				target,
@@ -283,7 +266,7 @@ describe('filesystem', () => {
 			});
 			mod.filesystem.put({
 				handle,
-				target: path.join(parents[0], stub.basename()),
+				target: path.join(breadcrumbs[0], stub.basename()),
 				data: Math.random().toString(),
 				breadcrumbs: breadcrumbs.slice(0, 1),
 				meta: stub.headers('text/plain'),
@@ -291,7 +274,7 @@ describe('filesystem', () => {
 			
 			const meta = mod.filesystem.meta({
 				handle,
-				target: parents[0] + '/',
+				target: breadcrumbs[0] + '/',
 			});
 			
 			mod.filesystem.remove({
@@ -310,7 +293,7 @@ describe('filesystem', () => {
 			});
 			expect(meta.ETag).not.toBe(mod.filesystem.meta({
 				handle,
-				target: parents[0] + '/',
+				target: breadcrumbs[0] + '/',
 			}).ETag);
 		});
 

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
+import path from 'path';
 
 const mod = {
 
@@ -50,6 +51,13 @@ const mod = {
     await page.locator('input[type="submit"]').click();
     await expect(page).toHaveURL(/\/sample-app/);
     await page.goto('/connected');
+  },
+
+  breadcrumbs () {
+  	const length = Math.max(Date.now() % 5, 2);
+  	return Array.from({ length }, mod.ulid).reduce((coll, item) => {
+  		return coll.concat(path.join(coll.at(-1) || '', item));
+  	}, []);
   },
 
 };
