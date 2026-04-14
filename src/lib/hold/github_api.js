@@ -78,6 +78,19 @@ const mod = {
 				'Last-Modified': date.toUTCString(),
 			};
 		},
+
+		async remove ({ target: _path, meta }) {
+			await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents/${ _path }`, {
+			  method: 'DELETE',
+			  headers: {
+			    'Authorization': `token ${ token }`,
+			  },
+			  body: JSON.stringify({
+			    message: 'sync',
+			    sha: meta.ETag,
+			  }),
+			});
+		},
 };
 
 export default mod;

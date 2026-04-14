@@ -170,4 +170,27 @@ describe('filesystem', () => {
 		});
 
 	});
+
+	test('remove', async () => {
+		const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
+		const ETag = stub.ulid();
+		const meta = Object.assign(stub.headers('text/plain'), { ETag });
+		const sha = stub.ulid();
+		nock('https://api.github.com')
+		  .delete(`/repos/${ owner }/${ repo }/contents/${ target }`, body => {
+		  	expect(body).toEqual({
+		  		message: 'sync',
+		  		sha: ETag,
+		  	});
+		  	return true;
+		  })
+		  .reply(200, {
+		    content: null,
+		  });
+		expect(await filesystem.remove({
+			target,
+			breadcrumbs: [],
+			meta,
+		})).toBe(undefined);
+	});
 });
