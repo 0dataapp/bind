@@ -94,10 +94,10 @@ const mod = {
 
 		async list ({ target: _path }) {
 			return Promise.all((await this._content(_path)).entries.map(async e => [
-				e.name + (e.type === 'folder' ? '/' : ''),
+				e.name + (e.type === 'dir' ? '/' : ''),
 				await this.meta({
 					target: e.path,
-					isFolderRequest: e.type === 'folder',
+					isFolderRequest: e.type === 'dir',
 				}),
 			])).then(Object.fromEntries);
 		},

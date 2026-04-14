@@ -253,7 +253,7 @@ describe('filesystem', () => {
 			  	entries: [{
 			  		name: basename,
 			  		path: target,
-			  		type: 'folder',
+			  		type: 'dir',
 			  	}],
 			  });
 			const scope = nock('https://api.github.com', {
