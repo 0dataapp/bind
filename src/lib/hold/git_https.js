@@ -36,7 +36,7 @@ const mod = {
 
 	util: {
 
-		_gitTreePath: _path => ('./' + path.join('./', _path.replace(/(.)\/$/, '$1'))).replace('././', './'),
+		_gitTreePath: e => ('./' + path.join('./', e.replace(/(.)\/$/, '$1'))).replace('././', './'),
 
 		_clonePath: id => path.join(mod.folder, util.hash(id)),
 
@@ -80,19 +80,19 @@ const mod = {
 
 	filesystem: cloneURL => ({
 
-		_localPath: _path => path.join(mod.util._clonePath(cloneURL), _path),
+		_localPath: e => path.join(mod.util._clonePath(cloneURL), e),
 		
-		async put ({ target: _path, data, meta }) {
-			const target = this._localPath(_path);
+		async put ({ target, data, meta }) {
+			const _target = this._localPath(target);
 
-			fs.mkdirSync(path.dirname(target), { recursive: true });
+			fs.mkdirSync(path.dirname(_target), { recursive: true });
 
-			fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
+			fs.writeFileSync(_target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
 
 			await mod.git(mod.util._clonePath(cloneURL)).commit();
 
 			Object.assign(meta, await this.meta({
-				target: _path,
+				target,
 			}));
 		},
 
@@ -100,17 +100,17 @@ const mod = {
 			return fs.readFileSync(this._localPath(target), util.encoding(contentType));
 		},
 
-		async meta ({ target: _path }) {
-			const target = this._localPath(_path);
-			const stat = fs.statSync(target);
+		async meta ({ target }) {
+			const _target = this._localPath(target);
+			const stat = fs.statSync(_target);
 			const isFolder = stat.isDirectory();
 
 			const meta = {
 				ETag: isFolder
-					// ? (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? _path.replace(/\/$/, '') : _path)))).trim().split('\n').pop()
+					// ? (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? target.replace(/\/$/, '') : target)))).trim().split('\n').pop()
 					? (
 						await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['show-ref'])
-						? (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', mod.util._gitTreePath(_path)])).trim().split('\n').pop()
+						? (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', mod.util._gitTreePath(target)])).trim().split('\n').pop()
 						: 'empty'
 						)
 					: stat.mtime.toJSON(),
@@ -121,14 +121,13 @@ const mod = {
 
 			return Object.assign(meta, {
 				'Content-Length': stat.size,
-				'Content-Type': await util._guessType(fs.readFileSync(target), target),
+				'Content-Type': await util._guessType(fs.readFileSync(_target), _target),
 				'Last-Modified': stat.mtime.toUTCString(),
 			});
 		},
 
-		async remove ({ target: _path, breadcrumbs }) {
-			const target = this._localPath(_path);
-			fs.unlinkSync(target);
+		async remove ({ target, breadcrumbs }) {
+			fs.unlinkSync(this._localPath(target));
 
 			breadcrumbs.slice().sort().reverse().forEach(e => {
 				e = this._localPath(e);
@@ -142,11 +141,8 @@ const mod = {
 			await mod.git(mod.util._clonePath(cloneURL)).commit();
 		},
 
-		async list ({ target: _path }) {
-			const target = this._localPath(_path);
-			const _this = this;
-
-			const tree = (await mod.git(mod.util._clonePath(cloneURL)).repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', `.${ _path }`)).trim();
+		async list ({ target }) {
+			const tree = (await mod.git(mod.util._clonePath(cloneURL)).repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', `.${ target }`)).trim();
 
 			if (!tree.length)
 				return {};
@@ -160,13 +156,13 @@ const mod = {
 					size: size === '-' ? null : parseInt(size),
 				};
 			}).map(async e => {
-				const basename = e.name.match(new RegExp(`^${ _path.slice(1) }(.*)`)).pop();
+				const basename = e.name.match(new RegExp(`^${ target.slice(1) }(.*)`)).pop();
 				return [
 					basename,
 					e.type === 'tree'
 					? { ETag: e.hash }
-					: await _this.meta({
-						target: path.join(_path, basename),
+					: await this.meta({
+						target: path.join(target, basename),
 					}),
 				];
 			})).then(Object.fromEntries);

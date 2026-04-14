@@ -5,10 +5,10 @@ const mod = {
 
 	filesystem: ({ owner, repo, token }) => ({
 
-		async put ({ target: _path, data, meta }) {
+		async put ({ target, data, meta }) {
 			const content = Buffer.from(data).toString('base64');
 			
-			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents/${ _path }`, {
+			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents/${ target }`, {
 			  method: 'PUT',
 			  headers: {
 			    'Authorization': `token ${ token }`,
@@ -51,14 +51,14 @@ const mod = {
 			return encoding ? buffer.toString(encoding) : buffer;
 		},
 
-		async meta ({ target: _path, isFolderRequest }) {
+		async meta ({ target, isFolderRequest }) {
+			const { size, content, sha } = await this._content(target);
+
 			if (isFolderRequest)
-				return {
-					ETag: (await this._content(_path)).sha,
-				};
+				return { ETag: sha };
 
 			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({
-				path: _path,
+				path: target,
 				per_page: 1,
 			}) }`, {
 				method: 'GET',
@@ -69,18 +69,17 @@ const mod = {
 			});
 			const commits = await response.json();
 			const date = new Date(commits[0].commit.author.date);
-			const { size, content, sha } = await this._content(_path);
 			const buffer = Buffer.from(content, 'base64');
 			return {
 				ETag: sha,
 				'Content-Length': size,
-				'Content-Type': await util._guessType(buffer, _path),
+				'Content-Type': await util._guessType(buffer, target),
 				'Last-Modified': date.toUTCString(),
 			};
 		},
 
-		async remove ({ target: _path, meta }) {
-			await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents/${ _path }`, {
+		async remove ({ target, meta }) {
+			await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents/${ target }`, {
 			  method: 'DELETE',
 			  headers: {
 			    'Authorization': `token ${ token }`,
@@ -92,8 +91,8 @@ const mod = {
 			});
 		},
 
-		async list ({ target: _path }) {
-			return Promise.all((await this._content(_path)).entries.map(async e => [
+		async list ({ target }) {
+			return Promise.all((await this._content(target)).entries.map(async e => [
 				e.name + (e.type === 'dir' ? '/' : ''),
 				await this.meta({
 					target: e.path,

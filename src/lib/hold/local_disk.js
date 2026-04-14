@@ -26,13 +26,13 @@ const mod = {
 		_metaPath: target => `${ target }${ metaSuffix }`,
 		_etag: () => (new Date()).toJSON(),
 		
-		put ({ handle, target: _path, data, breadcrumbs, meta }) {
-			const target = mod.util.localPath({
+		put ({ handle, target, data, breadcrumbs, meta }) {
+			const _target = mod.util.localPath({
 				handle,
-				target: _path,
+				target,
 			});
 
-			fs.mkdirSync(path.dirname(target), { recursive: true });
+			fs.mkdirSync(path.dirname(_target), { recursive: true });
 			breadcrumbs.forEach(e => {
 				e = mod.util.localPath({
 					handle,
@@ -45,10 +45,10 @@ const mod = {
 				}));
 			});
 			
-			fs.writeFileSync(target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
+			fs.writeFileSync(_target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
 
-			const stat = fs.statSync(target);
-			fs.writeFileSync(this._metaPath(target), JSON.stringify(Object.assign(meta, {
+			const stat = fs.statSync(_target);
+			fs.writeFileSync(this._metaPath(_target), JSON.stringify(Object.assign(meta, {
 				ETag: stat.mtime.toJSON(),
 				'Content-Length': Buffer.isBuffer(data) ? data.length : stat.size,
 				'Last-Modified': stat.mtime.toUTCString(),
@@ -65,13 +65,13 @@ const mod = {
 			return JSON.parse(fs.readFileSync(this._metaPath(target), 'utf8'));
 		},
 
-		remove ({ handle, target: _path, breadcrumbs }) {
-			const target = mod.util.localPath({
+		remove ({ handle, target, breadcrumbs }) {
+			const _target = mod.util.localPath({
 				handle,
-				target: _path,
+				target,
 			});
-			fs.unlinkSync(target);
-			fs.unlinkSync(this._metaPath(target));
+			fs.unlinkSync(_target);
+			fs.unlinkSync(this._metaPath(_target));
 
 			breadcrumbs.slice().sort().reverse().forEach(e => {
 				e = mod.util.localPath({
@@ -93,14 +93,14 @@ const mod = {
 			})));
 		},
 
-		list ({ handle, target: _path }) {
-			const target = mod.util.localPath({
+		list ({ handle, target }) {
+			const _target = mod.util.localPath({
 				handle,
-				target: _path,
+				target,
 			});
 
-			return fs.readdirSync(target).filter(e => !mod.util.isIgnored(e)).reduce((coll, item) => {
-				let e = path.join(target, item);
+			return fs.readdirSync(_target).filter(e => !mod.util.isIgnored(e)).reduce((coll, item) => {
+				let e = path.join(_target, item);
 
 				if (fs.statSync(e).isDirectory()) {
 					item += '/';
