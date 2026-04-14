@@ -101,6 +101,18 @@ const mod = {
 				}),
 			])).then(Object.fromEntries);
 		},
+
+		async exists ({ target }) {
+			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents/${ target }`, {
+				method: 'GET',
+			  headers: {
+			    'Authorization': `token ${ token }`,
+			    'Content-Type': 'application/json',
+			    'Accept': 'application/vnd.github.object+json',
+			  },
+			});
+			return response.status === 200;
+		},
 };
 
 export default mod;
