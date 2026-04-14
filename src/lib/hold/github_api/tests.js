@@ -193,4 +193,86 @@ describe('filesystem', () => {
 			meta,
 		})).toBe(undefined);
 	});
+
+	describe('list', () => {
+
+		test('file', async () => {
+			const folder = stub.ulid();
+			const basename = stub.basename();
+			const target = path.join(folder, basename);
+			nock('https://api.github.com', {
+				reqheaders: {
+					'Accept': 'application/vnd.github.object+json',
+				},
+			})
+			  .get(`/repos/${ owner }/${ repo }/contents/${ folder }`)
+			  .reply(200, {
+			  	entries: [{
+			  		name: basename,
+			  		path: target,
+			  		type: 'file',
+			  	}],
+			  });
+			const scope = nock('https://api.github.com')
+				.persist()
+			  .get(`/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({
+				path: target,
+				per_page: 1,
+			}) }`)
+			  .reply(200, [{
+			  	commit: {
+			  		author: { date: new Date().toJSON() },
+			  	},
+			  }])
+			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .reply(200, {
+				  size: parseInt(Math.random().toString().slice(-2)),
+				  content: stub.buffer().toString('base64'),
+				  sha: stub.ulid(),
+				});
+			expect(await filesystem.list({ target: folder })).toEqual({
+				[basename]: await filesystem.meta({
+					target,
+				}),
+			});
+			expect(scope.isDone()).toBe(true);
+			scope.persist(false);
+		});
+
+		test('folder', async () => {
+			const folder = stub.ulid();
+			const basename = stub.ulid();
+			const target = path.join(folder, basename);
+			nock('https://api.github.com', {
+				reqheaders: {
+					'Accept': 'application/vnd.github.object+json',
+				},
+			})
+			  .get(`/repos/${ owner }/${ repo }/contents/${ folder }`)
+			  .reply(200, {
+			  	entries: [{
+			  		name: basename,
+			  		path: target,
+			  		type: 'folder',
+			  	}],
+			  });
+			const scope = nock('https://api.github.com', {
+				reqheaders: {
+					'Accept': 'application/vnd.github.object+json',
+				},
+			})
+				.persist()
+			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .reply(200, {
+				  sha: stub.ulid(),
+				});
+			expect(await filesystem.list({ target: folder })).toEqual({
+				[basename + '/']: await filesystem.meta({
+					target,
+					isFolderRequest: true,
+				}),
+			});
+		});
+
+	});
 });

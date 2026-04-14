@@ -91,6 +91,16 @@ const mod = {
 			  }),
 			});
 		},
+
+		async list ({ target: _path }) {
+			return Promise.all((await this._content(_path)).entries.map(async e => [
+				e.name + (e.type === 'folder' ? '/' : ''),
+				await this.meta({
+					target: e.path,
+					isFolderRequest: e.type === 'folder',
+				}),
+			])).then(Object.fromEntries);
+		},
 };
 
 export default mod;
