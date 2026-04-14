@@ -22,7 +22,13 @@ describe('filesystem', () => {
 			const size = parseInt(Math.random().toString().slice(-2));
 			const date = new Date();
 			nock('https://api.github.com')
-			  .put(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .put(`/repos/${ owner }/${ repo }/contents/${ target }`, body => {
+			  	expect(body).toEqual({
+			  		message: 'sync',
+			  		content: Buffer.from(data).toString('base64'),
+			  	});
+			  	return true;
+			  })
 			  .reply(201, {
 			    content: { sha, size },
 			    commit: {
