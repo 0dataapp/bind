@@ -113,6 +113,14 @@ const mod = {
 			});
 			return response.status === 200;
 		},
+
+		async isFolder ({ target }) {
+			const response = await this._content(target);
+			return response.type === 'dir';
+		},
+
+	}),
+
 };
 
 export default mod;
