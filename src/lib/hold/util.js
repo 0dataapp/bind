@@ -29,10 +29,20 @@ const mod = {
 	},
 	_guessHTML: e => e.startsWith('<!DOCTYPE html>'),
 	_guessBuffer (buffer) {
-	  for (let byte of buffer)
-	    if (byte < 0x20 && byte !== 0x09 && byte !== 0x0a && byte !== 0x0d)
-	      return true;
-
+	  // Check for null bytes (almost always binary)
+	  if (buffer.includes(0x00)) return true;
+	  
+	  // Check for excessive control characters
+	  let controlChars = 0;
+	  for (let byte of buffer) {
+	    if ((byte < 0x20 || byte > 0x7E) && byte !== 0x09 && byte !== 0x0a && byte !== 0x0d) {
+	      controlChars++;
+	    }
+	  }
+	  
+	  // If more than 30% are non-printable, it's binary
+	  if (controlChars / buffer.length > 0.3) return true;
+	  
 	  return false;
 	},
 
