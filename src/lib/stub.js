@@ -63,6 +63,8 @@ const mod = {
   _bytes: () => Array.from({ length: 16 }, () => Math.floor(Math.random() * 256)),
   buffer: () => Buffer.from(mod._bytes()),
 
+  size: () => parseInt(Math.random().toString().slice(-2)),
+
 };
 
 export default mod;

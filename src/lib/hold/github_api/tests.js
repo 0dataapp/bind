@@ -19,7 +19,7 @@ describe('filesystem', () => {
 			const meta = stub.headers(contentType);
 
 			const sha = stub.ulid();
-			const size = parseInt(Math.random().toString().slice(-2));
+			const size = stub.size();
 			const date = new Date();
 			nock('https://api.github.com')
 			  .put(`/repos/${ owner }/${ repo }/contents/${ target }`, body => {
@@ -57,7 +57,7 @@ describe('filesystem', () => {
 			const meta = Object.assign(stub.headers(contentType), { ETag });
 
 			const sha = stub.ulid();
-			const size = parseInt(Math.random().toString().slice(-2));
+			const size = stub.size();
 			const date = new Date();
 			nock('https://api.github.com')
 			  .put(`/repos/${ owner }/${ repo }/contents/${ target }`, body => {
@@ -122,7 +122,7 @@ describe('filesystem', () => {
 
 		test('file', async () => {
 			const target = stub.basename();
-			const size = parseInt(Math.random().toString().slice(-2));
+			const size = stub.size();
 			const date = new Date();
 			const sha = stub.ulid();
 			nock('https://api.github.com')
@@ -226,7 +226,7 @@ describe('filesystem', () => {
 			  }])
 			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
 			  .reply(200, {
-				  size: parseInt(Math.random().toString().slice(-2)),
+				  size: stub.size(),
 				  content: stub.buffer().toString('base64'),
 				  sha: stub.ulid(),
 				});
