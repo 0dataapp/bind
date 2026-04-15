@@ -112,8 +112,8 @@ const mod = {
 		},
 
 		exists (params) {
+			// this currently fails the 409 test where 'target file path is an existing folder' because breadcrumbs are passed without a trailing slash, which creates the wrong _metaPath. not sure yet where is the most sensible place to ensure trailing slashes as we assume most folder request should have trailing slashes.
 			const target = mod.util.localPath(params);
-
 			return fs.existsSync(target) && fs.existsSync(this._metaPath(target));
 		},
 
