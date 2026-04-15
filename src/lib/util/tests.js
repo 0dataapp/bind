@@ -25,3 +25,25 @@ describe('humanLink', () => {
 	});
 	
 });
+
+describe('breadcrumbs', () => {
+
+	test('returns array', () => {
+		expect(mod.breadcrumbs([])).toEqual([]);
+	});
+
+	test('single', () => {
+		const item = stub.ulid();
+		expect(mod.breadcrumbs([item])).toEqual([item]);
+	});
+
+	test('multiple', () => {
+		const parent = stub.ulid();
+		const child = stub.ulid();
+		expect(mod.breadcrumbs([parent, child])).toEqual([
+			parent,
+			`${ parent }/${ child }`,
+		]);
+	});
+	
+});
