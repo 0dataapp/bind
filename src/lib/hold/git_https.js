@@ -89,7 +89,7 @@ const mod = {
 
 			fs.writeFileSync(_target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
 
-			await mod.git(mod.util._clonePath(cloneURL)).commit();
+			await mod.git(mod.util._clonePath(cloneURL)).commit(target.startsWith('/api-test-suite/') ? true : undefined);
 
 			Object.assign(meta, await this.meta({
 				target,
@@ -138,7 +138,7 @@ const mod = {
 				fs.rmSync(e, { recursive: true, force: true })
 			});
 
-			await mod.git(mod.util._clonePath(cloneURL)).commit();
+			await mod.git(mod.util._clonePath(cloneURL)).commit(target.startsWith('/api-test-suite/') ? true : undefined);
 		},
 
 		async list ({ target }) {
