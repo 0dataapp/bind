@@ -470,21 +470,17 @@ describe('filesystem', () => {
 
 		test('folder', () => {
 			const handle = stub.ulid();
-
-			const parent = stub.ulid();
-			const breadcrumbs = [parent];
-
-			const target = path.join(parent, stub.basename());
+			const target = stub.ulid();
 			mod.filesystem.put({
 				handle,
-				target,
+				target: path.join(target, stub.basename()),
 				data: Math.random().toString(),
-				breadcrumbs,
+				breadcrumbs: [target],
 				meta: stub.headers('text/plain'),
 			});
 			expect(mod.filesystem.isFolder({
 				handle,
-				target: parent,
+				target,
 			})).toBe(true);
 		});
 

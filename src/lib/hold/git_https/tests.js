@@ -366,17 +366,13 @@ describe('filesystem', () => {
 		});
 
 		test('folder', async () => {
-			const parent = stub.ulid();
-
-			const target = path.join(parent, stub.basename());
+			const target = stub.ulid();
 			await filesystem.put({
-				target,
+				target: path.join(target, stub.basename()),
 				data: Math.random().toString(),
 				meta: stub.headers('text/plain'),
 			});
-			expect(filesystem.isFolder({
-				target: parent,
-			})).toBe(true);
+			expect(filesystem.isFolder({ target })).toBe(true);
 		});
 
 	});
