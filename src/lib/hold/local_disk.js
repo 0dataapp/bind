@@ -33,17 +33,6 @@ const mod = {
 			});
 
 			fs.mkdirSync(path.dirname(_target), { recursive: true });
-			breadcrumbs.forEach(e => {
-				e = mod.util.localPath({
-					handle,
-					target: e,
-				}) + '/';
-
-				const stat = fs.statSync(e);
-				fs.writeFileSync(this._metaPath(e), JSON.stringify({
-					ETag: stat.mtime.toJSON(),
-				}));
-			});
 			
 			fs.writeFileSync(_target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
 
@@ -53,6 +42,15 @@ const mod = {
 				'Content-Length': Buffer.isBuffer(data) ? data.length : stat.size,
 				'Last-Modified': stat.mtime.toUTCString(),
 			})));
+
+			breadcrumbs.forEach(e => {
+				fs.writeFileSync(this._metaPath(mod.util.localPath({
+					handle,
+					target: e,
+				}) + '/'), JSON.stringify({
+					ETag: stat.mtime.toJSON(),
+				}));
+			});
 		},
 
 		get (params) {
