@@ -74,8 +74,8 @@ describe('filesystem', () => {
 
 		test('buffer', async () => {
 			const target = stub.ulid();
-			const data = stub.buffer();
-			const contentType = 'application/octet-stream';
+			const data = stub.zip();
+			const contentType = 'application/zip';
 			const meta = stub.headers(contentType);
 			
 			expect(await filesystem.put({

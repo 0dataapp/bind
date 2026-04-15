@@ -62,6 +62,7 @@ const mod = {
 
   _bytes: () => Array.from({ length: 16 }, () => Math.floor(Math.random() * 256)),
   buffer: () => Buffer.from(mod._bytes()),
+  zip: () => Buffer.concat([Buffer.from([0x50, 0x4B, 0x03, 0x04]), mod.buffer()]),
 
   size: () => parseInt(Math.random().toString().slice(-2)),
 
