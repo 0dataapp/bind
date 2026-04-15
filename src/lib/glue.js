@@ -165,7 +165,7 @@ const mod = {
 			target,
 		});
 
-		const _breadcrumbs = util.breadcrumbs(target.split('/').slice(1));
+		const _breadcrumbs = ['/', ...util.breadcrumbs(target.split('/').slice(1, isFolderRequest ? -1 : undefined))];
 
 		if (req.method === 'PUT' && await Promise.all(_breadcrumbs.slice(1).map(async target => {
 			const exists = await hold.exists({
