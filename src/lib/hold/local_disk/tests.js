@@ -48,7 +48,7 @@ describe('filesystem', () => {
 			});
 		});
 
-		test('buffer', () => {
+		test('blob', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
 			const data = stub.buffer();
@@ -127,7 +127,7 @@ describe('filesystem', () => {
 			})).toBe(data);
 		});
 
-		test('buffer', () => {
+		test('blob', () => {
 			const handle = stub.ulid();
 			const target = stub.basename();
 			const data = stub.buffer();

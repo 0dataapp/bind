@@ -102,7 +102,7 @@ describe('filesystem', () => {
 			})).toBe(data);
 		});
 
-		test('buffer', async () => {
+		test('blob', async () => {
 			const target = stub.basename();
 			const data = stub.buffer();
 			nock('https://api.github.com')

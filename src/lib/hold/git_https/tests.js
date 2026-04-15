@@ -72,7 +72,7 @@ describe('filesystem', () => {
 			expect(fs.readFileSync(filesystem._localPath(target), 'utf8')).toEqual(data);
 		});
 
-		test('buffer', async () => {
+		test('blob', async () => {
 			const target = stub.ulid();
 			const data = stub.zip();
 			const contentType = 'application/zip';
@@ -124,7 +124,7 @@ describe('filesystem', () => {
 			})).toBe(data);
 		});
 
-		test('buffer', async () => {
+		test('blob', async () => {
 			const target = stub.basename();
 			const data = stub.buffer();
 			const contentType = 'application/octet-stream';
