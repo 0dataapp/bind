@@ -49,6 +49,43 @@ describe('filesystem', () => {
 			}));
 		});
 
+		test('blob', async () => {
+			const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
+			const data = stub.buffer();
+			const contentType = 'application/octet-stream';
+			const meta = stub.headers(contentType);
+
+			const sha = stub.ulid();
+			const size = stub.size();
+			const date = new Date();
+			nock('https://api.github.com')
+			  .put(`/repos/${ owner }/${ repo }/contents/${ target }`, body => {
+			  	expect(body).toEqual({
+			  		message: 'sync',
+			  		content: data.toString('base64'),
+			  	});
+			  	return true;
+			  })
+			  .reply(201, {
+			    content: { sha, size },
+			    commit: {
+			      committer: { date: date.toJSON() },
+			    },
+			  });
+			
+			expect(await filesystem.put({
+				target,
+				data,
+				meta,
+			})).toBe(undefined);
+
+			expect(meta).toEqual(Object.assign(stub.headers(contentType), {
+				ETag: sha,
+				'Content-Length': size,
+				'Last-Modified': date.toUTCString(),
+			}));
+		});
+
 		test('ETag', async () => {
 			const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
 			const data = Math.random().toString();
