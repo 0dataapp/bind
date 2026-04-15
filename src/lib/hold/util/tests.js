@@ -36,3 +36,56 @@ describe('isJunk', () => {
 	});
 
 });
+
+describe('_guessType', () => {
+
+	describe('basename', () => {
+
+		test('text', async () => {
+			expect(await mod._guessType(null, stub.basename())).toBe('text/plain');
+		});
+
+		test('json', async () => {
+			expect(await mod._guessType(null, stub.basename().replace('.txt', '.json'))).toBe('application/json');
+		});
+
+		test('html', async () => {
+			expect(await mod._guessType(null, stub.basename().replace('.txt', '.html'))).toBe('text/html');
+		});
+
+		test('zip', async () => {
+			expect(await mod._guessType(null, stub.basename().replace('.txt', '.zip'))).toBe('application/zip');
+		});
+
+		test('jpg', async () => {
+			expect(await mod._guessType(null, stub.basename().replace('.txt', '.jpg'))).toBe('image/jpeg');
+		});
+
+		test('mp4', async () => {
+			expect(await mod._guessType(null, stub.basename().replace('.txt', '.mp4'))).toBe('video/mp4');
+		});
+
+	});
+
+	describe('buffer', () => {
+
+		test('text', async () => {
+			expect(await mod._guessType(Buffer.from(Math.random().toString()), stub.ulid())).toBe('text/plain');
+		});
+
+		test('json', async () => {
+			expect(await mod._guessType(Buffer.from(JSON.stringify({})), stub.ulid())).toBe('application/json');
+			expect(await mod._guessType(Buffer.from(JSON.stringify([])), stub.ulid())).toBe('application/json');
+		});
+
+		test('html', async () => {
+			expect(await mod._guessType(Buffer.from('<!DOCTYPE html>'), stub.ulid())).toBe('text/html');
+		});
+
+		test('zip', async () => {
+			expect(await mod._guessType(stub.zip(), stub.ulid())).toBe('application/zip');
+		});
+
+	});
+
+});

@@ -17,7 +17,7 @@ const mod = {
 		'.DS_Store',
 	].includes(path.basename(e)),
 
-	_guessJSON (e) {
+	__guessJSON (e) {
 		if (!['{', '['].includes(e.trim()[0]))
 			return false;
 
@@ -27,7 +27,7 @@ const mod = {
 			return false
 		}
 	},
-	_guessHTML: e => e.startsWith('<!DOCTYPE html>'),
+	__guessHTML: e => e.startsWith('<!DOCTYPE html>'),
 
 	async _guessType (buffer, basename) {
 		let type;
@@ -40,10 +40,10 @@ const mod = {
 
 		const string = buffer.toString('utf8');
 
-		if (mod._guessJSON(string))
+		if (mod.__guessJSON(string))
 			return 'application/json';
 		
-		if (mod._guessHTML(string))
+		if (mod.__guessHTML(string))
 			return 'text/html';
 
 		return 'text/plain';
