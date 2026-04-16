@@ -39,25 +39,20 @@ export const handle = sequence(
   
   glue.util.sveltekit(glue.cors()),
 	
-  async ({ event, resolve }) => {
+  ({ event, resolve }) => {
     const { pathname } = new URL(event.request.url);
     if (!pathname.startsWith(prefix))
       return resolve(event);
 
-    let hold = local_disk.filesystem;
-
-    const token = glue.util.parseToken(event.request.headers.get('authorization'))
-    if (token) {
-      const [handle, publicFolder] = glue.util.parsePathname(pathname.slice(prefix.length));
-      
-      const authorization = await oauth.authorization(handle, token);
-      if (authorization && authorization.data.depotId !== 'local_custody')
-        hold = git_https.filesystem(await depot.depotURL(authorization.data.depotId));
-    }
-    
     return glue.util.sveltekit(glue.remotestorage({
       getScope: oauth.getScope,
-      hold,
+      async getFS (handle, token) {
+        const authorization = await oauth.authorization(handle, token);
+        if (authorization && authorization.data.depotId !== 'local_custody')
+          return git_https.filesystem(await depot.depotURL(authorization.data.depotId));
+
+        return local_disk.filesystem;
+      },
     }), prefix)({ event, resolve })
   },
   

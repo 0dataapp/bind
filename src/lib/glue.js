@@ -127,10 +127,14 @@ const mod = {
 		});
 	},
 
-	remotestorage: ({ hold, getScope }) => async (req, res, next) => {
+	remotestorage: ({ getFS, getScope }) => async (req, res, next) => {
 		// console.info(req.method, req.url);
 		const [handle, isPublicFolder, relative] = mod.util.parsePathname(req.url);
 		const token = mod.util.parseToken(req.headers.authorization);
+		const fs = await getFS({
+			handle,
+			token,
+		});
 
 		if (!isPublicFolder && !token)
 			return res.status(401).send('missing token');
@@ -160,7 +164,7 @@ const mod = {
 			return res.status(400).end();
 
 		const target = `${ isPublicFolder ? '/public' : ''}${ relative }`;
-		const exists = await hold.exists({
+		const exists = await fs.exists({
 			handle,
 			target,
 		});
@@ -168,14 +172,14 @@ const mod = {
 		const _breadcrumbs = ['/', ...util.breadcrumbs(target.split('/').slice(1, isFolderRequest ? -1 : undefined))];
 
 		if (req.method === 'PUT' && await Promise.all(_breadcrumbs.slice(1).map(async target => {
-			const exists = await hold.exists({
+			const exists = await fs.exists({
 				handle,
 				target,
 			});
 			return {
 				target,
 				exists,
-				isFolder: exists && await hold.isFolder({
+				isFolder: exists && await fs.isFolder({
 					handle,
 					target,
 				}),
@@ -183,7 +187,7 @@ const mod = {
 		})).then(e => e.filter(e => e.exists && (`/${ e.target }` === target ? e.isFolder : !e.isFolder)).length))
 			return res.status(409).end();
 
-		const meta = exists ? await hold.meta({
+		const meta = exists ? await fs.meta({
 			handle,
 			target,
 		}) : {
@@ -214,7 +218,7 @@ const mod = {
 		const breadcrumbs = _breadcrumbs.slice(0, -1);
 
 		if (req.method === 'PUT')
-			await hold.put({
+			await fs.put({
 				handle,
 				target,
 				data: req.body,
@@ -227,7 +231,7 @@ const mod = {
 		meta['ETag'] = `"${ meta['ETag'] }"`;
 
 		if (req.method === 'DELETE') {
-			await hold.remove({
+			await fs.remove({
 				handle,
 				target,
 				breadcrumbs,
@@ -246,13 +250,13 @@ const mod = {
 
 		if (isFolderRequest)
 			return res.json(Object.assign(listResponse, {
-				items: await hold.list({
+				items: await fs.list({
 					handle,
 					target,
 				}),
 			}));
 
-		return res.send(await hold.get({
+		return res.send(await fs.get({
 			handle,
 			target,
 			contentType: meta['Content-Type'],
