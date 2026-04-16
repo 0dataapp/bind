@@ -9,9 +9,6 @@ import hold from '$lib/hold.js';
 for (const key in hold.options)
   hold.options[key].hold?.startup?.();
 
-import local_disk from '$lib/hold/local_disk.js';
-import git_https from '$lib/hold/git_https.js';
-
 import depot from '$lib/depot/auth.js';
 
 import oauth from '$lib/oauth-implicit.js';
@@ -49,9 +46,9 @@ export const handle = sequence(
       async getFS ({ handle, token }) {
         const authorization = await oauth.authorization(handle, token);
         if (authorization && authorization.data.depotId !== 'local_custody')
-          return git_https.filesystem(await depot.depotURL(authorization.data.depotId));
+          return hold.options.git_https.filesystem(await depot.depotURL(authorization.data.depotId));
 
-        return local_disk.filesystem(handle);
+        return hold.options.local_disk.filesystem(handle);
       },
     }), prefix)({ event, resolve })
   },
