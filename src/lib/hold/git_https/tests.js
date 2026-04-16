@@ -49,6 +49,10 @@ describe('filesystem', () => {
 
 	beforeAll(resetRepo);
 
+	test('blank', () => {
+		expect(() => mod.filesystem('')).toThrow('url blank');
+	});
+
 	describe('put', () => {
 
 		test('string', async () => {
@@ -377,10 +381,6 @@ describe('filesystem', () => {
 
 	});
 
-});
-
-describe('hold', () => {
-
 	test('erase', async () => {
 		const target = stub.basename();
 		await filesystem.put({
@@ -388,9 +388,8 @@ describe('hold', () => {
 			data: Math.random().toString(),
 			meta: stub.headers('text/plain'),
 		});
-		expect(() => mod.hold.erase('')).toThrow('url blank');
 		expect(fs.existsSync(filesystem._localPath(target))).toBe(true);
-		expect(mod.hold.erase(cloneURL)).toBe(undefined);
+		expect(filesystem.erase(cloneURL)).toBe(undefined);
 		expect(fs.existsSync(filesystem._localPath('/'))).toBe(false);
 	});
 

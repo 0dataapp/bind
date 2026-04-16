@@ -78,7 +78,7 @@ const mod = {
 		};
 	},
 
-	filesystem: cloneURL => ({
+	filesystem: cloneURL => !cloneURL ? (function () { throw new Error('url blank') })() : {
 
 		_localPath: e => path.join(mod.util._clonePath(cloneURL), e),
 		
@@ -176,7 +176,9 @@ const mod = {
 			return fs.statSync(this._localPath(target)).isDirectory();
 		},
 
-	}),
+		erase: () => fs.rmSync(mod.util._clonePath(cloneURL), { recursive: true, force: true }),
+
+	},
 
 	sync: {
 
@@ -202,8 +204,6 @@ const mod = {
 		startup () {
 			setInterval(mod.sync.pull, pollSeconds * 1000);
 		},
-
-		erase: id => id ? fs.rmSync(mod.util._clonePath(id), { recursive: true, force: true }) : (function () { throw new Error('url blank') })(),
 
 		prepare (id, url) {
 			q._pushAuto(async () => {

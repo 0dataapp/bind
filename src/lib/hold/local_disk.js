@@ -17,20 +17,16 @@ const mod = {
 	util: {
 
 		isIgnored: e => util.isJunk(e) || e.endsWith(metaSuffix),
-		localPath: ({ handle, target }) => path.join(mod.folder, handle, target),
 
 	},
 
-	filesystem: {
+	filesystem: handle => !handle ? (function () { throw new Error('username blank') })() : {
 
 		_metaPath: target => `${ target }${ metaSuffix }`,
-		_etag: () => (new Date()).toJSON(),
+		_localPath: target => path.join(mod.folder, handle, target),
 		
-		put ({ handle, target, data, breadcrumbs, meta }) {
-			const _target = mod.util.localPath({
-				handle,
-				target,
-			});
+		put ({ target, data, breadcrumbs, meta }) {
+			const _target = this._localPath(target);
 
 			fs.mkdirSync(path.dirname(_target), { recursive: true });
 			
@@ -44,38 +40,27 @@ const mod = {
 			})));
 
 			breadcrumbs.forEach(e => {
-				fs.writeFileSync(this._metaPath(mod.util.localPath({
-					handle,
-					target: e,
-				}) + '/'), JSON.stringify({
+				fs.writeFileSync(this._metaPath(this._localPath(e) + '/'), JSON.stringify({
 					ETag: stat.mtime.toJSON(),
 				}));
 			});
 		},
 
-		get (params) {
-			return fs.readFileSync(mod.util.localPath(params), util.encoding(params.contentType));
+		get ({ target, contentType }) {
+			return fs.readFileSync(this._localPath(target), util.encoding(contentType));
 		},
 
-		meta (params) {
-			const target = mod.util.localPath(params);
-
-			return JSON.parse(fs.readFileSync(this._metaPath(target), 'utf8'));
+		meta ({ target }) {
+			return JSON.parse(fs.readFileSync(this._metaPath(this._localPath(target)), 'utf8'));
 		},
 
-		remove ({ handle, target, breadcrumbs }) {
-			const _target = mod.util.localPath({
-				handle,
-				target,
-			});
+		remove ({ target, breadcrumbs }) {
+			const _target = this._localPath(target);
 			fs.unlinkSync(_target);
 			fs.unlinkSync(this._metaPath(_target));
 
 			breadcrumbs.slice().sort().reverse().forEach(e => {
-				e = mod.util.localPath({
-					handle,
-					target: e,
-				});
+				e = this._localPath(e);
 
 				if (fs.readdirSync(e).filter(e => !mod.util.isIgnored(e)).length)
 					return;
@@ -83,19 +68,13 @@ const mod = {
 				fs.rmSync(e, { recursive: true, force: true })
 			});
 
-			breadcrumbs.map(e => mod.util.localPath({
-				handle,
-				target: e,
-			})).filter(e => fs.existsSync(e) && fs.readdirSync(e).filter(e => !mod.util.isIgnored(e)).length).forEach(e => fs.writeFileSync(this._metaPath(`${ e }/`), JSON.stringify({
-				ETag: this._etag(),
+			breadcrumbs.map(e => this._localPath(e)).filter(e => fs.existsSync(e) && fs.readdirSync(e).filter(e => !mod.util.isIgnored(e)).length).forEach(e => fs.writeFileSync(this._metaPath(`${ e }/`), JSON.stringify({
+				ETag: new Date().toJSON() + Math.random().toString(),
 			})));
 		},
 
-		list ({ handle, target }) {
-			const _target = mod.util.localPath({
-				handle,
-				target,
-			});
+		list ({ target }) {
+			const _target = this._localPath(target);
 
 			return fs.readdirSync(_target).filter(e => !mod.util.isIgnored(e)).reduce((coll, item) => {
 				let e = path.join(_target, item);
@@ -111,24 +90,19 @@ const mod = {
 			}, {});
 		},
 
-		exists (params) {
+		exists ({ target }) {
 			// this currently fails the 409 test where 'target file path is an existing folder' because breadcrumbs are passed without a trailing slash, which creates the wrong _metaPath. not sure yet where is the most sensible place to ensure trailing slashes as we assume most folder request should have trailing slashes.
-			const target = mod.util.localPath(params);
-			return fs.existsSync(target) && fs.existsSync(this._metaPath(target));
+			const _target = this._localPath(target);
+			return fs.existsSync(_target) && fs.existsSync(this._metaPath(_target));
 		},
 
-		isFolder (params) {
-			return fs.statSync(mod.util.localPath(params)).isDirectory();
+		isFolder ({ target }) {
+			return fs.statSync(this._localPath(target)).isDirectory();
 		},
 
-	},
-
-	hold: {
-
-		erase: handle => handle ? fs.rmSync(mod.util.localPath({
-			handle,
-			target: '/',
-		}), { recursive: true, force: true }) : (function () { throw new Error('username blank') })(),
+		erase (handle) {
+			return fs.rmSync(this._localPath('/'), { recursive: true, force: true });
+		},
 
 	},
 	

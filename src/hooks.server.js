@@ -51,7 +51,7 @@ export const handle = sequence(
         if (authorization && authorization.data.depotId !== 'local_custody')
           return git_https.filesystem(await depot.depotURL(authorization.data.depotId));
 
-        return local_disk.filesystem;
+        return local_disk.filesystem(handle);
       },
     }), prefix)({ event, resolve })
   },

@@ -31,7 +31,7 @@ export const auth = betterAuth({
       enabled: true,
       beforeDelete: async (user, request) => {
         await oauth.revokeAll(user.username);
-        await local_disk.hold.erase(user.id);
+        await local_disk.filesystem(user.id).erase();
       },
     },
   },
