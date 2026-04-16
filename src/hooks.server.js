@@ -46,7 +46,7 @@ export const handle = sequence(
 
     return glue.util.sveltekit(glue.remotestorage({
       getScope: oauth.getScope,
-      async getFS (handle, token) {
+      async getFS ({ handle, token }) {
         const authorization = await oauth.authorization(handle, token);
         if (authorization && authorization.data.depotId !== 'local_custody')
           return git_https.filesystem(await depot.depotURL(authorization.data.depotId));
