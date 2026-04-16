@@ -125,8 +125,6 @@ const mod = {
 
 	hold: {
 
-		startup () {},
-		
 		erase: handle => handle ? fs.rmSync(mod.util.localPath({
 			handle,
 			target: '/',

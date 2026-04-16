@@ -1,28 +1,21 @@
-import local_disk from './hold/local_disk.js';
-import git_https from './hold/git_https.js';
+import { options } from './hold/options.js';
 
 const mod = {
 
-	_wrappers: {
-		local_disk,
-		git_https,
-	},
+	options,
 
-	wrapperId: e => {
+	identifier: e => {
 		if ([
 			'github',
 			'gitea_selfhosted',
 		].includes(e))
 			return 'git_https';
 
+		if (e === 'local_custody')
+			return 'local_disk';
+
 		throw new Error('unknown depot');
 	},
-
-	interface: wrapperId => Object.fromEntries([
-		'startup',
-		'prepare',
-		'erase',
-	].map(method => [method, mod._wrappers[wrapperId].hold[method]])),
 
 };
 

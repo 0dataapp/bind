@@ -205,15 +205,13 @@ const mod = {
 
 		erase: id => id ? fs.rmSync(mod.util._clonePath(id), { recursive: true, force: true }) : (function () { throw new Error('url blank') })(),
 
-		async _prepare (id, url) {
-			const target = mod.util._clonePath(id);
-
-			if (!fs.existsSync(target))
-				await simpleGit().clone(url, target);
-		},
-
 		prepare (id, url) {
-			q._pushAuto(() => mod.hold._prepare(...arguments));
+			q._pushAuto(async () => {
+				const target = mod.util._clonePath(id);
+
+				if (!fs.existsSync(target))
+					await simpleGit().clone(url, target);
+			});
 		},
 		
 	},

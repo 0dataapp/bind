@@ -6,7 +6,8 @@ import { env } from '$env/dynamic/private';
 import glue from '$lib/glue.js';
 
 import hold from '$lib/hold.js';
-Object.keys(hold._wrappers).forEach(wrapperId => hold.interface(wrapperId).startup());
+for (const key in hold.options)
+  hold.options[key].hold?.startup?.();
 
 import local_disk from '$lib/hold/local_disk.js';
 import git_https from '$lib/hold/git_https.js';
@@ -50,9 +51,8 @@ export const handle = sequence(
       const [handle, publicFolder] = glue.util.parsePathname(pathname.slice(prefix.length));
       
       const authorization = await oauth.authorization(handle, token);
-      if (authorization && authorization.data.depotId !== 'local_custody') {
+      if (authorization && authorization.data.depotId !== 'local_custody')
         hold = git_https.filesystem(await depot.depotURL(authorization.data.depotId));
-      }
     }
     
     return glue.util.sveltekit(glue.remotestorage({

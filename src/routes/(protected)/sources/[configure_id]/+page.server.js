@@ -57,14 +57,14 @@ export const actions = {
 		if (!account)
 			return redirect(307, '/sources');
 
-		const wrapper = hold.interface(hold.wrapperId(params.configure_id));
+		const _hold = hold.options[hold.identifier(params.configure_id)];
 
 		const sources = JSON.parse((await request.formData()).get('sources') || '[]').slice(0, maxItems);
 		const items = (await db.collection('account_subsource').hydrating.getItems()).filter(e => e.accountId === account.id);
 
 		const removed = items.filter(e => !sources.map(e => e.id).includes(e.foreignId));
 		await Promise.all(removed.map(e => db.collection('account_subsource').__delete(e.id)));
-		removed.forEach(e => wrapper.erase(e.data.cloneURL));
+		removed.forEach(e => _hold.erase?.(e.data.cloneURL));
 
 		const created = await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => db.collection('account_subsource').hydrating.create({
 			id: db.generateId(),
@@ -79,7 +79,7 @@ export const actions = {
 			headers: request.headers,
 		});
 		
-		created.map(e => e.data).forEach(source => wrapper.prepare(source.cloneURL, source.cloneURLTemplate.replace('{token}', accessToken)));
+		created.map(e => e.data).forEach(source => _hold.prepare(source.cloneURL, source.cloneURLTemplate.replace('{token}', accessToken)));
 
 		return redirect(303, '/sources');
 	},
