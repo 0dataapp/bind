@@ -1,26 +1,23 @@
-import { auth } from '$lib/auth/config.js';
+const prefix = '/storage';
+
+import { sequence } from '@sveltejs/kit/hooks';
+import { state } from '$lib/welcome.svelte.js';
+import { redirect } from '@sveltejs/kit';
+
 import { svelteKitHandler } from 'better-auth/svelte-kit';
+import { auth } from '$lib/auth/config.js';
 import { building } from '$app/environment';
-import { env } from '$env/dynamic/private';
 
 import glue from '$lib/glue.js';
+
+import oauth from '$lib/oauth-implicit.js';
 
 import hold from '$lib/hold.js';
 for (const key in hold.options)
   hold.options[key].hold?.startup?.();
-
 import depot from '$lib/depot/auth.js';
 
-import oauth from '$lib/oauth-implicit.js';
-
-import { sequence } from '@sveltejs/kit/hooks';
-
-import { state } from '$lib/welcome.svelte.js';
-import { redirect } from '@sveltejs/kit';
-
-const prefix = '/storage';
 export const handle = sequence(
-
   ({ event, resolve }) => svelteKitHandler({ event, resolve, auth, building }),
   
   async ({ event, resolve }) => {
@@ -56,6 +53,5 @@ export const handle = sequence(
   glue.util.sveltekit(glue.webfinger({
     storagePath: handle => `${ prefix }/${ handle }`,
     authPath: '/authorize',
-  })),
-  
+  })),  
 );
