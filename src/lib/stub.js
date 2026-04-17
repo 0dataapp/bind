@@ -6,6 +6,10 @@ const mod = {
 
 	random: () => Math.random().toString(36).slice(2),
 	
+	object: obj => Object.assign({
+		[mod.random()]: mod.random(),
+	}, obj || {}),
+	
 	ulid: () => Date.now().toString(36) + mod.random().slice(0, 4),
 	
 	slug: () => mod.random(),
