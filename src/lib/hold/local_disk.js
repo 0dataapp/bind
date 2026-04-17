@@ -65,7 +65,7 @@ const mod = {
 				if (fs.readdirSync(e).filter(e => !mod.util.isIgnored(e)).length)
 					return;
 
-				fs.rmSync(e, { recursive: true, force: true })
+				fs.rmSync(e, { recursive: true, force: true });
 			});
 
 			breadcrumbs.map(e => this._localPath(e)).filter(e => fs.existsSync(e) && fs.readdirSync(e).filter(e => !mod.util.isIgnored(e)).length).forEach(e => fs.writeFileSync(this._metaPath(`${ e }/`), JSON.stringify({
