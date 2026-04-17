@@ -6,7 +6,7 @@ const mod = {
 	filesystem: ({ owner, repo, token }) => ({
 
 		async put ({ target, data, meta }) {
-			const content = Buffer.from(data).toString('base64');
+			const content = Buffer.from(meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data)).toString('base64');
 			
 			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
 			  method: 'PUT',
