@@ -12,7 +12,7 @@ describe('identifier', () => {
 	});
 
 	test('github', () => {
-		expect(mod.identifier('github')).toEqual('git_https');
+		expect(mod.identifier('github')).toEqual('github_api');
 	});
 
 	test('gitea_selfhosted', () => {
