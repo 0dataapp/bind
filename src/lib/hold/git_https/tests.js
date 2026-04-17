@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeAll, beforeEach } from 'vitest';
 import mod from '../git_https.js';
-import stub from '../../stub.js';
+import stub from '$lib/stub.js';
 import util from '../util.js';
 import fs from 'fs';
 import path from 'path';

@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeAll, beforeEach } from 'vitest';
 import mod from '../local_disk.js';
-import stub from '../../stub.js';
+import stub from '$lib/stub.js';
 import fs from 'fs';
 import path from 'path';
 

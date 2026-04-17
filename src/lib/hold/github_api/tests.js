@@ -2,7 +2,7 @@ import { describe, test, expect } from 'vitest';
 import mod from '../github_api.js';
 import nock from 'nock';
 import path from 'path';
-import stub from '../../stub.js';
+import stub from '$lib/stub.js';
 
 const owner = Math.random().toString();
 const repo = Math.random().toString();

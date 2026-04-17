@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import mod from '../util.js';
-import stub from '../../stub.js';
+import stub from '$lib/stub.js';
 
 import crypto from 'crypto';
 test('hash', () => {
