@@ -199,7 +199,7 @@ const mod = {
 
 	},
 
-	hold: {
+	task: {
 
 		startup () {
 			setInterval(mod.sync.pull, pollSeconds * 1000);

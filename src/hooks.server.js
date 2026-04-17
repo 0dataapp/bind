@@ -14,7 +14,7 @@ import oauth from '$lib/oauth-implicit.js';
 
 import hold from '$lib/hold.js';
 for (const key in hold.options)
-  hold.options[key].hold?.startup?.();
+  hold.options[key].task?.startup?.();
 import depot from '$lib/depot/auth.js';
 
 export const handle = sequence(
