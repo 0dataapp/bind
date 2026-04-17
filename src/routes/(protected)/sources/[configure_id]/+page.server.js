@@ -79,7 +79,7 @@ export const actions = {
 			headers: request.headers,
 		});
 		
-		created.map(e => e.data).forEach(source => _hold.task.prepare(source.cloneURL, source.cloneURLTemplate.replace('{token}', accessToken)));
+		created.map(e => e.data).forEach(source => _hold.task?.prepare?.(source.cloneURL, source.cloneURLTemplate.replace('{token}', accessToken)));
 
 		return redirect(303, '/sources');
 	},
