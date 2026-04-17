@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import mod from '../oauth-implicit.js';
+import mod from '../auth/oauth-implicit.js';
 
 describe('_generateToken', () => {
 

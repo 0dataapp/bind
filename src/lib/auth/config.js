@@ -10,7 +10,7 @@ import usernames from './username.js';
 import database from '$lib/database.js';
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
-import oauth from '$lib/oauth-implicit.js';
+import oauth from '$lib/auth/oauth-implicit.js';
 import local_disk from '$lib/hold/local_disk.js';
 import depot from '$lib/depot.js';
 import { state } from '$lib/welcome.svelte.js';

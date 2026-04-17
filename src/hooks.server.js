@@ -10,7 +10,7 @@ import { building } from '$app/environment';
 
 import glue from '$lib/glue.js';
 
-import oauth from '$lib/oauth-implicit.js';
+import oauth from '$lib/auth/oauth-implicit.js';
 
 import hold from '$lib/hold.js';
 for (const key in hold.options)

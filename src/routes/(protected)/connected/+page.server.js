@@ -1,4 +1,4 @@
-import oauth from '$lib/oauth-implicit.js';
+import oauth from '$lib/auth/oauth-implicit.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals }) {

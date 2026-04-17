@@ -43,7 +43,7 @@ export async function load({ url, request }) {
 	};
 };
 
-import oauth from '$lib/oauth-implicit.js';
+import oauth from '$lib/auth/oauth-implicit.js';
 import { redirect } from '@sveltejs/kit';
 
 /** @satisfies {import('./$types').Actions} */
