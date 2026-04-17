@@ -8,7 +8,7 @@ const mod = {
 		async put ({ target, data, meta }) {
 			const content = Buffer.from(data).toString('base64');
 			
-			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents/${ target }`, {
+			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
 			  method: 'PUT',
 			  headers: {
 			    'Authorization': `token ${ token }`,

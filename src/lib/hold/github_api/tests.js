@@ -13,7 +13,7 @@ describe('filesystem', () => {
 	describe('put', () => {
 
 		test('string', async () => {
-			const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
+			const target = '/' + path.join(stub.breadcrumbs().at(-1), stub.basename());
 			const data = Math.random().toString();
 			const contentType = 'text/plain';
 			const meta = stub.headers(contentType);
@@ -22,7 +22,7 @@ describe('filesystem', () => {
 			const size = stub.size();
 			const date = new Date();
 			nock('https://api.github.com')
-			  .put(`/repos/${ owner }/${ repo }/contents/${ target }`, body => {
+			  .put(`/repos/${ owner }/${ repo }/contents${ target }`, body => {
 			  	expect(body).toEqual({
 			  		message: 'sync',
 			  		content: Buffer.from(data).toString('base64'),
@@ -50,7 +50,7 @@ describe('filesystem', () => {
 		});
 
 		test('blob', async () => {
-			const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
+			const target = '/' + path.join(stub.breadcrumbs().at(-1), stub.basename());
 			const data = stub.buffer();
 			const contentType = 'application/octet-stream';
 			const meta = stub.headers(contentType);
@@ -59,7 +59,7 @@ describe('filesystem', () => {
 			const size = stub.size();
 			const date = new Date();
 			nock('https://api.github.com')
-			  .put(`/repos/${ owner }/${ repo }/contents/${ target }`, body => {
+			  .put(`/repos/${ owner }/${ repo }/contents${ target }`, body => {
 			  	expect(body).toEqual({
 			  		message: 'sync',
 			  		content: data.toString('base64'),
@@ -87,7 +87,7 @@ describe('filesystem', () => {
 		});
 
 		test('ETag', async () => {
-			const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
+			const target = '/' + path.join(stub.breadcrumbs().at(-1), stub.basename());
 			const data = Math.random().toString();
 			const contentType = 'text/plain';
 			const ETag = stub.ulid();
@@ -97,7 +97,7 @@ describe('filesystem', () => {
 			const size = stub.size();
 			const date = new Date();
 			nock('https://api.github.com')
-			  .put(`/repos/${ owner }/${ repo }/contents/${ target }`, body => {
+			  .put(`/repos/${ owner }/${ repo }/contents${ target }`, body => {
 			  	expect(body.sha).toBe(ETag);
 			  	return true;
 			  })
