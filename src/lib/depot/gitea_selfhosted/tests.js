@@ -37,6 +37,7 @@ describe('repos', () => {
 				}).toString()),
 				webURL: json.html_url,
 				ownerId: json.owner.id.toString(),
+				ownerHandle: json.owner.login.toString(),
 				size: json.size,
 				payload: json,
 			}]);

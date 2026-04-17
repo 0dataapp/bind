@@ -58,6 +58,7 @@ const mod = {
 			}).toString()),
 			webURL: e.html_url,
 			ownerId: e.owner.id.toString(),
+			ownerHandle: e.owner.login.toString(),
 			size: e.size,
 			payload: mod.repos._tidy(e),
 		})),

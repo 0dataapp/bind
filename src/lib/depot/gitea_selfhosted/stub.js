@@ -24,6 +24,7 @@ const mod = {
 
 				owner: {
 					id: parseInt(Math.random().toString().slice(2)),
+					login: 'me',
 
 					active: false,
 					created: new Date().toJSON(),
@@ -36,7 +37,6 @@ const mod = {
 					language: '',
 					last_login: new Date().toJSON(),
 					location: '',
-					login: 'me',
 					login_name: '',
 					prohibit_login: false,
 					restricted: false,
