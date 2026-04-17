@@ -154,7 +154,7 @@ This can be started with `node build/index.js` or just `node build`.
 </tr>
 <tr>
 <td>
-  <code>account_subsource</code>
+  <code>datasource</code>
 </td>
 <td>
   <ul>
@@ -179,7 +179,7 @@ This can be started with `node build/index.js` or just `node build`.
     <li><code>data</code> stores:
       <ul>
         <li>remoteStorage <code>scope</code></li>
-        <li><code>depotId</code> pointing to which provider or <code>account_subsource</code> is linked</li>
+        <li><code>depotId</code> pointing to which provider or <code>datasource</code> is linked</li>
       </ul>
     </li>
   </ul>

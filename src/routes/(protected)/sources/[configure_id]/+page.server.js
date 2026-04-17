@@ -35,7 +35,7 @@ export async function load({ request, params }) {
 		title: `Configure ${ name }`,
 		name,
 		account,
-		selected: (await db.collection('account_subsource').hydrating.getItems()).filter(e => e.accountId === account.id).map(e => e.data),
+		selected: (await db.collection('datasource').hydrating.getItems()).filter(e => e.accountId === account.id).map(e => e.data),
 		groups: list.sort(util.sort.conform(order, e => e.key)).map(({ key, values }) => ({
 	  	account,
 	  	label: key,
@@ -60,13 +60,13 @@ export const actions = {
 		const _hold = hold.options[hold.identifier(params.configure_id)];
 
 		const sources = JSON.parse((await request.formData()).get('sources') || '[]').slice(0, maxItems);
-		const items = (await db.collection('account_subsource').hydrating.getItems()).filter(e => e.accountId === account.id);
+		const items = (await db.collection('datasource').hydrating.getItems()).filter(e => e.accountId === account.id);
 
 		const removed = items.filter(e => !sources.map(e => e.id).includes(e.foreignId));
-		await Promise.all(removed.map(e => db.collection('account_subsource').__delete(e.id)));
+		await Promise.all(removed.map(e => db.collection('datasource').__delete(e.id)));
 		removed.forEach(e => _hold.filesystem(e.data.cloneURL).erase?.());
 
-		const created = await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => db.collection('account_subsource').hydrating.create({
+		const created = await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => db.collection('datasource').hydrating.create({
 			id: db.generateId(),
 			foreignId: data.id,
 			accountId: account.id,

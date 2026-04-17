@@ -6,7 +6,7 @@ import { auth } from '$lib/auth/config';
 const mod = {
 
 	options: async request => {
-		const subsources = await db.collection('account_subsource').hydrating.getItems();
+		const subsources = await db.collection('datasource').hydrating.getItems();
 		const accounts = await auth.api.listUserAccounts({ headers: request.headers });
 		return Object.values(depot.options).filter(e => !(e.credentials || []).filter(e => !process.env[e]).length).filter(e => {
 			if (e.meta.id !== 'gitea_selfhosted')
@@ -29,7 +29,7 @@ const mod = {
 		});
 	},
 
-	_source: async id => (await db.collection('account_subsource').hydrating.getItems()).filter(e => e.id === id).shift(),
+	_source: async id => (await db.collection('datasource').hydrating.getItems()).filter(e => e.id === id).shift(),
 
 	depotURL: async id => {
 		const source = await mod._source(id);
