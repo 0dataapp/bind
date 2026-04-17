@@ -29,15 +29,30 @@ const mod = {
 		});
 	},
 
-	_source: async id => (await db.collection('datasource').hydrating.getItems()).filter(e => e.id === id).shift(),
+	_datasource: async id => (await db.collection('datasource').hydrating.getItems()).filter(e => e.id === id).shift(),
+	_account: async id => (await db.collection('account').hydrating.getItems()).filter(e => e.id === id).shift(),
 
-	depotURL: async id => {
-		const source = await mod._source(id);
+	depotURL: async depotId => {
+		const source = await mod._datasource(depotId);
 
 		if (!source)
 			return;
 
 		return source.data.cloneURL;
+	},
+
+	providerId: async depotId => {
+		const source = await mod._datasource(depotId);
+
+		if (!source)
+			throw new Error('datasource not found');
+
+		const account = await mod._datasource(source.id);
+
+		if (!account)
+			throw new Error('account not found');
+
+		return account.providerId;
 	},
 
 };
