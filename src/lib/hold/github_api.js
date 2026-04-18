@@ -10,7 +10,7 @@ const mod = {
 		async put ({ target, data, meta }) {
 			const content = Buffer.from(meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data)).toString('base64');
 			
-			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
+			const res = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
 			  method: 'PUT',
 			  headers: {
 			    'Authorization': `token ${ token }`,
@@ -24,7 +24,7 @@ const mod = {
 			  }),
 			});
 
-			const json = await response.json();
+			const json = await res.json();
 
 			Object.assign(meta, {
 				ETag: json.content.sha,
@@ -34,7 +34,7 @@ const mod = {
 		},
 
 		async _content (target) {
-			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
+			const res = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
 				method: 'GET',
 			  headers: {
 			    'Authorization': `token ${ token }`,
@@ -43,7 +43,7 @@ const mod = {
 			  },
 			});
 
-			return response.json();
+			return res.json();
 		},
 
 		async get ({ target, contentType }) {
@@ -105,7 +105,7 @@ const mod = {
 		},
 
 		async exists ({ target }) {
-			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
+			const res = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
 				method: 'GET',
 			  headers: {
 			    'Authorization': `token ${ token }`,
@@ -113,12 +113,12 @@ const mod = {
 			    'Accept': 'application/vnd.github.object+json',
 			  },
 			});
-			return response.status === 200;
+			return res.status === 200;
 		},
 
 		async isFolder ({ target }) {
-			const response = await this._content(target);
-			return response.type === 'dir';
+			const res = await this._content(target);
+			return res.type === 'dir';
 		},
 
 	}),
