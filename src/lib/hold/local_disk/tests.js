@@ -137,6 +137,10 @@ describe('filesystem', () => {
 
 	describe('meta', () => {
 
+		test('non-existant', () => {
+			expect(filesystem.meta({ target: stub.random() })).toEqual(null);
+		});
+
 		test('file', () => {
 			const target = stub.basename();
 			const contentType = 'text/plain';

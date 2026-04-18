@@ -181,6 +181,14 @@ describe('filesystem', () => {
 
 	describe('meta', () => {
 
+		test('non-existant', async () => {
+			const target = stub.random();
+			nock('https://api.github.com')
+			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
+			  .reply(404);
+			expect(await filesystem.meta({ target })).toEqual(null);
+		});
+
 		test('file', async () => {
 			const target = stub.basename();
 			const size = stub.size();
@@ -203,9 +211,7 @@ describe('filesystem', () => {
 				  content: stub.buffer().toString('base64'),
 				  sha,
 				});
-			expect(await filesystem.meta({
-				target,
-			})).toEqual({
+			expect(await filesystem.meta({ target })).toEqual({
 				'Content-Length': size,
 				'Content-Type': 'text/plain',
 				ETag: sha,

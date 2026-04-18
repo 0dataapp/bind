@@ -102,6 +102,10 @@ const mod = {
 
 		async meta ({ target }) {
 			const _target = this._localPath(target);
+			
+			if (!fs.existsSync(_target))
+				return null;
+			
 			const stat = fs.statSync(_target);
 			const isFolder = stat.isDirectory();
 

@@ -51,7 +51,13 @@ const mod = {
 		},
 
 		meta ({ target }) {
-			return JSON.parse(fs.readFileSync(this._metaPath(this._localPath(target)), 'utf8'));
+			const _target = this._metaPath(this._localPath(target));
+
+			if (!fs.existsSync(_target))
+				return null;
+			
+			
+			return JSON.parse(fs.readFileSync(_target, 'utf8'));
 		},
 
 		remove ({ target, breadcrumbs }) {
