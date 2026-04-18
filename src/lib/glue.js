@@ -192,7 +192,7 @@ const mod = {
 			target,
 			isFolderRequest,
 		}) : {
-			ETag: 'empty',
+			ETag: isFolderRequest ? 'empty' : undefined,
 		};;
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
