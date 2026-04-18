@@ -57,12 +57,24 @@ const mod = {
 		},
 
 		async meta ({ target, isFolderRequest }) {
-			const { size, content, sha } = await this._content(target);
+			const res = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
+				method: 'GET',
+			  headers: {
+			    'Authorization': `token ${ token }`,
+			    'Content-Type': 'application/json',
+			    'Accept': 'application/vnd.github.object+json',
+			  },
+			});
+
+			if (res.status !== 200)
+				return null;
+
+			const { size, content, sha } = await res.json();
 
 			if (isFolderRequest)
 				return { ETag: sha };
 
-			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({
+			const _commits = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({
 				path: target,
 				per_page: 1,
 			}) }`, {
@@ -72,7 +84,7 @@ const mod = {
 			    'Content-Type': 'application/json',
 			  },
 			});
-			const commits = await response.json();
+			const commits = await _commits.json();
 
 			const date = new Date(commits[0].commit.author.date);
 			const buffer = Buffer.from(content, 'base64');
