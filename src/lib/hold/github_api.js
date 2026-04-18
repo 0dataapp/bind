@@ -34,7 +34,7 @@ const mod = {
 		},
 
 		async _content (target) {
-			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents/${ target }`, {
+			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
 				method: 'GET',
 			  headers: {
 			    'Authorization': `token ${ token }`,
@@ -70,6 +70,7 @@ const mod = {
 			  },
 			});
 			const commits = await response.json();
+
 			const date = new Date(commits[0].commit.author.date);
 			const buffer = Buffer.from(content, 'base64');
 			return {
@@ -81,7 +82,7 @@ const mod = {
 		},
 
 		async remove ({ target, meta }) {
-			await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents/${ target }`, {
+			await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
 			  method: 'DELETE',
 			  headers: {
 			    'Authorization': `token ${ token }`,
@@ -97,14 +98,14 @@ const mod = {
 			return Promise.all((await this._content(target)).entries.map(async e => [
 				e.name + (e.type === 'dir' ? '/' : ''),
 				await this.meta({
-					target: e.path,
+					target: '/' + e.path,
 					isFolderRequest: e.type === 'dir',
 				}),
 			])).then(Object.fromEntries);
 		},
 
 		async exists ({ target }) {
-			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents/${ target }`, {
+			const response = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
 				method: 'GET',
 			  headers: {
 			    'Authorization': `token ${ token }`,

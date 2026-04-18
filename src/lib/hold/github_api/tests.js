@@ -37,7 +37,7 @@ describe('filesystem', () => {
 	describe('put', () => {
 
 		test('string', async () => {
-			const target = '/' + path.join(stub.breadcrumbs().at(-1), stub.basename());
+			const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
 			const data = Math.random().toString();
 			const contentType = 'text/plain';
 			const meta = stub.headers(contentType);
@@ -74,7 +74,7 @@ describe('filesystem', () => {
 		});
 
 		test('blob', async () => {
-			const target = '/' + path.join(stub.breadcrumbs().at(-1), stub.basename());
+			const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
 			const data = stub.buffer();
 			const contentType = 'application/octet-stream';
 			const meta = stub.headers(contentType);
@@ -111,7 +111,7 @@ describe('filesystem', () => {
 		});
 
 		test('ETag', async () => {
-			const target = '/' + path.join(stub.breadcrumbs().at(-1), stub.basename());
+			const target = path.join(stub.breadcrumbs().at(-1), stub.basename());
 			const data = Math.random().toString();
 			const contentType = 'text/plain';
 			const ETag = stub.ulid();
@@ -153,7 +153,7 @@ describe('filesystem', () => {
 			const target = stub.basename();
 			const data = Math.random().toString();
 			nock('https://api.github.com')
-			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
 			  .reply(200, {
 					content: Buffer.from(data).toString('base64'),
 				});
@@ -167,7 +167,7 @@ describe('filesystem', () => {
 			const target = stub.basename();
 			const data = stub.buffer();
 			nock('https://api.github.com')
-			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
 			  .reply(200, {
 					content: data.toString('base64'),
 				});
@@ -197,7 +197,7 @@ describe('filesystem', () => {
 			  	},
 			  }]);
 			nock('https://api.github.com')
-			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
 			  .reply(200, {
 				  size,
 				  content: stub.buffer().toString('base64'),
@@ -221,7 +221,7 @@ describe('filesystem', () => {
 					'Accept': 'application/vnd.github.object+json',
 				},
 			})
-			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
 			  .reply(200, {
 			  	sha,
 			  });
@@ -238,7 +238,7 @@ describe('filesystem', () => {
 		const meta = Object.assign(stub.headers('text/plain'), { ETag });
 		const sha = stub.ulid();
 		nock('https://api.github.com')
-		  .delete(`/repos/${ owner }/${ repo }/contents/${ target }`, body => {
+		  .delete(`/repos/${ owner }/${ repo }/contents${ target }`, body => {
 		  	expect(body).toEqual({
 		  		message: 'sync',
 		  		sha: ETag,
@@ -266,7 +266,7 @@ describe('filesystem', () => {
 					'Accept': 'application/vnd.github.object+json',
 				},
 			})
-			  .get(`/repos/${ owner }/${ repo }/contents/${ folder }`)
+			  .get(`/repos/${ owner }/${ repo }/contents${ folder }`)
 			  .reply(200, {
 			  	entries: [{
 			  		name: basename,
@@ -277,7 +277,7 @@ describe('filesystem', () => {
 			const scope = nock('https://api.github.com')
 				.persist()
 			  .get(`/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({
-				path: target,
+				path: '/' + target,
 				per_page: 1,
 			}) }`)
 			  .reply(200, [{
@@ -293,7 +293,7 @@ describe('filesystem', () => {
 				});
 			expect(await filesystem.list({ target: folder })).toEqual({
 				[basename]: await filesystem.meta({
-					target,
+					target: '/' + target,
 				}),
 			});
 			expect(scope.isDone()).toBe(true);
@@ -309,7 +309,7 @@ describe('filesystem', () => {
 					'Accept': 'application/vnd.github.object+json',
 				},
 			})
-			  .get(`/repos/${ owner }/${ repo }/contents/${ folder }`)
+			  .get(`/repos/${ owner }/${ repo }/contents${ folder }`)
 			  .reply(200, {
 			  	entries: [{
 			  		name: basename,
@@ -329,7 +329,7 @@ describe('filesystem', () => {
 				});
 			expect(await filesystem.list({ target: folder })).toEqual({
 				[basename + '/']: await filesystem.meta({
-					target,
+					target: '/' + target,
 					isFolderRequest: true,
 				}),
 			});
@@ -342,7 +342,7 @@ describe('filesystem', () => {
 		test('existant', async () => {
 			const target = stub.basename();
 			nock('https://api.github.com')
-			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
 			  .reply(200, {
 					content: Buffer.from(Math.random().toString()).toString('base64'),
 				});
@@ -354,7 +354,7 @@ describe('filesystem', () => {
 		test('non-existant', async () => {
 			const target = stub.basename();
 			nock('https://api.github.com')
-			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
 			  .reply(404, {
 					content: Buffer.from(Math.random().toString()).toString('base64'),
 				});
@@ -370,7 +370,7 @@ describe('filesystem', () => {
 		test('file', async () => {
 			const target = stub.basename();
 			nock('https://api.github.com')
-			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
 			  .reply(200, {
 					type: 'file',
 				});
@@ -380,7 +380,7 @@ describe('filesystem', () => {
 		test('folder', async () => {
 			const target = stub.basename();
 			nock('https://api.github.com')
-			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
+			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
 			  .reply(200, {
 					type: 'dir',
 				});
