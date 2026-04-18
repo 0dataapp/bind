@@ -116,7 +116,9 @@ const mod = {
 		async list ({ target }) {
 			return Promise.all((await this._content(target)).entries.map(async e => [
 				e.name + (e.type === 'dir' ? '/' : ''),
-				await this.meta({
+				e.type === 'dir' ? {
+					ETag: e.sha,
+				} : await this.meta({
 					target: '/' + e.path,
 					isFolderRequest: e.type === 'dir',
 				}),

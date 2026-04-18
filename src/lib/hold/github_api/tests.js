@@ -304,6 +304,7 @@ describe('filesystem', () => {
 			const folder = stub.ulid();
 			const basename = stub.ulid();
 			const target = path.join(folder, basename);
+			const sha = stub.ulid();
 			nock('https://api.github.com', {
 				reqheaders: {
 					'Accept': 'application/vnd.github.object+json',
@@ -313,25 +314,15 @@ describe('filesystem', () => {
 			  .reply(200, {
 			  	entries: [{
 			  		name: basename,
+			  		sha,
 			  		path: target,
 			  		type: 'dir',
 			  	}],
 			  });
-			const scope = nock('https://api.github.com', {
-				reqheaders: {
-					'Accept': 'application/vnd.github.object+json',
-				},
-			})
-				.persist()
-			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
-			  .reply(200, {
-				  sha: stub.ulid(),
-				});
 			expect(await filesystem.list({ target: folder })).toEqual({
-				[basename + '/']: await filesystem.meta({
-					target: '/' + target,
-					isFolderRequest: true,
-				}),
+				[basename + '/']: {
+					ETag: sha,
+				},
 			});
 		});
 
