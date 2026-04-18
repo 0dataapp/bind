@@ -20,7 +20,7 @@ const mod = {
 			    message: 'sync',
 			    content,
 			    // required to update, populated if exists via glue.remotestorage
-			    sha: meta.ETag,
+			    sha: mod._unquote(meta.ETag),
 			  }),
 			});
 
@@ -88,7 +88,7 @@ const mod = {
 			  },
 			  body: JSON.stringify({
 			    message: 'sync',
-			    sha: meta.ETag,
+			    sha: mod._unquote(meta.ETag),
 			  }),
 			});
 		},
