@@ -24,6 +24,9 @@ const mod = {
 			  }),
 			});
 
+			if (![200, 201].includes(res.status))
+				throw new Error('put status ' + res.status);
+
 			const json = await res.json();
 
 			Object.assign(meta, {
@@ -82,7 +85,7 @@ const mod = {
 		},
 
 		async remove ({ target, meta }) {
-			await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
+			const res = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
 			  method: 'DELETE',
 			  headers: {
 			    'Authorization': `token ${ token }`,
@@ -92,6 +95,10 @@ const mod = {
 			    sha: mod._unquote(meta.ETag),
 			  }),
 			});
+
+			if (res.status !== 200)
+				throw new Error('delete status ' + res.status);
+
 		},
 
 		async list ({ target }) {
