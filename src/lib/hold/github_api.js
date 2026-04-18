@@ -32,7 +32,7 @@ const mod = {
 			Object.assign(meta, {
 				ETag: json.content.sha,
 				'Content-Length': json.content.size,
-				// 'Last-Modified': new Date(json.commit.committer.date).toUTCString(),
+				'Last-Modified': new Date(json.commit.committer.date).toUTCString(),
 			});
 		},
 
@@ -74,25 +74,25 @@ const mod = {
 			if (isFolderRequest)
 				return { ETag: sha };
 
-			// const _commits = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({
-			// 	path: target,
-			// 	per_page: 1,
-			// }) }`, {
-			// 	method: 'GET',
-			//   headers: {
-			//     'Authorization': `token ${ token }`,
-			//     'Content-Type': 'application/json',
-			//   },
-			// });
-			// const commits = await _commits.json();
+			const _commits = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({
+				path: target,
+				per_page: 1,
+			}) }`, {
+				method: 'GET',
+			  headers: {
+			    'Authorization': `token ${ token }`,
+			    'Content-Type': 'application/json',
+			  },
+			});
+			const commits = await _commits.json();
 
-			// const date = new Date(commits[0].commit.author.date);
+			const date = new Date(commits[0].commit.author.date);
 			const buffer = Buffer.from(content, 'base64');
 			return {
 				ETag: sha,
 				'Content-Length': size,
 				'Content-Type': await util._guessType(buffer, target),
-				// 'Last-Modified': date.toUTCString(),
+				'Last-Modified': date.toUTCString(),
 			};
 		},
 
