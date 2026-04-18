@@ -42,8 +42,27 @@ export const handle = sequence(
       getScope: oauth.getScope,
       async getFS ({ handle, token }) {
         const authorization = await oauth.authorization(handle, token);
-        if (authorization && authorization.data.depotId !== 'local_custody')
-          return hold.options.git_https.filesystem(await depot.depotURL(authorization.data.depotId));
+        if (authorization && authorization.data.depotId !== 'local_custody') {
+          const refs = await depot.refs(authorization.data.depotId);
+          const id = hold.identifier(refs.account.providerId);
+          return hold.options[id].filesystem(await (async () => {
+            if (id === 'git_https')
+              return depot.depotURL(id);
+
+            if (id === 'github_api') {
+              const { accessToken } = await auth.api.getAccessToken({
+                body: { providerId: refs.account.providerId, accountId: refs.account.accountId, userId: refs.account.userId },
+                headers: event.request.headers,
+              });
+
+              return {
+                owner: refs.source.data.ownerHandle,
+                repo: refs.source.data.name,
+                token: accessToken,
+              };
+            }
+          })());
+        }
 
         return hold.options.local_disk.filesystem(handle);
       },

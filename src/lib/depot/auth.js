@@ -41,18 +41,21 @@ const mod = {
 		return source.data.cloneURL;
 	},
 
-	providerId: async depotId => {
+	refs: async depotId => {
 		const source = await mod._datasource(depotId);
 
 		if (!source)
 			throw new Error('datasource not found');
 
-		const account = await mod._datasource(source.id);
+		const account = await mod._account(source.accountId);
 
 		if (!account)
 			throw new Error('account not found');
 
-		return account.providerId;
+		return {
+			source,
+			account,
+		};
 	},
 
 };

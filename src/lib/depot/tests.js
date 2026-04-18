@@ -41,15 +41,20 @@ describe('oauth-implicit', () => {
 		expect(await auth._account(id)).toEqual(created);
 	});
 
-	test('providerId', async () => {
+	test('refs', async () => {
 		const id = stub.random();
-		vi.spyOn(db, 'collection').mockReturnValue(datasource);
-		await datasource.hydrating.create({ id });
-		
-		const providerId = stub.random();
-		vi.spyOn(db, 'collection').mockReturnValue(account);
-		const created = await account.hydrating.create({ id, providerId });
-		expect(await auth.providerId(id)).toEqual(providerId);
+		const accountId = stub.random();
+		vi.spyOn(db, 'collection').mockImplementation(name => ({
+			datasource,
+			account,
+		}[name]));
+
+		const source = await datasource.hydrating.create({ id, accountId });
+		const _account = await account.hydrating.create({ id: accountId });
+		expect(await auth.refs(id)).toEqual({
+			source,
+			account: _account,
+		});
 	});
 
 });
