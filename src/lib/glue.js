@@ -171,21 +171,6 @@ const mod = {
 
 		const _breadcrumbs = ['/', ...util.breadcrumbs(target.split('/').slice(1, isFolderRequest ? -1 : undefined))];
 
-		if (req.method === 'PUT' && await Promise.all(_breadcrumbs.slice(1).map(async target => {
-			const exists = await fs.exists({
-				handle,
-				target,
-			});
-			return {
-				target,
-				exists,
-				isFolder: exists && await fs.isFolder({
-					handle,
-					target,
-				}),
-			};
-		})).then(e => e.filter(e => e.exists && (`/${ e.target }` === target ? e.isFolder : !e.isFolder)).length))
-			return res.status(409).end();
 
 		const meta = exists ? await fs.meta({
 			handle,
@@ -194,6 +179,21 @@ const mod = {
 		}) : {
 			ETag: isFolderRequest ? 'empty' : undefined,
 		};;
+		// if (req.method === 'PUT' && await Promise.all(_breadcrumbs.slice(1).map(async target => {
+		// 	const exists = await fs.exists({
+		// 		handle,
+		// 		target,
+		// 	});
+		// 	return {
+		// 		target,
+		// 		exists,
+		// 		isFolder: exists && await fs.isFolder({
+		// 			handle,
+		// 			target,
+		// 		}),
+		// 	};
+		// })).then(e => e.filter(e => e.exists && (`/${ e.target }` === target ? e.isFolder : !e.isFolder)).length))
+		// 	return res.status(409).end();
 
 		if (['PUT', 'DELETE'].includes(req.method) && (
 			!exists && req.headers['if-match']
