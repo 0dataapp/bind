@@ -8,6 +8,30 @@ const owner = Math.random().toString();
 const repo = Math.random().toString();
 const filesystem = mod.filesystem({ owner, repo });
 
+describe('_unquote', () => {
+
+	test('no quotes', () => {
+		const e = Math.random().toString();
+		expect(mod._unquote(e)).toBe(e);
+	});
+
+	test('single quotes', () => {
+		const e = `'${ Math.random().toString() }'`;
+		expect(mod._unquote(e)).toBe(e);
+	});
+
+	test('double quotes', () => {
+		const e = Math.random().toString();
+		expect(mod._unquote(`"${ e }"`)).toBe(e);
+	});
+
+	test('not set', () => {
+		expect(mod._unquote(undefined)).toBe(undefined);
+		expect(mod._unquote(null)).toBe(null);
+	});
+
+});
+
 describe('filesystem', () => {
 
 	describe('put', () => {

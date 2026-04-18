@@ -3,6 +3,8 @@ import path from 'path';
 
 const mod = {
 
+	_unquote: e => e ? e.replace(/^\"/i, '').replace(/\"$/i, '') : e,
+
 	filesystem: ({ owner, repo, token }) => ({
 
 		async put ({ target, data, meta }) {
