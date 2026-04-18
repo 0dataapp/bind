@@ -190,6 +190,7 @@ const mod = {
 		const meta = exists ? await fs.meta({
 			handle,
 			target,
+			isFolderRequest,
 		}) : {
 			ETag: 'empty',
 		};;
@@ -235,6 +236,7 @@ const mod = {
 				handle,
 				target,
 				breadcrumbs,
+				meta,
 			});
 			return res.set({
 				ETag: meta['ETag'],
