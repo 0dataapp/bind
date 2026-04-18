@@ -164,21 +164,18 @@ const mod = {
 			return res.status(400).end();
 
 		const target = `${ isPublicFolder ? '/public' : ''}${ relative }`;
-		const exists = await fs.exists({
-			handle,
-			target,
-		});
-
-		const _breadcrumbs = ['/', ...util.breadcrumbs(target.split('/').slice(1, isFolderRequest ? -1 : undefined))];
-
-
-		const meta = exists ? await fs.meta({
+		const _meta = await fs.meta({
 			handle,
 			target,
 			isFolderRequest,
-		}) : {
+		})
+		const meta = _meta || {
 			ETag: isFolderRequest ? 'empty' : undefined,
-		};;
+		};
+		const exists = !!_meta;
+
+		const _breadcrumbs = ['/', ...util.breadcrumbs(target.split('/').slice(1, isFolderRequest ? -1 : undefined))];
+
 		// if (req.method === 'PUT' && await Promise.all(_breadcrumbs.slice(1).map(async target => {
 		// 	const exists = await fs.exists({
 		// 		handle,
