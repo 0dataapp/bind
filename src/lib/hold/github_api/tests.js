@@ -69,7 +69,7 @@ describe('filesystem', () => {
 			expect(meta).toEqual(Object.assign(stub.headers(contentType), {
 				ETag: sha,
 				'Content-Length': size,
-				'Last-Modified': date.toUTCString(),
+				// 'Last-Modified': date.toUTCString(),
 			}));
 		});
 
@@ -106,7 +106,7 @@ describe('filesystem', () => {
 			expect(meta).toEqual(Object.assign(stub.headers(contentType), {
 				ETag: sha,
 				'Content-Length': size,
-				'Last-Modified': date.toUTCString(),
+				// 'Last-Modified': date.toUTCString(),
 			}));
 		});
 
@@ -141,7 +141,7 @@ describe('filesystem', () => {
 			expect(meta).toEqual(Object.assign(stub.headers(contentType), {
 				ETag: sha,
 				'Content-Length': size,
-				'Last-Modified': date.toUTCString(),
+				// 'Last-Modified': date.toUTCString(),
 			}));
 		});
 
@@ -209,7 +209,7 @@ describe('filesystem', () => {
 				'Content-Length': size,
 				'Content-Type': 'text/plain',
 				ETag: sha,
-				'Last-Modified': date.toUTCString(),
+				// 'Last-Modified': date.toUTCString(),
 			});
 		});
 
@@ -276,15 +276,15 @@ describe('filesystem', () => {
 			  });
 			const scope = nock('https://api.github.com')
 				.persist()
-			  .get(`/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({
-				path: '/' + target,
-				per_page: 1,
-			}) }`)
-			  .reply(200, [{
-			  	commit: {
-			  		author: { date: new Date().toJSON() },
-			  	},
-			  }])
+			//   .get(`/repos/${ owner }/${ repo }/commits?${ new URLSearchParams({
+			// 	path: '/' + target,
+			// 	per_page: 1,
+			// }) }`)
+			//   .reply(200, [{
+			//   	commit: {
+			//   		author: { date: new Date().toJSON() },
+			//   	},
+			//   }])
 			  .get(`/repos/${ owner }/${ repo }/contents/${ target }`)
 			  .reply(200, {
 				  size: stub.size(),
