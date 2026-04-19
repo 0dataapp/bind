@@ -247,9 +247,6 @@ const mod = {
 		if (req.method === 'HEAD')
 			return res.end();
 
-		if (req.method === 'PUT')
-			return res.send('{}');
-
 		if (isFolderRequest)
 			return res.json(Object.assign(listResponse, {
 				items: await fs.list({
