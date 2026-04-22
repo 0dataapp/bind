@@ -87,26 +87,13 @@ const mod = {
 
 	},
 
-	cors: () => (req, res, next) => {
-		res.set({
-			'Access-Control-Allow-Origin': req.headers['origin'] || '*',
-			'Access-Control-Allow-Headers': 'Authorization, Content-Length, Content-Type, If-Match, If-None-Match, Origin, X-Requested-With, Content-Range',
-			'Access-Control-Allow-Credentials': 'true',
-			'Access-Control-Expose-Headers': 'Content-Length, Content-Type, ETag',
-			'Cache-control': 'no-cache',
-		});
-
-		if (req.method === 'OPTIONS')
-			return res.set({
-				'Access-Control-Allow-Methods': 'OPTIONS, GET, HEAD, PUT, DELETE',
-			}).status(204).end();
-
-		return next();
-	},
-
 	webfinger: ({ storagePath, authPath }) => async (req, res, next) => {
 		if (!req.url.toLowerCase().match('/.well-known/webfinger'))
 			return next();
+
+		res.set({
+			'Access-Control-Allow-Origin': '*',
+		});
 
 		const base = `${ req.protocol }://${ req.get('host') }`;
 		
@@ -129,6 +116,19 @@ const mod = {
 
 	remotestorage: ({ getFS, getScope }) => async (req, res, next) => {
 		// console.info(req.method, req.url);
+		res.set({
+			'Access-Control-Allow-Origin': req.headers['origin'] || '*',
+			'Access-Control-Allow-Headers': 'Authorization, Content-Length, Content-Type, If-Match, If-None-Match, Origin, X-Requested-With, Content-Range',
+			'Access-Control-Allow-Credentials': 'true',
+			'Access-Control-Expose-Headers': 'Content-Length, Content-Type, ETag',
+			'Cache-Control': 'no-cache',
+		});
+
+		if (req.method === 'OPTIONS')
+			return res.set({
+				'Access-Control-Allow-Methods': 'OPTIONS, GET, HEAD, PUT, DELETE',
+			}).status(204).end();
+
 		const [handle, isPublicFolder, relative] = mod.util.parsePathname(req.url);
 		const token = mod.util.parseToken(req.headers.authorization);
 		const fs = await getFS({

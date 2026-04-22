@@ -31,8 +31,6 @@ export const handle = sequence(
     return resolve(event);
   },
   
-  glue.util.sveltekit(glue.cors()),
-	
   ({ event, resolve }) => {
     const { pathname } = new URL(event.request.url);
     if (!pathname.startsWith(prefix))
