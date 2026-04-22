@@ -17,9 +17,26 @@ describe('oauth-implicit', () => {
 		fs.rmSync(folder, { recursive: true, force: true });
 	});
 
-	test('_generateToken', () => {
-		const items = Array.from({ length: 100 }, mod._generateToken);
-		expect(Array.from(new Set(items))).toEqual(items);
+	describe('_generateToken', () => {
+
+		test('type', () => {
+			expect(mod._generateToken()).toBeTypeOf('string');
+		});
+
+		test('length', () => {
+			expect(mod._generateToken().length).toBe(64);
+		});
+
+		test('random', () => {
+			const items = Array.from({ length: 100 }, mod._generateToken);
+			expect(Array.from(new Set(items))).toEqual(items);
+		});
+
+		test('hex', () => {
+			const items = Array.from({ length: 100 }, mod._generateToken);
+			expect(items.filter(e => !e.match(/^[a-f0-9]+$/))).toEqual([]);
+		});
+
 	});
 
 	test('createToken', async () => {
