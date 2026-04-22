@@ -87,6 +87,45 @@ const mod = {
 
 	},
 
+	vitest: ({ middleware, url, method, headers, body }) => {
+		const req = {
+			url,
+			method,
+			headers,
+		};
+
+		for (const key in headers)
+			headers[key.toLowerCase()] = headers[key];
+		
+		if (req.method === 'PUT')
+			req.body = (function () {
+				if (req.headers['content-type'].startsWith('application/json'))
+					return JSON.parse(body);
+
+				return body;
+			})();
+
+		const __headers = {};
+		const res = {
+			set: obj => (Object.keys(obj).forEach(key => __headers[key] = obj[key]), res),
+
+			status: code => (res._status = code, res),
+			json: obj => res.send(JSON.stringify(obj)),
+			send: body => (res.body = body, res.end()),
+			end: () => new Response(res.body, {
+				status: res._status || 200,
+				headers: __headers,
+			}),
+		};
+
+		return middleware(req, res, err => {
+			if (err)
+				throw err;
+
+			return res.end();
+		});
+	},
+
 	webfinger: ({ storagePath, authPath }) => async (req, res, next) => {
 		if (!req.url.toLowerCase().match('/.well-known/webfinger'))
 			return next();
@@ -107,13 +146,14 @@ const mod = {
 				rel: 'http://tools.ietf.org/id/draft-dejong-remotestorage',
 				href: `${ base }${ await storagePath(handle) }`,
 				properties: {
-					'http://remotestorage.io/spec/version': 'draft-dejong-remotestorage-13',
+					'http://remotestorage.io/spec/version': `draft-dejong-remotestorage-${ mod.remotestorage_spec_version }`,
 					'http://tools.ietf.org/html/rfc6749#section-4.2': `${ base }${ authPath }`,
 				},
 			}],
 		});
 	},
 
+	remotestorage_spec_version: 13,
 	remotestorage: ({ getFS, getScope }) => async (req, res, next) => {
 		// console.info(req.method, req.url);
 		res.set({

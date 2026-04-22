@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
+    "spec-check": "0dataapp/spec-check",
     "module-alias": "^2.3.4",
     "nock": "^14.0.11",
     "vitest": "^3.2.3"
