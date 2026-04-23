@@ -40,6 +40,14 @@ const mod = {
 
 		_clonePath: id => path.join(mod.folder, util.hash(id)),
 
+		_reset (path) {
+			fs.rmSync(path, { recursive: true, force: true });
+
+			fs.mkdirSync(path, { recursive: true });
+
+			return mod.git(path)._init();
+		},
+
 	},
 
 	git (path) {

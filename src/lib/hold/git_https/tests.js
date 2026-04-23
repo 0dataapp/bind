@@ -9,13 +9,7 @@ const testFolder = './__testing/git_https';
 const cloneURL = 'testing-repo';
 const repo = `${ testFolder }/${ util.hash(cloneURL) }/`;
 const filesystem = mod.filesystem(cloneURL);
-function resetRepo () {
-	fs.rmSync(testFolder, { recursive: true, force: true });
-
-	fs.mkdirSync(repo, { recursive: true });
-
-	return mod.git(repo)._init();
-};
+const resetRepo = () => mod.util._reset(repo);
 
 mod.folder = testFolder;
 
