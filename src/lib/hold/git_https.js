@@ -125,7 +125,7 @@ const mod = {
 				ETag: isFolder
 					// ? (await repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? target.replace(/\/$/, '') : target)))).trim().split('\n').pop()
 					? (
-						await repo.raw(...['show-ref'])
+						await repo.raw('show-ref')
 						? (await repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', mod.util._gitTreePath(target)])).trim().split('\n').pop()
 						: 'empty'
 						)

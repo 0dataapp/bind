@@ -174,7 +174,7 @@ describe('filesystem', () => {
 			});
 			await mod.git(repo).commit(true);
 			expect(await filesystem.meta({ target: parent + '/' })).toEqual({
-				ETag: (await mod.git(repo).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', parent])).trim().split('\n').pop(),
+				ETag: (await mod.git(repo).repo.raw('ls-tree', '--object-only', '-d', 'HEAD', parent)).trim().split('\n').pop(),
 			});
 		});
 
@@ -232,7 +232,7 @@ describe('filesystem', () => {
 			const meta = await filesystem.meta({
 				target: breadcrumbs[0] + '/',
 			});
-			expect(meta.ETag).toBe((await mod.git(repo).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', breadcrumbs[0]])).trim().split('\n').pop())
+			expect(meta.ETag).toBe((await mod.git(repo).repo.raw('ls-tree', '--object-only', '-d', 'HEAD', breadcrumbs[0])).trim().split('\n').pop())
 			
 			await filesystem.remove({
 				target,
