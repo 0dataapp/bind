@@ -8,6 +8,9 @@ export default defineConfig(({ mode }) => {
 		test: {
 			hideSkippedTests: true,
 			expect: { requireAssertions: true },
+			experimental: {
+				preParse: true,
+			},
 			projects: [
 				{
 					extends: './vite.config.js',
