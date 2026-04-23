@@ -83,123 +83,119 @@ const mod = {
 		};
 	},
 
-	filesystem ({ localDir, cloneURL }) {
-		if (!cloneURL)
-			throw new Error('url blank');
+	filesystem: ({ localDir, cloneURL }) => !cloneURL ? (function () { throw new Error('url blank') })() : {
 
-		const _clonePath = path.join(localDir || folder, util.hash(cloneURL));
-		const _git = mod.git(_clonePath);
+		_clonePath: id => path.join(localDir || folder, util.hash(id)),
 
-		return {
+		_localPath (e) {
+			return path.join(this._clonePath(cloneURL), e);
+		},
+		
+		async put ({ target, data, meta }) {
+			const _target = this._localPath(target);
 
-			_localPath (e) {
-				return path.join(_clonePath, e);
-			},
+			fs.mkdirSync(path.dirname(_target), { recursive: true });
+
+			fs.writeFileSync(_target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
+
+			await mod.git(this._clonePath(cloneURL)).commit(target.startsWith('/api-test-suite/') ? true : undefined);
+
+			Object.assign(meta, await this.meta({
+				target,
+			}));
+		},
+
+		get ({ target, contentType }) {
+			return fs.readFileSync(this._localPath(target), util.encoding(contentType));
+		},
+
+		async meta ({ target }) {
+			const _target = this._localPath(target);
 			
-			async put ({ target, data, meta }) {
-				const _target = this._localPath(target);
+			if (!fs.existsSync(_target))
+				return null;
+			
+			const stat = fs.statSync(_target);
+			const isFolder = stat.isDirectory();
 
-				fs.mkdirSync(path.dirname(_target), { recursive: true });
+			const { repo } = mod.git(this._clonePath(cloneURL));
 
-				fs.writeFileSync(_target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
+			const meta = {
+				ETag: isFolder
+					// ? (await repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', this._gitPath(isFolder ? target.replace(/\/$/, '') : target)))).trim().split('\n').pop()
+					? (
+						await repo.raw('show-ref')
+						? (await repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', mod.util._gitTreePath(target)])).trim().split('\n').pop()
+						: 'empty'
+						)
+					: stat.mtime.toJSON(),
+			};
 
-				await _git.commit(target.startsWith('/api-test-suite/') ? true : undefined);
+			if (isFolder)
+				return meta;
 
-				Object.assign(meta, await this.meta({
-					target,
-				}));
-			},
+			return Object.assign(meta, {
+				'Content-Length': stat.size,
+				'Content-Type': await util._guessType(fs.readFileSync(_target), _target),
+				'Last-Modified': stat.mtime.toUTCString(),
+			});
+		},
 
-			get ({ target, contentType }) {
-				return fs.readFileSync(this._localPath(target), util.encoding(contentType));
-			},
+		async remove ({ target, breadcrumbs }) {
+			fs.unlinkSync(this._localPath(target));
 
-			async meta ({ target }) {
-				const _target = this._localPath(target);
-				
-				if (!fs.existsSync(_target))
-					return null;
-				
-				const stat = fs.statSync(_target);
-				const isFolder = stat.isDirectory();
+			breadcrumbs.slice().sort().reverse().forEach(e => {
+				e = this._localPath(e);
 
-				const meta = {
-					ETag: isFolder
-						// ? (await _git.repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', this._gitPath(isFolder ? target.replace(/\/$/, '') : target)))).trim().split('\n').pop()
-						? (
-							await _git.repo.raw('show-ref')
-							? (await _git.repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', mod.util._gitTreePath(target)])).trim().split('\n').pop()
-							: 'empty'
-							)
-						: stat.mtime.toJSON(),
+				if (fs.readdirSync(e).filter(e => !util.isJunk(e)).length)
+					return;
+
+				fs.rmSync(e, { recursive: true, force: true })
+			});
+
+			await mod.git(this._clonePath(cloneURL)).commit(target.startsWith('/api-test-suite/') ? true : undefined);
+		},
+
+		async list ({ target }) {
+			const { repo } = mod.git(this._clonePath(cloneURL));
+			const tree = (await repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', `.${ target }`)).trim();
+
+			if (!tree.length)
+				return {};
+
+			return Promise.all(tree.split('\n').map(e => {
+				const [type, hash, size, path] = e.split(/\s+/);
+				return {
+					name: type === 'tree' ? `${ path }/` : path,
+					type,
+					hash,
+					size: size === '-' ? null : parseInt(size),
 				};
+			}).map(async e => {
+				const basename = e.name.match(new RegExp(`^${ target.slice(1) }(.*)`)).pop();
+				return [
+					basename,
+					e.type === 'tree'
+					? { ETag: e.hash }
+					: await this.meta({
+						target: path.join(target, basename),
+					}),
+				];
+			})).then(Object.fromEntries);
+		},
 
-				if (isFolder)
-					return meta;
+		exists ({ target }) {
+			return fs.existsSync(this._localPath(target));
+		},
 
-				return Object.assign(meta, {
-					'Content-Length': stat.size,
-					'Content-Type': await util._guessType(fs.readFileSync(_target), _target),
-					'Last-Modified': stat.mtime.toUTCString(),
-				});
-			},
+		isFolder ({ target }) {
+			return fs.statSync(this._localPath(target)).isDirectory();
+		},
 
-			async remove ({ target, breadcrumbs }) {
-				fs.unlinkSync(this._localPath(target));
+		erase () {
+			return fs.rmSync(this._clonePath(cloneURL), { recursive: true, force: true })
+		},
 
-				breadcrumbs.slice().sort().reverse().forEach(e => {
-					e = this._localPath(e);
-
-					if (fs.readdirSync(e).filter(e => !util.isJunk(e)).length)
-						return;
-
-					fs.rmSync(e, { recursive: true, force: true })
-				});
-
-				await _git.commit(target.startsWith('/api-test-suite/') ? true : undefined);
-			},
-
-			async list ({ target }) {
-				const { repo } = _git;
-				const tree = (await repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', `.${ target }`)).trim();
-
-				if (!tree.length)
-					return {};
-
-				return Promise.all(tree.split('\n').map(e => {
-					const [type, hash, size, path] = e.split(/\s+/);
-					return {
-						name: type === 'tree' ? `${ path }/` : path,
-						type,
-						hash,
-						size: size === '-' ? null : parseInt(size),
-					};
-				}).map(async e => {
-					const basename = e.name.match(new RegExp(`^${ target.slice(1) }(.*)`)).pop();
-					return [
-						basename,
-						e.type === 'tree'
-						? { ETag: e.hash }
-						: await this.meta({
-							target: path.join(target, basename),
-						}),
-					];
-				})).then(Object.fromEntries);
-			},
-
-			exists ({ target }) {
-				return fs.existsSync(this._localPath(target));
-			},
-
-			isFolder ({ target }) {
-				return fs.statSync(this._localPath(target)).isDirectory();
-			},
-
-			erase () {
-				return fs.rmSync(_clonePath, { recursive: true, force: true })
-			},
-
-		};
 	},
 
 	sync: {
