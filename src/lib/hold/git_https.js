@@ -45,7 +45,7 @@ const mod = {
 
 			fs.mkdirSync(path, { recursive: true });
 
-			return mod.git(path)._init();
+			return mod.git(path).repo.init();
 		},
 
 	},
@@ -65,7 +65,6 @@ const mod = {
 
 			repo,
 
-			_init: () => repo.init(),
 			_commit: () => repo.add('./*').commit('sync'),
 
 			commit (direct) {
