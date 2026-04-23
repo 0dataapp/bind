@@ -4,7 +4,7 @@ import stub from '$lib/stub.js';
 import fs from 'fs';
 import path from 'path';
 
-const testFolder = './__testing/local_disk';
+const testFolder = path.join(process.cwd(), '__testing/local_disk');
 mod.folder = testFolder;
 
 const handle = stub.ulid()

@@ -5,7 +5,7 @@ import util from '../util.js';
 import fs from 'fs';
 import path from 'path';
 
-const testFolder = './__testing/git_https';
+const testFolder = path.join(process.cwd(), '__testing/git_https');
 const cloneURL = 'testing-repo';
 const repo = `${ testFolder }/${ util.hash(cloneURL) }/`;
 const filesystem = mod.filesystem(cloneURL);
