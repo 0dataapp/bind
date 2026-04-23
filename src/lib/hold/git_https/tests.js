@@ -11,6 +11,7 @@ const repo = `${ testFolder }/${ util.hash(cloneURL) }`;
 const filesystem = mod.filesystem({
 	localDir: testFolder,
 	cloneURL,
+	direct: true,
 });
 const resetRepo = () => mod.util._reset(repo);
 

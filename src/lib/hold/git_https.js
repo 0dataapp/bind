@@ -85,7 +85,7 @@ const mod = {
 		};
 	},
 
-	filesystem: ({ localDir, cloneURL }) => !cloneURL ? (function () { throw new Error('url blank') })() : {
+	filesystem: ({ localDir, cloneURL, direct }) => !cloneURL ? (function () { throw new Error('url blank') })() : {
 
 		_clonePath: id => path.join(localDir || folder, util.hash(id)),
 
@@ -100,7 +100,7 @@ const mod = {
 
 			fs.writeFileSync(_target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
 
-			await mod.git(this._clonePath(cloneURL)).commit(mod.util._isTestPath(target) ? true : undefined);
+			await mod.git(this._clonePath(cloneURL)).commit(direct || mod.util._isTestPath(target));
 
 			Object.assign(meta, await this.meta({
 				target,
@@ -155,7 +155,7 @@ const mod = {
 				fs.rmSync(e, { recursive: true, force: true })
 			});
 
-			await mod.git(this._clonePath(cloneURL)).commit(mod.util._isTestPath(target) ? true : undefined);
+			await mod.git(this._clonePath(cloneURL)).commit(direct || mod.util._isTestPath(target));
 		},
 
 		async list ({ target }) {
