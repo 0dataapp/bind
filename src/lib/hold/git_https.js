@@ -119,12 +119,14 @@ const mod = {
 			const stat = fs.statSync(_target);
 			const isFolder = stat.isDirectory();
 
+			const { repo } = mod.git(mod.util._clonePath(cloneURL));
+
 			const meta = {
 				ETag: isFolder
-					// ? (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? target.replace(/\/$/, '') : target)))).trim().split('\n').pop()
+					// ? (await repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? target.replace(/\/$/, '') : target)))).trim().split('\n').pop()
 					? (
-						await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['show-ref'])
-						? (await mod.git(mod.util._clonePath(cloneURL)).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', mod.util._gitTreePath(target)])).trim().split('\n').pop()
+						await repo.raw(...['show-ref'])
+						? (await repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', mod.util._gitTreePath(target)])).trim().split('\n').pop()
 						: 'empty'
 						)
 					: stat.mtime.toJSON(),
@@ -156,7 +158,8 @@ const mod = {
 		},
 
 		async list ({ target }) {
-			const tree = (await mod.git(mod.util._clonePath(cloneURL)).repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', `.${ target }`)).trim();
+			const { repo } = mod.git(mod.util._clonePath(cloneURL));
+			const tree = (await repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', `.${ target }`)).trim();
 
 			if (!tree.length)
 				return {};
