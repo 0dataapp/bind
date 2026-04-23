@@ -175,7 +175,7 @@ describe('filesystem', () => {
 			await mod.git(repo).commit(true);
 			expect(await filesystem.meta({ target: parent + '/' })).toEqual({
 				ETag: (await mod.git(repo).repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', parent])).trim().split('\n').pop(),
-			})
+			});
 		});
 
 	});
