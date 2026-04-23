@@ -64,7 +64,9 @@ export const actions = {
 
 		const removed = items.filter(e => !sources.map(e => e.id).includes(e.foreignId));
 		await Promise.all(removed.map(e => db.collection('datasource').__delete(e.id)));
-		removed.forEach(e => _hold.filesystem(e.data.cloneURL).erase?.());
+		removed.forEach(e => _hold.filesystem({
+			cloneURL: e.data.cloneURL,
+		}).erase?.());
 
 		const created = await Promise.all(sources.filter(e => !items.map(e => e.foreignId).includes(e.id)).map(data => db.collection('datasource').hydrating.create({
 			id: db.generateId(),

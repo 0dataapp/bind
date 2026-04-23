@@ -46,7 +46,7 @@ export const handle = sequence(
           return hold.options[id].filesystem(await (async () => {
             if (id === 'git_https')
               return {
-                cloneURL: depot.depotURL(authorization.data.depotId),
+                cloneURL: await depot.depotURL(authorization.data.depotId),
               };
 
             if (id === 'github_api') {

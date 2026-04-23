@@ -219,12 +219,12 @@ const mod = {
 
 		prepare (id, url) {
 			q._pushAuto(async () => {
-				const target = this._clonePath(id);
+				const target = mod.filesystem({
+					cloneURL: id
+				})._clonePath;
 
 				if (!fs.existsSync(target))
-					await simpleGit({
-						baseDir: target,
-					}).clone(url, target);
+					await simpleGit().clone(url, target);
 			});
 		},
 		
