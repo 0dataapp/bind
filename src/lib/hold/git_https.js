@@ -66,7 +66,7 @@ const mod = {
 			repo,
 
 			_init: () => repo.init(),
-			_commit: () => repo.raw('commit', '-a', '-m', 'sync'),
+			_commit: () => repo.add('./*').commit('sync'),
 
 			commit (direct) {
 				if (direct)
