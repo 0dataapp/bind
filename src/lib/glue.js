@@ -276,6 +276,11 @@ const mod = {
 			.set(meta)
 			.status(200);
 
+		if (req.method === 'PUT')
+			return res.set({
+				'Content-Length': 0,
+			}).end();
+
 		if (req.method === 'DELETE')
 			await fs.remove({
 				handle,
