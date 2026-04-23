@@ -35,6 +35,8 @@ const mod = {
 	util: {
 
 		_gitTreePath: e => ('./' + path.join('./', e.replace(/(.)\/$/, '$1'))).replace('././', './'),
+		
+		_isTestPath: e => e.match('/api-test-suite'),
 
 		_reset (path) {
 			fs.rmSync(path, { recursive: true, force: true });
@@ -98,7 +100,7 @@ const mod = {
 
 			fs.writeFileSync(_target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
 
-			await mod.git(this._clonePath(cloneURL)).commit(target.startsWith('/api-test-suite/') ? true : undefined);
+			await mod.git(this._clonePath(cloneURL)).commit(mod.util._isTestPath(target) ? true : undefined);
 
 			Object.assign(meta, await this.meta({
 				target,
@@ -153,7 +155,7 @@ const mod = {
 				fs.rmSync(e, { recursive: true, force: true })
 			});
 
-			await mod.git(this._clonePath(cloneURL)).commit(target.startsWith('/api-test-suite/') ? true : undefined);
+			await mod.git(this._clonePath(cloneURL)).commit(mod.util._isTestPath(target) ? true : undefined);
 		},
 
 		async list ({ target }) {
