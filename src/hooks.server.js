@@ -45,7 +45,9 @@ export const handle = sequence(
           const id = hold.identifier(refs.account.providerId);
           return hold.options[id].filesystem(await (async () => {
             if (id === 'git_https')
-              return depot.depotURL(authorization.data.depotId);
+              return {
+                cloneURL: depot.depotURL(authorization.data.depotId),
+              };
 
             if (id === 'github_api') {
               const { accessToken } = await auth.api.getAccessToken({

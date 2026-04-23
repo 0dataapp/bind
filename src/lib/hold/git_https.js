@@ -32,13 +32,9 @@ const debounce = (id, cb) => (_debounceMap[id] = _debounceMap[id] || pDebounce((
 
 const mod = {
 
-	folder,
-
 	util: {
 
 		_gitTreePath: e => ('./' + path.join('./', e.replace(/(.)\/$/, '$1'))).replace('././', './'),
-
-		_clonePath: id => path.join(mod.folder, util.hash(id)),
 
 		_reset (path) {
 			fs.rmSync(path, { recursive: true, force: true });
@@ -87,9 +83,13 @@ const mod = {
 		};
 	},
 
-	filesystem: cloneURL => !cloneURL ? (function () { throw new Error('url blank') })() : {
+	filesystem: ({ localDir, cloneURL }) => !cloneURL ? (function () { throw new Error('url blank') })() : {
 
-		_localPath: e => path.join(mod.util._clonePath(cloneURL), e),
+		_clonePath: id => path.join(localDir || folder, util.hash(id)),
+
+		_localPath (e) {
+			return path.join(this._clonePath(cloneURL), e);
+		},
 		
 		async put ({ target, data, meta }) {
 			const _target = this._localPath(target);
@@ -98,7 +98,7 @@ const mod = {
 
 			fs.writeFileSync(_target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
 
-			await mod.git(mod.util._clonePath(cloneURL)).commit(target.startsWith('/api-test-suite/') ? true : undefined);
+			await mod.git(this._clonePath(cloneURL)).commit(target.startsWith('/api-test-suite/') ? true : undefined);
 
 			Object.assign(meta, await this.meta({
 				target,
@@ -118,11 +118,11 @@ const mod = {
 			const stat = fs.statSync(_target);
 			const isFolder = stat.isDirectory();
 
-			const { repo } = mod.git(mod.util._clonePath(cloneURL));
+			const { repo } = mod.git(this._clonePath(cloneURL));
 
 			const meta = {
 				ETag: isFolder
-					// ? (await repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', mod.util._gitPath(isFolder ? target.replace(/\/$/, '') : target)))).trim().split('\n').pop()
+					// ? (await repo.raw(...['ls-tree', '--object-only'].concat(isFolder ? '-t' : []).concat('HEAD', this._gitPath(isFolder ? target.replace(/\/$/, '') : target)))).trim().split('\n').pop()
 					? (
 						await repo.raw('show-ref')
 						? (await repo.raw(...['ls-tree', '--object-only', '-d', 'HEAD', mod.util._gitTreePath(target)])).trim().split('\n').pop()
@@ -153,11 +153,11 @@ const mod = {
 				fs.rmSync(e, { recursive: true, force: true })
 			});
 
-			await mod.git(mod.util._clonePath(cloneURL)).commit(target.startsWith('/api-test-suite/') ? true : undefined);
+			await mod.git(this._clonePath(cloneURL)).commit(target.startsWith('/api-test-suite/') ? true : undefined);
 		},
 
 		async list ({ target }) {
-			const { repo } = mod.git(mod.util._clonePath(cloneURL));
+			const { repo } = mod.git(this._clonePath(cloneURL));
 			const tree = (await repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', `.${ target }`)).trim();
 
 			if (!tree.length)
@@ -192,7 +192,9 @@ const mod = {
 			return fs.statSync(this._localPath(target)).isDirectory();
 		},
 
-		erase: () => fs.rmSync(mod.util._clonePath(cloneURL), { recursive: true, force: true }),
+		erase () {
+			return fs.rmSync(this._clonePath(cloneURL), { recursive: true, force: true })
+		},
 
 	},
 
@@ -223,7 +225,7 @@ const mod = {
 
 		prepare (id, url) {
 			q._pushAuto(async () => {
-				const target = mod.util._clonePath(id);
+				const target = this._clonePath(id);
 
 				if (!fs.existsSync(target))
 					await simpleGit({
