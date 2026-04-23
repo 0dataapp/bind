@@ -12,7 +12,6 @@ const token_read_only = stub.tid();
 const token_read_write = stub.tid();
 const token_global = stub.tid();
 const baseURL = `${ origin }/${ handle }`;
-const testFolder = './__testing/local_disk/';
 				
 const State = stub.state({
 	server: origin,
@@ -31,9 +30,13 @@ State.storage = util.storage(Object.assign(util.clone(State), {
 	token: State.token_read_write,
 }));
 
+import { join } from 'path';
 import { vi } from 'vitest';
-for (const prop in options) {
-	if (prop !== 'local_disk')
+for (const e in options) {
+	if (![
+		'local_disk',
+		// 'git_https',
+	].includes(e))
 		continue
 
 	vi.spyOn(util, '_fetch').mockImplementation((url, params) => mod.vitest({
@@ -52,10 +55,22 @@ for (const prop in options) {
 					return `${ State.scope }:r`;
 			},
 
-			getFS ({ handle, token }) {
-				options.local_disk.folder = testFolder;
+			getFS () {
+				if (e === 'git_https') {
+					const cloneURL = 'testing-repo';
 
-				return options.local_disk.filesystem(handle);
+					const mod = Object.assign(options.git_https, {
+						folder: join(process.cwd(), '__testing/glue/git_https'),
+					});
+
+					// mod.util._reset(mod.util._clonePath(cloneURL));
+
+					return mod.filesystem(cloneURL);
+				}
+
+				return Object.assign(options.local_disk, {
+					folder: join(process.cwd(), '__testing/glue/local_disk'),
+				}).filesystem(handle);
 			},
 		}),
 		url: url.split(origin + '').pop(),
@@ -64,7 +79,7 @@ for (const prop in options) {
 		body: params.body,
 	}));
 
-	describe(`spec-check ${ prop }`, () => { generate({
+	describe(`spec-check ${ e }`, () => { generate({
 		describe,
 		it: test,
 		expect,
