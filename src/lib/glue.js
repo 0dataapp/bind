@@ -208,7 +208,7 @@ const mod = {
 			handle,
 			target,
 			isFolderRequest,
-		})
+		});
 		const meta = _meta || {
 			ETag: isFolderRequest ? 'empty' : undefined,
 		};
