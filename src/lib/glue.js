@@ -213,7 +213,11 @@ const mod = {
 			ETag: isFolderRequest ? 'empty' : undefined,
 		};
 		const exists = !!_meta;
-
+		
+		// const _isFolder = exists && (Object.keys(_meta).length === 1) && _meta.ETag;
+		// if (req.method === 'PUT' && _isFolder)
+		// 	return res.status(409).end();
+		
 		const _breadcrumbs = ['/', ...util.breadcrumbs(target.split('/').slice(1, isFolderRequest ? -1 : undefined))];
 
 		// if (req.method === 'PUT' && await Promise.all(_breadcrumbs.slice(1).map(async target => {
