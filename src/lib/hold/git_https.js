@@ -65,13 +65,14 @@ const mod = {
 			repo,
 
 			_init: () => repo.init(),
+			_commit: () => repo.raw('commit', '-a', '-m', 'sync'),
 
-			commit: direct => {
+			commit (direct) {
 				if (direct)
-					return repo.add('./*').commit('sync');
+					return this._commit();
 
 				debounce(`commit-${ path }`, () => {
-					repo.add('./*').commit('sync');
+					this._commit();
 
 					debounce(`push-${ path }`, async () => {
 						try {
