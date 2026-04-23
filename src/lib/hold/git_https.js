@@ -52,6 +52,7 @@ const mod = {
 
 	git (path) {
 		const repo = simpleGit(path, {
+			baseDir: path,
 			maxConcurrentProcesses: 10,
 			trimmed: true,
 			config: [
@@ -223,7 +224,9 @@ const mod = {
 				const target = mod.util._clonePath(id);
 
 				if (!fs.existsSync(target))
-					await simpleGit().clone(url, target);
+					await simpleGit({
+						baseDir: target,
+					}).clone(url, target);
 			});
 		},
 		
