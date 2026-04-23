@@ -87,10 +87,10 @@ const mod = {
 
 	filesystem: ({ localDir, cloneURL, direct }) => !cloneURL ? (function () { throw new Error('url blank') })() : {
 
-		_clonePath: id => path.join(localDir || folder, util.hash(id)),
+		_clonePath: path.join(localDir || folder, util.hash(cloneURL)),
 
 		_localPath (e) {
-			return path.join(this._clonePath(cloneURL), e);
+			return path.join(this._clonePath, e);
 		},
 		
 		async put ({ target, data, meta }) {
@@ -100,7 +100,7 @@ const mod = {
 
 			fs.writeFileSync(_target, meta['Content-Type'].startsWith('application/json') ? JSON.stringify(data) : Buffer.from(data));
 
-			await mod.git(this._clonePath(cloneURL)).commit(direct || mod.util._isTestPath(target));
+			await mod.git(this._clonePath).commit(direct || mod.util._isTestPath(target));
 
 			Object.assign(meta, await this.meta({
 				target,
@@ -120,7 +120,7 @@ const mod = {
 			const stat = fs.statSync(_target);
 			const isFolder = stat.isDirectory();
 
-			const { repo } = mod.git(this._clonePath(cloneURL));
+			const { repo } = mod.git(this._clonePath);
 
 			const meta = {
 				ETag: isFolder
@@ -155,11 +155,11 @@ const mod = {
 				fs.rmSync(e, { recursive: true, force: true })
 			});
 
-			await mod.git(this._clonePath(cloneURL)).commit(direct || mod.util._isTestPath(target));
+			await mod.git(this._clonePath).commit(direct || mod.util._isTestPath(target));
 		},
 
 		async list ({ target }) {
-			const { repo } = mod.git(this._clonePath(cloneURL));
+			const { repo } = mod.git(this._clonePath);
 			const tree = (await repo.raw('ls-tree', '--format', '%(objecttype) %(objectname) %(objectsize:padded)%x09%(path)', 'HEAD', `.${ target }`)).trim();
 
 			if (!tree.length)
@@ -187,7 +187,7 @@ const mod = {
 		},
 
 		erase () {
-			return fs.rmSync(this._clonePath(cloneURL), { recursive: true, force: true })
+			return fs.rmSync(this._clonePath, { recursive: true, force: true })
 		},
 
 	},
