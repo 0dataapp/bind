@@ -334,28 +334,4 @@ describe('filesystem', () => {
 
 	});
 
-	describe('isFolder', () => {
-
-		test('file', async () => {
-			const target = stub.basename();
-			nock('https://api.github.com')
-			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
-			  .reply(200, {
-					type: 'file',
-				});
-			expect(await filesystem.isFolder({ target })).toBe(false);
-		});
-
-		test('folder', async () => {
-			const target = stub.basename();
-			nock('https://api.github.com')
-			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
-			  .reply(200, {
-					type: 'dir',
-				});
-			expect(await filesystem.isFolder({ target })).toBe(true);
-		});
-
-	});
-
 });

@@ -333,32 +333,6 @@ describe('filesystem', () => {
 
 	});
 
-	describe('isFolder', () => {
-
-		test('file', () => {
-			const target = stub.basename();
-			filesystem.put({
-				target,
-				data: Math.random().toString(),
-				breadcrumbs: [],
-				meta: stub.headers('text/plain'),
-			});
-			expect(filesystem.isFolder({ target })).toBe(false);
-		});
-
-		test('folder', () => {
-			const target = stub.ulid();
-			filesystem.put({
-				target: path.join(target, stub.basename()),
-				data: Math.random().toString(),
-				breadcrumbs: [target],
-				meta: stub.headers('text/plain'),
-			});
-			expect(filesystem.isFolder({ target })).toBe(true);
-		});
-
-	});
-
 	test('erase', () => {
 		const target = stub.basename();
 		filesystem.put({

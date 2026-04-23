@@ -125,11 +125,6 @@ const mod = {
 			])).then(Object.fromEntries);
 		},
 
-		async isFolder ({ target }) {
-			const res = await this._content(target);
-			return res.type === 'dir';
-		},
-
 	}),
 
 };

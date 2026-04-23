@@ -186,10 +186,6 @@ const mod = {
 			})).then(Object.fromEntries);
 		},
 
-		isFolder ({ target }) {
-			return fs.statSync(this._localPath(target)).isDirectory();
-		},
-
 		erase () {
 			return fs.rmSync(this._clonePath(cloneURL), { recursive: true, force: true })
 		},

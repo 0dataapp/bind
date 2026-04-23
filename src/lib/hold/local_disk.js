@@ -97,10 +97,6 @@ const mod = {
 			}, {});
 		},
 
-		isFolder ({ target }) {
-			return fs.statSync(this._localPath(target)).isDirectory();
-		},
-
 		erase (handle) {
 			return fs.rmSync(this._localPath('/'), { recursive: true, force: true });
 		},

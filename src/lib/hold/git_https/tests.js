@@ -319,30 +319,6 @@ describe('filesystem', () => {
 
 	});
 
-	describe('isFolder', () => {
-
-		test('file', async () => {
-			const target = stub.basename();
-			await filesystem.put({
-				target,
-				data: Math.random().toString(),
-				meta: stub.headers('text/plain'),
-			});
-			expect(filesystem.isFolder({ target })).toBe(false);
-		});
-
-		test('folder', async () => {
-			const target = stub.ulid();
-			await filesystem.put({
-				target: path.join(target, stub.basename()),
-				data: Math.random().toString(),
-				meta: stub.headers('text/plain'),
-			});
-			expect(filesystem.isFolder({ target })).toBe(true);
-		});
-
-	});
-
 	test('erase', async () => {
 		const target = stub.basename();
 		await filesystem.put({
