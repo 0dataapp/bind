@@ -8,7 +8,7 @@ import { env } from '$env/dynamic/private';
 const folder = path.join(env.DATA_DIRECTORY || __dirname, '__hold/git_https');
 import util from './util.js';
 
-import { simpleGit, CleanOptions } from 'simple-git';
+import { simpleGit } from 'simple-git';
 
 const pollSeconds = 5;
 
