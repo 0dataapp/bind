@@ -7,8 +7,8 @@ import path from 'path';
 
 const testFolder = path.join(process.cwd(), '__testing/git_https');
 const cloneURL = 'testing-repo';
-const repo = `${ testFolder }/${ util.hash(cloneURL) }/`;
 const filesystem = mod.filesystem(cloneURL);
+const repo = `${ testFolder }/${ util.hash(cloneURL) }`;
 const resetRepo = () => mod.util._reset(repo);
 
 mod.folder = testFolder;
