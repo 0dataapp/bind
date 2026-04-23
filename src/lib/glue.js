@@ -272,23 +272,19 @@ const mod = {
 
 		meta['ETag'] = `"${ meta['ETag'] }"`;
 
-		if (req.method === 'DELETE') {
+		res
+			.set(meta)
+			.status(200);
+
+		if (req.method === 'DELETE')
 			await fs.remove({
 				handle,
 				target,
 				breadcrumbs,
 				meta,
 			});
-			return res.set({
-				ETag: meta['ETag'],
-			}).status(200).end();
-		}
 		
-		res
-			.set(meta)
-			.status(200);
-
-		if (req.method === 'HEAD')
+		if (['HEAD', 'DELETE'].includes(req.method))
 			return res.end();
 
 		if (isFolderRequest)
