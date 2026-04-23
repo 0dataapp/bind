@@ -144,7 +144,18 @@ describe('filesystem', () => {
 	describe('meta', () => {
 
 		test('non-existant', async () => {
-			expect(await filesystem.meta({ target: stub.random() })).toEqual(null);
+			const parent = stub.ulid();
+			await filesystem.put({
+				target: path.join(parent, stub.basename()),
+				data: Math.random().toString(),
+				meta: stub.headers('text/plain'),
+			});
+			expect(await filesystem.meta({
+				target: path.join(parent, stub.basename()),
+			})).toEqual(null);
+			expect(await filesystem.meta({
+				target: path.join(parent, `${ stub.basename() }/`),
+			})).toEqual(null);
 		});
 
 		test('file', async () => {
@@ -304,55 +315,6 @@ describe('filesystem', () => {
 					target: parent + '/',
 				}),
 			});
-		});
-
-	});
-
-	describe('exists', () => {
-
-		test('file', async () => {
-			const target = stub.basename();
-			await filesystem.put({
-				target,
-				data: Math.random().toString(),
-				meta: stub.headers('text/plain'),
-			});
-			expect(filesystem.exists({
-				target,
-			})).toBe(true);
-		});
-
-		test('folder', async () => {
-			const parent = stub.ulid();
-			
-			const target = path.join(parent, stub.basename());
-			await filesystem.put({
-				target,
-				data: Math.random().toString(),
-				meta: stub.headers('text/plain'),
-			});
-			expect(filesystem.exists({
-				target: parent,
-			})).toBe(true);
-			expect(filesystem.exists({
-				target: parent + '/',
-			})).toBe(true);
-		});
-
-		test('non-existant', async () => {
-			const parent = stub.ulid();
-
-			await filesystem.put({
-				target: path.join(parent, stub.basename()),
-				data: Math.random().toString(),
-				meta: stub.headers('text/plain'),
-			});
-			expect(filesystem.exists({
-				target: path.join(parent, stub.basename()),
-			})).toBe(false);
-			expect(filesystem.exists({
-				target: path.join(parent, `${ stub.basename() }/`),
-			})).toBe(false);
 		});
 
 	});

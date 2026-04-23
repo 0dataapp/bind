@@ -125,18 +125,6 @@ const mod = {
 			])).then(Object.fromEntries);
 		},
 
-		async exists ({ target }) {
-			const res = await fetch(`https://api.github.com/repos/${ owner }/${ repo }/contents${ target }`, {
-				method: 'GET',
-			  headers: {
-			    'Authorization': `token ${ token }`,
-			    'Content-Type': 'application/json',
-			    'Accept': 'application/vnd.github.object+json',
-			  },
-			});
-			return res.status === 200;
-		},
-
 		async isFolder ({ target }) {
 			const res = await this._content(target);
 			return res.type === 'dir';

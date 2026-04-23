@@ -186,10 +186,6 @@ const mod = {
 			})).then(Object.fromEntries);
 		},
 
-		exists ({ target }) {
-			return fs.existsSync(this._localPath(target));
-		},
-
 		isFolder ({ target }) {
 			return fs.statSync(this._localPath(target)).isDirectory();
 		},

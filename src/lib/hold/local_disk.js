@@ -51,6 +51,7 @@ const mod = {
 		},
 
 		meta ({ target }) {
+			// this currently fails the 409 test where 'target file path is an existing folder' because breadcrumbs are passed without a trailing slash, which creates the wrong _metaPath. not sure yet where is the most sensible place to ensure trailing slashes as we assume most folder request should have trailing slashes.
 			const _target = this._metaPath(this._localPath(target));
 
 			if (!fs.existsSync(_target))
@@ -94,12 +95,6 @@ const mod = {
 					[item]: JSON.parse(fs.readFileSync(this._metaPath(e), 'utf8')),
 				});
 			}, {});
-		},
-
-		exists ({ target }) {
-			// this currently fails the 409 test where 'target file path is an existing folder' because breadcrumbs are passed without a trailing slash, which creates the wrong _metaPath. not sure yet where is the most sensible place to ensure trailing slashes as we assume most folder request should have trailing slashes.
-			const _target = this._localPath(target);
-			return fs.existsSync(_target) && fs.existsSync(this._metaPath(_target));
 		},
 
 		isFolder ({ target }) {

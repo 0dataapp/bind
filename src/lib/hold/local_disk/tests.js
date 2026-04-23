@@ -137,8 +137,51 @@ describe('filesystem', () => {
 
 	describe('meta', () => {
 
+		describe('no meta', () => {
+
+			test('file', () => {
+				const target = stub.basename();
+				filesystem.put({
+					target,
+					data: Math.random().toString(),
+					breadcrumbs: [],
+					meta: stub.headers('text/plain'),
+				});
+				fs.unlinkSync(filesystem._localPath(filesystem._metaPath(target)));
+				expect(filesystem.meta({ target })).toBe(null);
+			});
+
+			test('folder', () => {
+				const parent = stub.ulid();
+				filesystem.put({
+					target: path.join(parent, stub.basename()),
+					data: Math.random().toString(),
+					breadcrumbs: [parent],
+					meta: stub.headers('text/plain'),
+				});
+				fs.unlinkSync(filesystem._localPath(filesystem._metaPath(parent + '/')));
+				expect(filesystem.meta({
+					target: parent + '/',
+				})).toBe(null);
+			});
+
+		});
+
 		test('non-existant', () => {
-			expect(filesystem.meta({ target: stub.random() })).toEqual(null);
+			const parent = stub.ulid();
+			const breadcrumbs = [parent];
+			filesystem.put({
+				target: path.join(parent, stub.basename()),
+				data: Math.random().toString(),
+				breadcrumbs,
+				meta: stub.headers('text/plain'),
+			});
+			expect(filesystem.meta({
+				target: path.join(parent, stub.basename()),
+			})).toBe(null);
+			expect(filesystem.meta({
+				target: path.join(parent, `${ stub.basename() }/`),
+			})).toBe(null);
 		});
 
 		test('file', () => {
@@ -286,82 +329,6 @@ describe('filesystem', () => {
 					target: parent + '/',
 				}),
 			});
-		});
-
-	});
-
-	describe('exists', () => {
-
-		test('file', () => {
-			const target = stub.basename();
-			filesystem.put({
-				target,
-				data: Math.random().toString(),
-				breadcrumbs: [],
-				meta: stub.headers('text/plain'),
-			});
-			expect(filesystem.exists({ target })).toBe(true);
-		});
-
-		test('folder', () => {
-			const parent = stub.ulid();
-			filesystem.put({
-				target: path.join(parent, stub.basename()),
-				data: Math.random().toString(),
-				breadcrumbs: [parent],
-				meta: stub.headers('text/plain'),
-			});
-			expect(filesystem.exists({
-				target: parent + '/',
-			})).toBe(true);
-		});
-
-		test('non-existant', () => {
-			const parent = stub.ulid();
-			const breadcrumbs = [parent];
-
-			filesystem.put({
-				target: path.join(parent, stub.basename()),
-				data: Math.random().toString(),
-				breadcrumbs,
-				meta: stub.headers('text/plain'),
-			});
-			expect(filesystem.exists({
-				target: path.join(parent, stub.basename()),
-			})).toBe(false);
-			expect(filesystem.exists({
-				target: path.join(parent, `${ stub.basename() }/`),
-			})).toBe(false);
-		});
-
-		describe('no meta', () => {
-
-			test('file', () => {
-				const target = stub.basename();
-				filesystem.put({
-					target,
-					data: Math.random().toString(),
-					breadcrumbs: [],
-					meta: stub.headers('text/plain'),
-				});
-				fs.unlinkSync(filesystem._localPath(filesystem._metaPath(target)));
-				expect(filesystem.exists({ target })).toBe(false);
-			});
-
-			test('folder', () => {
-				const parent = stub.ulid();
-				filesystem.put({
-					target: path.join(parent, stub.basename()),
-					data: Math.random().toString(),
-					breadcrumbs: [parent],
-					meta: stub.headers('text/plain'),
-				});
-				fs.unlinkSync(filesystem._localPath(filesystem._metaPath(parent + '/')));
-				expect(filesystem.exists({
-					target: parent + '/',
-				})).toBe(false);
-			});
-
 		});
 
 	});

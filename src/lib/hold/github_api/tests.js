@@ -182,7 +182,7 @@ describe('filesystem', () => {
 	describe('meta', () => {
 
 		test('non-existant', async () => {
-			const target = stub.random();
+			const target = stub.basename();
 			nock('https://api.github.com')
 			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
 			  .reply(404);
@@ -330,34 +330,6 @@ describe('filesystem', () => {
 					ETag: sha,
 				},
 			});
-		});
-
-	});
-
-	describe('exists', () => {
-
-		test('existant', async () => {
-			const target = stub.basename();
-			nock('https://api.github.com')
-			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
-			  .reply(200, {
-					content: Buffer.from(Math.random().toString()).toString('base64'),
-				});
-			expect(await filesystem.exists({
-				target
-			})).toBe(true);
-		});
-
-		test('non-existant', async () => {
-			const target = stub.basename();
-			nock('https://api.github.com')
-			  .get(`/repos/${ owner }/${ repo }/contents${ target }`)
-			  .reply(404, {
-					content: Buffer.from(Math.random().toString()).toString('base64'),
-				});
-			expect(await filesystem.exists({
-				target
-			})).toBe(false);
 		});
 
 	});
