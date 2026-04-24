@@ -9,6 +9,8 @@ RUN npm install --omit=dev
 
 COPY . .
 
+ARG COMMIT_HASH
+ENV VITE_COMMIT_HASH=${COMMIT_HASH}
 RUN npm run build
 
 ENV PORT 3000
