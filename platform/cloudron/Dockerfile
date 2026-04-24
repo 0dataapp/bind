@@ -4,10 +4,10 @@ RUN mkdir -p /app/code
 WORKDIR /app/code
 
 # copy package.json in isolation to detect changes
-ADD package.json .
+COPY package.json .
 RUN npm install --omit=dev
 
-ADD . .
+COPY . .
 
 RUN npm run build
 

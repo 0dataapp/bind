@@ -6,10 +6,10 @@ RUN mkdir -p /app
 WORKDIR /app
 
 # copy package.json in isolation to detect changes
-ADD package.json .
+COPY package.json .
 RUN npm install --omit=dev
 
-ADD . .
+COPY . .
 
 ARG _DATA_DIRECTORY="/app/__persistent"
 
