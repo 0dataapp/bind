@@ -37,6 +37,14 @@ focus {
 	background: var(--zd-c-bg-focus);
 }
 
+span.meta {
+	display: block;
+	padding: calc(var(--bind-pad) / 3);
+	opacity: 0.5;
+	font-size: 80%;
+	text-align: center;
+}
+
 pre {
 	padding: var(--bind-pad);
 }

@@ -3,7 +3,7 @@ import 'normalize.css';
 import '@picocss/pico';
 import '$lib/component/zero-data.css';
 import './style.css';
-
+import { version } from '$app/environment';
 import { page } from '$app/state';
 let { children } = $props();
 </script>
@@ -20,26 +20,32 @@ let { children } = $props();
 
 <wrap class={ page.data.classes }>
 
-<focus class="container-fluid">
+<center-container>
+	<focus class="container-fluid">
 
-<h1>{ page.data.title }</h1>
+	<h1>{ page.data.title }</h1>
 
-{@render children?.()}
+	{@render children?.()}
 
-{#if page.data.navigation.length }
-	
-<hr>
+	{#if page.data.navigation.length }
+		
+	<hr>
 
-<footer>
-	<nav>
-		{#each page.data.navigation as section, index}
-			{#if index}&nbsp;·&nbsp;{/if}<a href="{section.path}">{section.title}</a>
-		{/each}
-	</nav>
-</footer>
+	<footer>
+		<nav>
+			{#each page.data.navigation as section, index}
+				{#if index}&nbsp;·&nbsp;{/if}<a href="{section.path}">{section.title}</a>
+			{/each}
+		</nav>
+	</footer>
 
-{/if}
+	{/if}
 
-</focus>
+	</focus>
+
+	<span class="meta">
+		<small>{ Object.entries(JSON.parse(version)).map(([key, value]) => `${ key } ${ value }`).join(', ') }</small>
+	</span>
+</center-container>
 
 </wrap>
