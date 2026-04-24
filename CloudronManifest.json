@@ -8,6 +8,7 @@
   "addons": {
     "localstorage": {}
   },
+  "multiDomain": true,
   "icon": "file://docs/public/identity.svg",
   "manifestVersion": 2,
   "id": "app.0data.bind",
