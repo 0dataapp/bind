@@ -45,9 +45,3 @@ import Flash from '$lib/component/Flash.svelte';
 <input type="submit" value="Continue" />
 
 </form>
-
-<style>
-error {
-	color: #fd6666;
-}
-</style>
