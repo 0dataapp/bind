@@ -3,6 +3,8 @@ import { loadEnv } from 'vite';
 
 const env = loadEnv('development', process.cwd(), '');
 
+import { cpSync } from 'fs';
+import { resolve } from 'path';
 export default withMermaid({
   title: 'Bind',
   description: 'Git-backed web apps.',
@@ -60,6 +62,14 @@ export default withMermaid({
       port: env.PORT,
       allowedHosts: [ env.HOST ],
     },
+
+    plugins: [{
+      name: 'copy-cloudron-versions',
+      writeBundle () {
+        const basename = 'CloudronVersions.json';
+        cpSync(resolve(process.cwd(), '../', basename), resolve(__dirname, './dist/', basename), { force: true });
+      }
+    }],
   },
 
   cleanUrls: true,

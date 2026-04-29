@@ -1,0 +1,42 @@
+{
+    "stable": true,
+    "versions": {
+        "0.0.1": {
+            "manifest": {
+                "title": "Bind",
+                "tagline": "Git-backed web apps.",
+                "version": "0.0.1",
+                "healthCheckPath": "/",
+                "httpPort": 3000,
+                "website": "https://bind.0data.app",
+                "addons": {
+                    "localstorage": {}
+                },
+                "multiDomain": true,
+                "icon": "file://docs/public/identity.svg",
+                "manifestVersion": 2,
+                "id": "app.0data.bind",
+                "author": "Rosano",
+                "contactEmail": "manifest.cloudron.io@xeari.com",
+                "iconUrl": "https://bind.0data.app/identity.svg",
+                "packagerName": "Zero Data App",
+                "packagerUrl": "https://0data.app",
+                "minBoxVersion": "9.1.0",
+                "description": "Git-backed web apps.",
+                "changelog": "* Initial release\n",
+                "postInstallMessage": "Create your administrative account to get started.",
+                "tags": [
+                    "data",
+                    "files"
+                ],
+                "mediaLinks": [
+                    "https://bind.0data.app/screenshot.png"
+                ],
+                "dockerImage": "0data/bind:cloudron"
+            },
+            "creationDate": "Wed, 29 Apr 2026 08:37:33 GMT",
+            "ts": "Wed, 29 Apr 2026 08:37:33 GMT",
+            "publishState": "published"
+        }
+    }
+}
