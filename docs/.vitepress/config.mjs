@@ -1,4 +1,4 @@
-import { withMermaid } from "vitepress-plugin-mermaid";
+import { withMermaid } from 'vitepress-plugin-mermaid';
 import { loadEnv } from 'vite';
 
 const env = loadEnv('development', process.cwd(), '');
