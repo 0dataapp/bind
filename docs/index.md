@@ -86,3 +86,13 @@ Data starts in your hands.<br>Give apps permission as necessary.
 </div>  
 
 </div>
+
+<div class="ways">
+
+::: info Git sync demo
+
+![Sync demo](https://bind.0data.app/demo.gif)
+
+:::
+
+</div>

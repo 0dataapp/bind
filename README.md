@@ -4,6 +4,8 @@ Git-backed web apps.
 
 https://bind.0data.app
 
+![Sync demo](https://bind.0data.app/demo.gif)
+
 - [Quickstart](https://bind.0data.app/quickstart): Try apps with Bind
 - [How it works](https://bind.0data.app/understand): Design explainer
 - [Integrate](https://bind.0data.app/integrate): Short intro to making apps
