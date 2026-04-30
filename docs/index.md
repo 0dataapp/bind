@@ -24,6 +24,23 @@ features:
     details: Always accessible, even if the app isn't.
   - title: Highly interoperable
     details: Files, open protocols, infinite integrations.
+
+head:
+  - - meta
+    - property: 'og:url'
+      content: '/'
+  - - meta
+    - property: 'og:site_name'
+      content: Bind
+  - - meta
+    - property: 'og:title'
+      content: Bind
+  - - meta
+    - property: 'og:description'
+      content: Git-backed web apps.
+  - - meta
+    - property: 'og:image'
+      content: https://bind.0data.app/demo.gif
 ---
 
 <div class="ways">
