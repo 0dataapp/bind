@@ -72,8 +72,8 @@ const mod = {
 				json: obj => {
 					res.set({
 						'Content-Type': 'application/json',
-					})
-					res.send(JSON.stringify(obj));
+					});
+					return res.send(JSON.stringify(obj));
 				},
 				send: body => (res.body = body, res.end()),
 				end: () => new Response(res.body, {
