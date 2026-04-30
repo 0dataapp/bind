@@ -139,3 +139,4 @@ In case of [SSL issues](https://coolify.io/docs/troubleshoot/dns-and-domains/let
 | - | - |
 | `BIND_SECRET` | configured automatically; used by [Better Auth](https://better-auth.com/docs/reference/options#secret) to encrypt credentials; generate via `openssl rand -hex 32` or [online](https://www.better-auth.com/docs/installation). |
 | `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | create a new [OAuth App](https://github.com/settings/developers) and set these credentials to enable connecting GitHub accounts. |
+| `DISABLE_CUSTODY` | set to `disable` to hide `Local disk` as a data source. |

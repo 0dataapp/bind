@@ -9,13 +9,17 @@ const mod = {
 		const subsources = await db.collection('datasource').hydrating.getItems();
 		const accounts = await auth.api.listUserAccounts({ headers: request.headers });
 		return Object.values(depot.options).filter(e => !(e.credentials || []).filter(e => !process.env[e]).length).filter(e => {
-			if (e.meta.id !== 'gitea_selfhosted')
-				return true;
+			if (e.meta.id === 'gitea_selfhosted') {
+				if (!process.env.GITEA_ACCOUNT)
+					return true;
 
-			if (!process.env.GITEA_ACCOUNT)
-				return true;
+				return accounts.map(e => e.id).includes(process.env.GITEA_ACCOUNT);
+			}
 
-			return accounts.map(e => e.id).includes(process.env.GITEA_ACCOUNT);
+			if (e.meta.id === 'local_custody' && process.env.DISABLE_CUSTODY === 'disable')
+				return false;
+
+			return true;
 		}).map(e => {
 			Object.assign(e = structuredClone(e.meta), {
 				optionId: e.id,
