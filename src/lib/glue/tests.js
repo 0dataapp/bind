@@ -36,7 +36,7 @@ import { vi, afterAll } from 'vitest';
 for (const e in options) {
 	if (![
 		'local_disk',
-		'git_https',
+		// 'git_https',
 	].includes(e))
 		continue
 
