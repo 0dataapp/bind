@@ -69,7 +69,12 @@ const mod = {
 				set: obj => (Object.keys(obj).forEach(key => event.__headers[key] = obj[key]), res),
 
 				status: code => (res._status = code, res),
-				json: obj => res.send(JSON.stringify(obj)),
+				json: obj => {
+					res.set({
+						'Content-Type': 'application/json',
+					})
+					res.send(JSON.stringify(obj));
+				},
 				send: body => (res.body = body, res.end()),
 				end: () => new Response(res.body, {
 					status: res._status || 200,
