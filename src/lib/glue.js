@@ -70,9 +70,8 @@ const mod = {
 
 				status: code => (res._status = code, res),
 				json: obj => {
-					res.set({
-						'Content-Type': 'application/json',
-					});
+					if (!event.__headers['Content-Type'])
+						res.set({ 'Content-Type': 'application/json' });
 					return res.send(JSON.stringify(obj));
 				},
 				send: body => (res.body = body, res.end()),
