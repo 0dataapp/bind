@@ -8,7 +8,7 @@ const data = _data[0].frontmatter.data;
 
 ## Get an account
 
-1. Sign up for an account on the community server or follow the [host guide](/host/) to run your own.
+1. Sign up for an account on the [community server](https://bridge.0data.app) or follow the [host guide](/host/) to run your own.
 2. Connect GitHub or other sources so you can sync repositories.
 3. Use your *storage address* (looks like `account@example.com`) with any remoteStorage-compatible app.
 
