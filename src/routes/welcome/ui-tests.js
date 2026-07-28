@@ -4,14 +4,14 @@ import stub from '$lib/stub.js';
 
 test.describe('welcome', () => {
 
-  test.beforeEach(({ page }) => page.goto('/welcome'));
+	test.beforeEach(({ page }) => page.goto('/welcome'));
 
-  test.describe('title', () => {
+	test.describe('title', () => {
 
-    test('head', async ({ page }) => expect(await page.title()).toEqual(load().title));
+		test('head', async ({ page }) => expect(await page.title()).toEqual(load().title));
 
-    test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(load().title));
-    
-  });
+		test('h1', ({ page }) => expect(page.locator('h1')).toHaveText(load().title));
+		
+	});
 
 });
