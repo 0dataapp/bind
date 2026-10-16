@@ -11,7 +11,7 @@ App development is much simpler with
 
 Just read and write data with the [remoteStorage.js library](https://remotestorage.io/rs.js/docs/why.html) and your web apps get:
 
-- automatic syncronization
+- automatic synchronization
 - offline-first data
 - authentication
 - personal data stores
@@ -36,7 +36,7 @@ json = localStorage.getItem('app-data');
 todos = JSON.parse(json);
 ```
 
-This app's data can syncronize across multiple devices just by swapping two things.
+This app's data can synchronize across multiple devices just by swapping two things.
 
 We start with `remoteStorage` and write to a `scope`:
 
